@@ -1,44 +1,227 @@
-# NSE Scanner v2.0
+# 🛡️ Security Scanner Suite
 
-A security-focused scanner using **Nmap Scripting Engine (NSE)** with SSL/TLS certificate checking, HTTP security headers analysis, and clean output formatting.
+A comprehensive security scanning toolkit with two powerful scanners:
 
-## ✨ Features
+| Scanner | Purpose | Best For |
+|---------|---------|----------|
+| **Intelligent Scanner** | Nmap + Nuclei smart pipeline | Full security assessments |
+| **NSE Scanner** | Nmap Scripting Engine | Quick port/service scans |
 
-- 🔍 **Full Port Scanning** - Scans all 65535 ports by default
-- 🔐 **SSL/TLS Certificate Check** - Validates certificates, ciphers, and protocols
-- 🛡️ **HTTP Security Headers** - Checks HSTS, CSP, X-Frame-Options, etc.
-- ✅ **Clean Output** - Only displays open ports (no closed port clutter)
-- 📋 **Scan Profiles** - Pre-configured profiles for common use cases
-- 📊 **Formatted Results** - Beautiful, readable scan summaries
+---
 
-## Requirements
+## 📋 Table of Contents
 
-- Python 3.6+
-- Nmap installed (`sudo apt install nmap`)
+- [Quick Start](#-quick-start)
+- [Intelligent Scanner](#-intelligent-scanner)
+- [NSE Scanner](#-nse-scanner)
+- [Installation](#-installation)
+- [Target File Format](#-target-file-format)
+- [Output Files](#-output-files)
+- [Legal Disclaimer](#️-legal-disclaimer)
 
-## Installation
+---
+
+## 🚀 Quick Start
 
 ```bash
+# Clone and setup
 cd /home/ritikrajput/Documents/Nmap_Scan
-chmod +x nse_scanner.py
+chmod +x *.py
+
+# Quick security scan (Intelligent Scanner - recommended)
+sudo python3 intelligent_scanner.py -t example.com
+
+# Quick NSE scan
+sudo python3 nse_scanner.py -t example.com --profile security
 ```
 
-## Quick Start
+---
+
+## 🧠 Intelligent Scanner
+
+**Production-grade security scanner with Nmap + Nuclei smart pipeline.**
+
+### How It Works
+
+```
+┌─────────────┐      ┌─────────────┐      ┌─────────────┐      ┌─────────────┐
+│   PHASE 1   │      │   PHASE 2   │      │   PHASE 3   │      │   PHASE 4   │
+│    Nmap     │ ───▶ │   Analyze   │ ───▶ │   Nuclei    │ ───▶ │   Report    │
+│ Recon Scan  │      │   & Decide  │      │  (Targeted) │      │  Generation │
+└─────────────┘      └─────────────┘      └─────────────┘      └─────────────┘
+```
+
+### Why Use This?
+
+| Traditional Approach | Intelligent Approach |
+|---------------------|---------------------|
+| Run Nmap → Run ALL Nuclei templates | Run Nmap → Analyze → Run ONLY relevant templates |
+| Slow, noisy, many false positives | Fast, clean, accurate results |
+| Wastes time on irrelevant checks | Focuses on actual attack surface |
+
+### Usage
 
 ```bash
-# Security scan with SSL + HTTP headers (recommended)
-sudo python3 nse_scanner.py -t example.com --profile security
+# Basic scan (single target)
+sudo python3 intelligent_scanner.py -t example.com
 
-# HTTPS-only security check
-sudo python3 nse_scanner.py -t example.com --profile https
+# Scan multiple targets from file
+sudo python3 intelligent_scanner.py -f targets.txt
 
-# Full port scan
-sudo python3 nse_scanner.py -t 192.168.1.1 --profile full
+# Full port scan (all 65535 ports)
+sudo python3 intelligent_scanner.py -t example.com --ports "-p-"
+
+# Quick scan (top 100 ports)
+sudo python3 intelligent_scanner.py -t example.com --ports "--top-ports 100"
+
+# High severity findings only
+sudo python3 intelligent_scanner.py -t example.com --severity high,critical
+
+# Custom output directory
+sudo python3 intelligent_scanner.py -t example.com -o ./my_results
 ```
 
-## Usage
+### Command Line Options
 
-### Single Target Scanning
+| Option | Default | Description |
+|--------|---------|-------------|
+| `-t, --target` | - | Single target IP or domain |
+| `-f, --file` | - | File containing targets (one per line) |
+| `--ports` | `--top-ports 1000` | Nmap port specification |
+| `--severity` | `medium,high,critical` | Nuclei severity filter |
+| `-o, --output` | `./scan_results` | Output directory |
+| `--rate-limit` | `150` | Nuclei requests per second |
+| `--timeout` | `300` | Scan timeout in seconds |
+
+### Decision Engine Logic
+
+The scanner analyzes Nmap results and **intelligently decides** which Nuclei templates to run:
+
+```
+IF port 443 open
+  ├── IF certificate CN ≠ domain
+  │     └── 🚨 Flag as potential PHISHING
+  ├── IF HSTS header missing
+  │     └── Run: http/misconfiguration
+  ├── IF TLS < 1.2 detected
+  │     └── Run: ssl/misconfigurations
+  └── Run: ssl templates + http/exposures
+
+IF port 80 open
+  └── Run: http/misconfiguration, http/exposures
+
+IF database port open (MySQL/Redis/MongoDB)
+  └── Run: default-logins, network/exposures
+
+IF SSH/FTP open
+  └── Run: network/cves, default-logins
+```
+
+### Service-to-Template Mapping
+
+| Detected Service | Nuclei Templates Applied |
+|-----------------|-------------------------|
+| HTTP (80, 8080) | `http/misconfiguration`, `http/exposures`, `http/cves` |
+| HTTPS (443, 8443) | `ssl`, `http/misconfiguration`, `http/exposures` |
+| MySQL | `network/cves`, `default-logins` |
+| MongoDB | `network/cves`, `default-logins`, `network/exposures` |
+| Redis | `network/cves`, `default-logins`, `network/exposures` |
+| SSH | `network/cves`, `default-logins` |
+| FTP | `network/cves`, `default-logins`, `network/exposures` |
+| SMTP | `network/cves`, `network/exposures` |
+
+### Security Checks Performed
+
+| Check | Description |
+|-------|-------------|
+| **Certificate Validation** | CN mismatch detection (phishing indicator) |
+| **TLS Version** | Flags weak TLSv1.0/1.1/SSLv3 |
+| **Security Headers** | HSTS, CSP, X-Frame-Options, X-Content-Type-Options, X-XSS-Protection, Referrer-Policy |
+| **Vulnerability Scan** | CVEs, misconfigurations, exposures via Nuclei |
+
+### Risk Scoring
+
+Each target receives a risk score (0-100):
+
+| Score | Level | Indicator | Meaning |
+|-------|-------|-----------|---------|
+| 0-19 | LOW | 🟢 | Minimal security concerns |
+| 20-49 | MEDIUM | 🟡 | Some issues to address |
+| 50-79 | HIGH | 🟠 | Significant vulnerabilities |
+| 80-100 | CRITICAL | 🔴 | Immediate attention required |
+
+**Score Breakdown:**
+- Certificate CN mismatch: +30 points
+- Weak TLS version: +20 points
+- Each missing security header: +5 points
+- Critical Nuclei finding: +40 points
+- High Nuclei finding: +25 points
+- Medium Nuclei finding: +10 points
+
+### Sample Output
+
+```
+══════════════════════════════════════════════════════════════════════════════
+🎯 SCANNING: example.com
+══════════════════════════════════════════════════════════════════════════════
+
+──────────────────────────────────────────────────────────────────
+  Phase 1: Nmap Reconnaissance
+──────────────────────────────────────────────────────────────────
+  🔍 Running: nmap --open -sV -sC -T4 --top-ports 1000 example.com
+  ✅ Found 3 open port(s)
+
+──────────────────────────────────────────────────────────────────
+  🧠 Decision Engine Analysis
+──────────────────────────────────────────────────────────────────
+    → Port 443/https → ssl, http/misconfiguration
+    → Port 80/http → http/misconfiguration, http/exposures
+    → Missing 3 security headers → http/misconfiguration
+
+──────────────────────────────────────────────────────────────────
+  Phase 3: Nuclei Vulnerability Scan
+──────────────────────────────────────────────────────────────────
+    🎯 Nuclei scanning: https://example.com
+    📋 Templates: ssl, http/misconfiguration, http/exposures
+
+══════════════════════════════════════════════════════════════════════════════
+📊 SCAN REPORT
+══════════════════════════════════════════════════════════════════════════════
+
+  🎯 Target: example.com
+  📍 IP: 93.184.216.34
+  
+  🟡 Risk Score: 35/100 (MEDIUM)
+
+  ✅ Open Ports (3):
+      443/tcp   → https (nginx 1.18.0)
+      80/tcp    → http (nginx 1.18.0)
+      22/tcp    → ssh (OpenSSH 8.2)
+
+  🔐 TLS/Certificate:
+      CN: example.com
+      Issuer: DigiCert Inc
+      Expires: 2025-12-15
+
+  🛡️  Missing Security Headers (3):
+      ❌ Content-Security-Policy
+      ❌ X-Frame-Options
+      ❌ Permissions-Policy
+
+  🔥 Vulnerabilities Found (1):
+      🟡 [MEDIUM] Missing X-Frame-Options Header
+         └─ https://example.com
+
+  📁 Report saved: ./scan_results/report_example_com_20251216_120000.json
+```
+
+---
+
+## 🔧 NSE Scanner
+
+**Nmap Scripting Engine scanner with pre-configured security profiles.**
+
+### Usage
 
 ```bash
 # Quick scan (top 100 ports)
@@ -48,138 +231,174 @@ sudo python3 nse_scanner.py -t example.com --profile quick
 sudo python3 nse_scanner.py -t example.com --profile standard
 
 # Full port scan (all 65535 ports)
-sudo python3 nse_scanner.py -t 192.168.1.1 --profile full
+sudo python3 nse_scanner.py -t example.com --profile full
 
 # Security scan (SSL + Headers + Vulns)
 sudo python3 nse_scanner.py -t example.com --profile security
 
-# HTTPS security check
+# HTTPS-only security check
 sudo python3 nse_scanner.py -t example.com --profile https
 
 # Web application scan
 sudo python3 nse_scanner.py -t example.com --profile web
-```
 
-### Multiple Targets from File
-
-```bash
-# Security scan on all targets
+# Multiple targets from file
 sudo python3 nse_scanner.py -f targets.txt --profile security
 
-# Full scan on all targets
-sudo python3 nse_scanner.py -f targets.txt --profile full
-```
-
-### Custom Scans
-
-```bash
 # Custom scripts
 sudo python3 nse_scanner.py -t example.com -s "ssl-cert,http-security-headers" -p 443
-
-# Specific ports
-sudo python3 nse_scanner.py -t example.com -s vuln -p 80,443,8080
-
-# With extra nmap arguments
-sudo python3 nse_scanner.py -t example.com --profile security -e "-A -T5"
 ```
 
-## Command Line Options
+### Command Line Options
 
-| Option | Description |
-|--------|-------------|
-| `-t, --target` | Single target IP or domain |
-| `-f, --file` | Target file (one per line) |
-| `-s, --scripts` | NSE scripts to run |
-| `-p, --ports` | Ports to scan (default: ALL) |
-| `--profile` | Use predefined scan profile |
-| `-o, --output` | Output directory (default: ./scan_results) |
-| `-e, --extra` | Extra nmap arguments |
-| `--show-closed` | Show closed ports (default: only open) |
-| `--list-profiles` | List available scan profiles |
-| `--list-scripts` | List security-focused NSE scripts |
+| Option | Default | Description |
+|--------|---------|-------------|
+| `-t, --target` | - | Single target IP or domain |
+| `-f, --file` | - | File containing targets |
+| `-s, --scripts` | `default` | NSE scripts to run |
+| `-p, --ports` | All ports | Ports to scan |
+| `--profile` | - | Use predefined scan profile |
+| `-o, --output` | `./scan_results` | Output directory |
+| `-e, --extra` | - | Extra nmap arguments |
+| `--show-closed` | `false` | Show closed ports |
+| `--list-profiles` | - | List available profiles |
+| `--list-scripts` | - | List security NSE scripts |
 
-## 📋 Scan Profiles
+### Scan Profiles
 
-| Profile | Description | Ports |
-|---------|-------------|-------|
-| `quick` | Fast scan, top 100 ports | Top 100 |
-| `standard` | Standard scan | Top 1000 |
-| `full` | Complete scan, all ports | 1-65535 |
-| `security` | SSL + Headers + Vulnerabilities | 1-65535 |
-| `https` | HTTPS security check | 443,8443,8080,4443 |
-| `web` | Web application scan | 80,443,8080,8443,8000,3000,5000 |
+| Profile | Ports | Scripts | Use Case |
+|---------|-------|---------|----------|
+| `quick` | Top 100 | default | Fast reconnaissance |
+| `standard` | Top 1000 | default + sV | General scanning |
+| `full` | 1-65535 | default, safe | Complete enumeration |
+| `security` | 1-65535 | ssl-*, http-*, vuln | Security assessment |
+| `https` | 443, 8443, 4443 | ssl-*, http-security-headers | HTTPS security check |
+| `web` | 80, 443, 8080, 8443 | http-*, ssl-* | Web app scanning |
 
-## 🔐 Security Scripts Included
+### NSE Scripts Used
 
-### SSL/TLS Certificate Scripts
+**SSL/TLS Scripts:**
 | Script | Description |
 |--------|-------------|
-| `ssl-cert` | Retrieves SSL certificate information |
-| `ssl-enum-ciphers` | Enumerates SSL/TLS ciphers and protocols |
-| `ssl-heartbleed` | Checks for Heartbleed vulnerability |
-| `ssl-poodle` | Checks for POODLE vulnerability |
-| `ssl-dh-params` | Checks Diffie-Hellman parameters |
-| `ssl-ccs-injection` | Checks for CCS injection vulnerability |
+| `ssl-cert` | Certificate information |
+| `ssl-enum-ciphers` | Cipher suite enumeration |
+| `ssl-heartbleed` | Heartbleed vulnerability check |
+| `ssl-poodle` | POODLE vulnerability check |
+| `ssl-dh-params` | Diffie-Hellman parameter check |
+| `ssl-ccs-injection` | CCS injection check |
 
-### HTTP Security Header Scripts
+**HTTP Security Scripts:**
 | Script | Description |
 |--------|-------------|
-| `http-security-headers` | Checks HSTS, CSP, X-Frame-Options, etc. |
-| `http-headers` | Retrieves all HTTP headers |
-| `http-cookie-flags` | Checks cookie security flags |
-| `http-cors` | Checks CORS configuration |
+| `http-security-headers` | Security header analysis |
+| `http-headers` | All HTTP headers |
+| `http-cookie-flags` | Cookie security flags |
+| `http-cors` | CORS configuration |
 
-## Output Format
+---
 
-Results are saved in the `scan_results/` directory:
-- `target_timestamp.txt` - Human-readable output
-- `target_timestamp.xml` - XML format (for tools like Metasploit)
-- `target_timestamp.gnmap` - Grepable format
+## 📦 Installation
 
-### Sample Output
+### Requirements
 
+- **Python 3.6+**
+- **Nmap** (required for both scanners)
+- **Nuclei** (optional, enhances Intelligent Scanner)
+
+### Install Dependencies
+
+```bash
+# Install Nmap
+sudo apt update && sudo apt install nmap -y
+
+# Install Nuclei (recommended)
+# Option 1: Using Go
+go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
+
+# Option 2: Download binary
+wget https://github.com/projectdiscovery/nuclei/releases/latest/download/nuclei_3.3.7_linux_amd64.zip
+unzip nuclei_3.3.7_linux_amd64.zip
+sudo mv nuclei /usr/local/bin/
+
+# Update Nuclei templates
+nuclei -update-templates
 ```
-═══════════════════════════════════════════════════════════════════
-🔍 SCANNING: example.com
-═══════════════════════════════════════════════════════════════════
 
-📊 SCAN RESULTS SUMMARY
-───────────────────────────────────────────────────────────────────
-🎯 Nmap scan report for example.com (93.184.216.34)
-   ├─ ✅ 80/tcp          http
-   ├─ ✅ 443/tcp         https
-   │  🔐 Subject: CN=example.com
-   │  📜 Issuer: DigiCert Inc
-   │  ⏰ Not valid after: 2025-12-15
-   │  🛡️  HSTS: ✅ Present
-   │  🛡️  CSP: ✅ Present
-   │  🛡️  X-Frame-Options: ✅ Present
-   │  ✅ TLSv1.2
-   │  ✅ TLSv1.3
+### Setup Scanners
+
+```bash
+cd /home/ritikrajput/Documents/Nmap_Scan
+chmod +x intelligent_scanner.py nse_scanner.py
 ```
 
-## Target File Format
+---
 
-Create a `targets.txt` file:
+## 📄 Target File Format
+
+Create a `targets.txt` file with one target per line:
 
 ```
 # Comments start with #
+# IP addresses
 192.168.1.1
-10.0.0.0/24
+10.0.0.1
+
+# CIDR ranges
+192.168.1.0/24
+
+# Domain names
 example.com
 scanme.nmap.org
 ```
 
+---
+
+## 📁 Output Files
+
+All results are saved in the `scan_results/` directory:
+
+| File Type | Description | Scanner |
+|-----------|-------------|---------|
+| `nmap_*.xml` | Nmap XML output | Both |
+| `nmap_*.txt` | Nmap text output | Both |
+| `nmap_*.gnmap` | Nmap grepable output | NSE Scanner |
+| `nuclei_*.json` | Nuclei findings | Intelligent Scanner |
+| `report_*.json` | Complete JSON report | Intelligent Scanner |
+
+---
+
 ## ⚠️ Legal Disclaimer
 
-**Only scan networks and systems you have permission to test!**
+**Only scan networks and systems you have explicit permission to test!**
 
-Unauthorized scanning is illegal. Always:
-- Get written permission before scanning
-- Only scan your own systems or authorized targets
-- Use `scanme.nmap.org` for testing (Nmap's public test server)
+Unauthorized scanning is **illegal** and may result in:
+- Criminal charges
+- Civil liability
+- Network bans
 
-## License
+### Safe Testing Options:
+- Your own systems
+- Authorized penetration tests
+- `scanme.nmap.org` (Nmap's public test server)
+- HackTheBox / TryHackMe labs
+
+---
+
+## 📄 License
 
 MIT License - Use responsibly!
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+---
+
+**Made with ❤️ for security professionals**
 # Nmap_Scanner

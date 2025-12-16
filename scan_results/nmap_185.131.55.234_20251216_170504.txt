@@ -1,0 +1,1 @@
+# Nmap 7.95 scan initiated Tue Dec 16 17:05:04 2025 as: /usr/lib/nmap/nmap --open -oX ./scan_results/nmap_185.131.55.234_20251216_170504.xml -oN ./scan_results/nmap_185.131.55.234_20251216_170504.txt --top-ports 1000 -sV -sC -T4 185.131.55.234

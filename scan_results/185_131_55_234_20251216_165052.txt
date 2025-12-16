@@ -1,0 +1,590 @@
+# Nmap 7.95 scan initiated Tue Dec 16 16:50:53 2025 as: /usr/lib/nmap/nmap --open --script ssl-cert,ssl-enum-ciphers,http-security-headers,http-headers -p - -sV -T4 -oN ./scan_results/185_131_55_234_20251216_165052.txt -oX ./scan_results/185_131_55_234_20251216_165052.xml -oG ./scan_results/185_131_55_234_20251216_165052.gnmap 185.131.55.234
+Nmap scan report for eyewebsolution.dnshostserver.in (185.131.55.234)
+Host is up (0.021s latency).
+Not shown: 65462 filtered tcp ports (no-response), 8 filtered tcp ports (port-unreach), 41 closed tcp ports (reset)
+Bug in http-security-headers: no string output.
+Some closed ports may be reported as filtered due to --defeat-rst-ratelimit
+PORT     STATE SERVICE      VERSION
+21/tcp   open  ftp          Pure-FTPd
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Issuer: commonName=R12/organizationName=Let's Encrypt/countryName=US
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-11-16T02:35:21
+| Not valid after:  2026-02-14T02:35:20
+| MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39
+|_SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112
+25/tcp   open  smtp?
+53/tcp   open  domain       ISC BIND 9.11.4-P2 (RedHat Enterprise Linux 7)
+80/tcp   open  http         Apache httpd
+| http-security-headers: 
+|   Cache_Control: 
+|     Header: Cache-Control: no-cache, no-store, must-revalidate
+|   Pragma: 
+|     Header: Pragma: no-cache
+|   Expires: 
+|_    Header: Expires: 0
+|_http-server-header: Apache
+| http-headers: 
+|   Date: Tue, 16 Dec 2025 11:27:55 GMT
+|   Server: Apache
+|   Last-Modified: Tue, 05 Aug 2025 23:19:02 GMT
+|   Accept-Ranges: bytes
+|   Content-Length: 163
+|   Cache-Control: no-cache, no-store, must-revalidate
+|   Pragma: no-cache
+|   Expires: 0
+|   Connection: close
+|   Content-Type: text/html
+|   
+|_  (Request type: HEAD)
+110/tcp  open  pop3         Dovecot pop3d
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Issuer: commonName=R12/organizationName=Let's Encrypt/countryName=US
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-11-16T02:35:21
+| Not valid after:  2026-02-14T02:35:20
+| MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39
+|_SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112
+143/tcp  open  imap         Dovecot imapd
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Issuer: commonName=R12/organizationName=Let's Encrypt/countryName=US
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-11-16T02:35:21
+| Not valid after:  2026-02-14T02:35:20
+| MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39
+|_SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112
+443/tcp  open  ssl/http     Apache httpd
+| ssl-enum-ciphers: 
+|   TLSv1.2: 
+|     ciphers: 
+|       TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A
+|       TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A
+|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A
+|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A
+|       TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (secp256r1) - A
+|     compressors: 
+|       NULL
+|     cipher preference: client
+|   TLSv1.3: 
+|     ciphers: 
+|       TLS_AKE_WITH_AES_128_GCM_SHA256 (ecdh_x25519) - A
+|       TLS_AKE_WITH_AES_256_GCM_SHA384 (ecdh_x25519) - A
+|       TLS_AKE_WITH_CHACHA20_POLY1305_SHA256 (ecdh_x25519) - A
+|     cipher preference: client
+|_  least strength: A
+|_http-server-header: Apache
+| http-security-headers: 
+|   Strict_Transport_Security: 
+|_    HSTS not configured in HTTPS Server
+| ssl-cert: Subject: commonName=aadhunikpacker.in
+| Subject Alternative Name: DNS:*.aadhunikpacker.in, DNS:aadhunikpacker.in
+| Issuer: commonName=R11/organizationName=Let's Encrypt/countryName=US
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-08-10T05:19:16
+| Not valid after:  2025-11-08T05:19:15
+| MD5:   7d02:40be:12f3:2e4a:33d9:f414:517f:9a33
+|_SHA-1: 33da:336f:d423:16f1:a622:4ce0:6d08:f115:320d:9d1d
+| http-headers: 
+|   Date: Tue, 16 Dec 2025 11:27:55 GMT
+|   Server: Apache
+|   Content-Length: 362
+|   Connection: close
+|   Content-Type: text/html; charset=iso-8859-1
+|   
+|_  (Request type: GET)
+465/tcp  open  ssl/smtp     Exim smtpd 4.96.2
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Issuer: commonName=R12/organizationName=Let's Encrypt/countryName=US
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-11-16T02:35:21
+| Not valid after:  2026-02-14T02:35:20
+| MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39
+|_SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112
+| ssl-enum-ciphers: 
+|   TLSv1.2: 
+|     ciphers: 
+|       TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A
+|       TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A
+|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A
+|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A
+|     compressors: 
+|       NULL
+|     cipher preference: client
+|_  least strength: A
+587/tcp  open  smtp         Exim smtpd 4.96.2
+| ssl-enum-ciphers: 
+|   TLSv1.2: 
+|     ciphers: 
+|       TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A
+|       TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A
+|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A
+|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A
+|     compressors: 
+|       NULL
+|     cipher preference: client
+|_  least strength: A
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Issuer: commonName=R12/organizationName=Let's Encrypt/countryName=US
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-11-16T02:35:21
+| Not valid after:  2026-02-14T02:35:20
+| MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39
+|_SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112
+993/tcp  open  imaps?
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Issuer: commonName=R12/organizationName=Let's Encrypt/countryName=US
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-11-16T02:35:21
+| Not valid after:  2026-02-14T02:35:20
+| MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39
+|_SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112
+| ssl-enum-ciphers: 
+|   TLSv1.2: 
+|     ciphers: 
+|       TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A
+|       TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A
+|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A
+|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A
+|     compressors: 
+|       NULL
+|     cipher preference: client
+|_  least strength: A
+995/tcp  open  pop3s?
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Issuer: commonName=R12/organizationName=Let's Encrypt/countryName=US
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-11-16T02:35:21
+| Not valid after:  2026-02-14T02:35:20
+| MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39
+|_SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112
+| ssl-enum-ciphers: 
+|   TLSv1.2: 
+|     ciphers: 
+|       TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A
+|       TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A
+|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A
+|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A
+|     compressors: 
+|       NULL
+|     cipher preference: client
+|_  least strength: A
+2000/tcp open  cisco-sccp?
+2077/tcp open  tsrmagt?
+| fingerprint-strings: 
+|   SIPOptions: 
+|     HTTP/1.1 302 Moved
+|     Date: Tue, 16 Dec 2025 11:26:50 GMT
+|     Server: cPanel
+|     Persistent-Auth: false
+|     Host: eyewebsolution.dnshostserver.in:2077
+|     Cache-Control: no-cache, no-store, must-revalidate, private
+|     Connection: close
+|     Location: https://eyewebsolution.dnshostserver.in:2078sip:nm
+|     Vary: Accept-Encoding
+|     Expires: Fri, 01 Jan 1990 00:00:00 GMT
+|_    X-Redirect-Reason: requiressl
+2078/tcp open  ssl/http     cPanel httpd (unauthorized)
+| http-headers: 
+|   Date: Tue, 16 Dec 2025 11:27:55 GMT
+|   Server: cPanel
+|   Persistent-Auth: false
+|   Host: eyewebsolution.dnshostserver.in:2078
+|   Cache-Control: no-cache, no-store, must-revalidate, private
+|   Connection: close
+|   Vary: Accept-Encoding
+|   WWW-Authenticate: Basic realm="Restricted Area"
+|   Content-Length: 35
+|   Content-Type: text/html; charset="utf-8"
+|   Expires: Fri, 01 Jan 1990 00:00:00 GMT
+|   
+|_  (Request type: GET)
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Issuer: commonName=R12/organizationName=Let's Encrypt/countryName=US
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-11-16T02:35:21
+| Not valid after:  2026-02-14T02:35:20
+| MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39
+|_SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112
+| ssl-enum-ciphers: 
+|   TLSv1.2: 
+|     ciphers: 
+|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A
+|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A
+|       TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A
+|       TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A
+|     compressors: 
+|       NULL
+|     cipher preference: server
+|_  least strength: A
+| http-security-headers: 
+|   Strict_Transport_Security: 
+|     HSTS not configured in HTTPS Server
+|   Cache_Control: 
+|     Header: Cache-Control: no-cache, no-store, must-revalidate, private
+|   Expires: 
+|_    Header: Expires: Fri, 01 Jan 1990 00:00:00 GMT
+2082/tcp open  infowave?
+| fingerprint-strings: 
+|   SIPOptions: 
+|     HTTP/1.1 301 Moved
+|     Content-length: 137
+|     Location: https://eyewebsolution.dnshostserver.in:2083/sip%3anm
+|     Content-type: text/html; charset="utf-8"
+|     Cache-Control: no-cache, no-store, must-revalidate, private
+|_    <html><head><META HTTP-EQUIV="refresh" CONTENT="2;URL=https://eyewebsolution.dnshostserver.in:2083/sip%3anm"></head><body></body></html>
+2083/tcp open  ssl/radsec?
+| ssl-enum-ciphers: 
+|   TLSv1.2: 
+|     ciphers: 
+|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A
+|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A
+|       TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A
+|       TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A
+|     compressors: 
+|       NULL
+|     cipher preference: server
+|_  least strength: A
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Issuer: commonName=R12/organizationName=Let's Encrypt/countryName=US
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-11-16T02:35:21
+| Not valid after:  2026-02-14T02:35:20
+| MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39
+|_SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112
+| fingerprint-strings: 
+|   GetRequest: 
+|     HTTP/1.0 200 OK
+|     Connection: close
+|     Content-Type: text/html; charset="utf-8"
+|     Date: Tue, 16 Dec 2025 11:25:35 GMT
+|     Cache-Control: no-cache, no-store, must-revalidate, private
+|     Pragma: no-cache
+|     Set-Cookie: cprelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure
+|     Set-Cookie: cpsession=%3a1jVAWvfnrEbTk3UR%2c6adf0cd58979ec392eb399df7382aec0; HttpOnly; path=/; port=2083; secure
+|     Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure
+|     Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure
+|     Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure
+|     Cache-Control: no-cache, no-store, must-revalidate, private
+|     Pragma: no-cache
+|     X-Frame-Options: SAMEORIGIN
+|     X-Conte
+|   HTTPOptions: 
+|     HTTP/1.0 200 OK
+|     Connection: close
+|     Content-Type: text/html; charset="utf-8"
+|     Date: Tue, 16 Dec 2025 11:25:35 GMT
+|     Cache-Control: no-cache, no-store, must-revalidate, private
+|     Pragma: no-cache
+|     Set-Cookie: cprelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure
+|     Set-Cookie: cpsession=%3aPwyqwi4s4zIGVkDw%2c93a0c7cff83d0ba97abc2969bc954fef; HttpOnly; path=/; port=2083; secure
+|     Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure
+|     Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure
+|     Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure
+|     Cache-Control: no-cache, no-store, must-revalidate, private
+|     Pragma: no-cache
+|     X-Frame-Options: SAMEORIGIN
+|_    X-Conte
+2086/tcp open  gnunet?
+| fingerprint-strings: 
+|   SIPOptions: 
+|     HTTP/1.1 301 Moved
+|     Content-length: 137
+|     Location: https://eyewebsolution.dnshostserver.in:2087/sip%3anm
+|     Content-type: text/html; charset="utf-8"
+|     Cache-Control: no-cache, no-store, must-revalidate, private
+|_    <html><head><META HTTP-EQUIV="refresh" CONTENT="2;URL=https://eyewebsolution.dnshostserver.in:2087/sip%3anm"></head><body></body></html>
+2087/tcp open  ssl/eli?
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Issuer: commonName=R12/organizationName=Let's Encrypt/countryName=US
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-11-16T02:35:21
+| Not valid after:  2026-02-14T02:35:20
+| MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39
+|_SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112
+| fingerprint-strings: 
+|   GetRequest: 
+|     HTTP/1.0 200 OK
+|     Connection: close
+|     Content-Type: text/html; charset="utf-8"
+|     Date: Tue, 16 Dec 2025 11:25:42 GMT
+|     Cache-Control: no-cache, no-store, must-revalidate, private
+|     Pragma: no-cache
+|     Set-Cookie: whostmgrrelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure
+|     Set-Cookie: whostmgrsession=%3a2QvtL3siByjQzDBC%2c6cccf2a750f950626e9336410f12793f; HttpOnly; path=/; port=2087; secure
+|     Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure
+|     Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure
+|     Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure
+|     Cache-Control: no-cache, no-store, must-revalidate, private
+|     Pragma: no-cache
+|     X-Frame-Options: SAMEORI
+|   HTTPOptions: 
+|     HTTP/1.0 200 OK
+|     Connection: close
+|     Content-Type: text/html; charset="utf-8"
+|     Date: Tue, 16 Dec 2025 11:25:43 GMT
+|     Cache-Control: no-cache, no-store, must-revalidate, private
+|     Pragma: no-cache
+|     Set-Cookie: whostmgrrelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure
+|     Set-Cookie: whostmgrsession=%3ac6YYQFeBr_BBYjI2%2c8f541cf61e90aa047ad5671786231e8b; HttpOnly; path=/; port=2087; secure
+|     Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure
+|     Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure
+|     Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure
+|     Cache-Control: no-cache, no-store, must-revalidate, private
+|     Pragma: no-cache
+|_    X-Frame-Options: SAMEORI
+| ssl-enum-ciphers: 
+|   TLSv1.2: 
+|     ciphers: 
+|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A
+|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A
+|       TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A
+|       TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A
+|     compressors: 
+|       NULL
+|     cipher preference: server
+|_  least strength: A
+2095/tcp open  nbx-ser?
+| fingerprint-strings: 
+|   SIPOptions: 
+|     HTTP/1.1 301 Moved
+|     Content-length: 137
+|     Location: https://eyewebsolution.dnshostserver.in:2096/sip%3anm
+|     Content-type: text/html; charset="utf-8"
+|     Cache-Control: no-cache, no-store, must-revalidate, private
+|_    <html><head><META HTTP-EQUIV="refresh" CONTENT="2;URL=https://eyewebsolution.dnshostserver.in:2096/sip%3anm"></head><body></body></html>
+2096/tcp open  ssl/nbx-dir?
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Issuer: commonName=R12/organizationName=Let's Encrypt/countryName=US
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-11-16T02:35:21
+| Not valid after:  2026-02-14T02:35:20
+| MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39
+|_SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112
+| fingerprint-strings: 
+|   GetRequest: 
+|     HTTP/1.0 200 OK
+|     Connection: close
+|     Content-Type: text/html; charset="utf-8"
+|     Date: Tue, 16 Dec 2025 11:25:39 GMT
+|     Cache-Control: no-cache, no-store, must-revalidate, private
+|     Pragma: no-cache
+|     Set-Cookie: webmailrelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure
+|     Set-Cookie: webmailsession=%3adiaxYdq1HGT2UzvF%2c1bb8163e1325607e457050c025fac42c; HttpOnly; path=/; port=2096; secure
+|     Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure
+|     Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure
+|     Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure
+|     Set-Cookie: roundcube_cookies=enabled; HttpOnly; expires=Wed, 16-Dec-2026 11:25:39 GMT; path=/; port=2096
+|   HTTPOptions: 
+|     HTTP/1.0 200 OK
+|     Connection: close
+|     Content-Type: text/html; charset="utf-8"
+|     Date: Tue, 16 Dec 2025 11:25:39 GMT
+|     Cache-Control: no-cache, no-store, must-revalidate, private
+|     Pragma: no-cache
+|     Set-Cookie: webmailrelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure
+|     Set-Cookie: webmailsession=%3aSbm3PGPZkUV2NnoN%2cb69de5e6c1ec39b812dd5084cfb41873; HttpOnly; path=/; port=2096; secure
+|     Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure
+|     Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure
+|     Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure
+|_    Set-Cookie: roundcube_cookies=enabled; HttpOnly; expires=Wed, 16-Dec-2026 11:25:39 GMT; path=/; port=2096
+| ssl-enum-ciphers: 
+|   TLSv1.2: 
+|     ciphers: 
+|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A
+|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A
+|       TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A
+|       TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A
+|     compressors: 
+|       NULL
+|     cipher preference: server
+|_  least strength: A
+3306/tcp open  mysql        MySQL (unauthorized)
+5060/tcp open  sip?
+7767/tcp open  ssh          OpenSSH 7.4 (protocol 2.0)
+9280/tcp open  http         Prometheus exporter Node Exporter 1.7.0
+| http-headers: 
+|   Content-Type: text/html; charset=UTF-8
+|   Date: Tue, 16 Dec 2025 11:27:56 GMT
+|   Content-Length: 961
+|   Connection: close
+|   
+|_  (Request type: GET)
+7 services unrecognized despite returning data. If you know the service/version, please submit the following fingerprints at https://nmap.org/cgi-bin/submit.cgi?new-service :
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port2077-TCP:V=7.95%I=7%D=12/16%Time=694141FA%P=x86_64-pc-linux-gnu%r(S
+SF:IPOptions,17B,"HTTP/1\.1\x20302\x20Moved\r\nDate:\x20Tue,\x2016\x20Dec\
+SF:x202025\x2011:26:50\x20GMT\r\nServer:\x20cPanel\r\nPersistent-Auth:\x20
+SF:false\r\nHost:\x20eyewebsolution\.dnshostserver\.in:2077\r\nCache-Contr
+SF:ol:\x20no-cache,\x20no-store,\x20must-revalidate,\x20private\r\nConnect
+SF:ion:\x20close\r\nLocation:\x20https://eyewebsolution\.dnshostserver\.in
+SF::2078sip:nm\r\nVary:\x20Accept-Encoding\r\nExpires:\x20Fri,\x2001\x20Ja
+SF:n\x201990\x2000:00:00\x20GMT\r\nX-Redirect-Reason:\x20requiressl\r\n\r\
+SF:n");
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port2082-TCP:V=7.95%I=7%D=12/16%Time=694141FC%P=x86_64-pc-linux-gnu%r(S
+SF:IPOptions,15C,"HTTP/1\.1\x20301\x20Moved\r\nContent-length:\x20137\r\nL
+SF:ocation:\x20https://eyewebsolution\.dnshostserver\.in:2083/sip%3anm\r\n
+SF:Content-type:\x20text/html;\x20charset=\"utf-8\"\r\nCache-Control:\x20n
+SF:o-cache,\x20no-store,\x20must-revalidate,\x20private\r\n\r\n<html><head
+SF:><META\x20HTTP-EQUIV=\"refresh\"\x20CONTENT=\"2;URL=https://eyewebsolut
+SF:ion\.dnshostserver\.in:2083/sip%3anm\"></head><body></body></html>\n");
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port2083-TCP:V=7.95%T=SSL%I=7%D=12/16%Time=694141AF%P=x86_64-pc-linux-g
+SF:nu%r(GetRequest,4000,"HTTP/1\.0\x20200\x20OK\r\nConnection:\x20close\r\
+SF:nContent-Type:\x20text/html;\x20charset=\"utf-8\"\r\nDate:\x20Tue,\x201
+SF:6\x20Dec\x202025\x2011:25:35\x20GMT\r\nCache-Control:\x20no-cache,\x20n
+SF:o-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-cache\r\nSet-C
+SF:ookie:\x20cprelogin=no;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x20
+SF:00:00:01\x20GMT;\x20path=/;\x20port=2083;\x20secure\r\nSet-Cookie:\x20c
+SF:psession=%3a1jVAWvfnrEbTk3UR%2c6adf0cd58979ec392eb399df7382aec0;\x20Htt
+SF:pOnly;\x20path=/;\x20port=2083;\x20secure\r\nSet-Cookie:\x20roundcube_s
+SF:essid=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\
+SF:x20GMT;\x20path=/;\x20port=2083;\x20secure\r\nSet-Cookie:\x20roundcube_
+SF:sessauth=expired;\x20HttpOnly;\x20domain=eyewebsolution\.dnshostserver\
+SF:.in;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20p
+SF:ort=2083;\x20secure\r\nSet-Cookie:\x20PPA_ID=expired;\x20HttpOnly;\x20e
+SF:xpires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2083;
+SF:\x20secure\r\nCache-Control:\x20no-cache,\x20no-store,\x20must-revalida
+SF:te,\x20private\r\nPragma:\x20no-cache\r\nX-Frame-Options:\x20SAMEORIGIN
+SF:\r\nX-Conte")%r(HTTPOptions,4000,"HTTP/1\.0\x20200\x20OK\r\nConnection:
+SF:\x20close\r\nContent-Type:\x20text/html;\x20charset=\"utf-8\"\r\nDate:\
+SF:x20Tue,\x2016\x20Dec\x202025\x2011:25:35\x20GMT\r\nCache-Control:\x20no
+SF:-cache,\x20no-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-ca
+SF:che\r\nSet-Cookie:\x20cprelogin=no;\x20HttpOnly;\x20expires=Thu,\x2001-
+SF:Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2083;\x20secure\r\nSet-
+SF:Cookie:\x20cpsession=%3aPwyqwi4s4zIGVkDw%2c93a0c7cff83d0ba97abc2969bc95
+SF:4fef;\x20HttpOnly;\x20path=/;\x20port=2083;\x20secure\r\nSet-Cookie:\x2
+SF:0roundcube_sessid=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\
+SF:x2000:00:01\x20GMT;\x20path=/;\x20port=2083;\x20secure\r\nSet-Cookie:\x
+SF:20roundcube_sessauth=expired;\x20HttpOnly;\x20domain=eyewebsolution\.dn
+SF:shostserver\.in;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20
+SF:path=/;\x20port=2083;\x20secure\r\nSet-Cookie:\x20PPA_ID=expired;\x20Ht
+SF:tpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x
+SF:20port=2083;\x20secure\r\nCache-Control:\x20no-cache,\x20no-store,\x20m
+SF:ust-revalidate,\x20private\r\nPragma:\x20no-cache\r\nX-Frame-Options:\x
+SF:20SAMEORIGIN\r\nX-Conte");
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port2086-TCP:V=7.95%I=7%D=12/16%Time=694141FB%P=x86_64-pc-linux-gnu%r(S
+SF:IPOptions,15C,"HTTP/1\.1\x20301\x20Moved\r\nContent-length:\x20137\r\nL
+SF:ocation:\x20https://eyewebsolution\.dnshostserver\.in:2087/sip%3anm\r\n
+SF:Content-type:\x20text/html;\x20charset=\"utf-8\"\r\nCache-Control:\x20n
+SF:o-cache,\x20no-store,\x20must-revalidate,\x20private\r\n\r\n<html><head
+SF:><META\x20HTTP-EQUIV=\"refresh\"\x20CONTENT=\"2;URL=https://eyewebsolut
+SF:ion\.dnshostserver\.in:2087/sip%3anm\"></head><body></body></html>\n");
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port2087-TCP:V=7.95%T=SSL%I=7%D=12/16%Time=694141B6%P=x86_64-pc-linux-g
+SF:nu%r(GetRequest,4000,"HTTP/1\.0\x20200\x20OK\r\nConnection:\x20close\r\
+SF:nContent-Type:\x20text/html;\x20charset=\"utf-8\"\r\nDate:\x20Tue,\x201
+SF:6\x20Dec\x202025\x2011:25:42\x20GMT\r\nCache-Control:\x20no-cache,\x20n
+SF:o-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-cache\r\nSet-C
+SF:ookie:\x20whostmgrrelogin=no;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-19
+SF:70\x2000:00:01\x20GMT;\x20path=/;\x20port=2087;\x20secure\r\nSet-Cookie
+SF::\x20whostmgrsession=%3a2QvtL3siByjQzDBC%2c6cccf2a750f950626e9336410f12
+SF:793f;\x20HttpOnly;\x20path=/;\x20port=2087;\x20secure\r\nSet-Cookie:\x2
+SF:0roundcube_sessid=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\
+SF:x2000:00:01\x20GMT;\x20path=/;\x20port=2087;\x20secure\r\nSet-Cookie:\x
+SF:20roundcube_sessauth=expired;\x20HttpOnly;\x20domain=eyewebsolution\.dn
+SF:shostserver\.in;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20
+SF:path=/;\x20port=2087;\x20secure\r\nSet-Cookie:\x20PPA_ID=expired;\x20Ht
+SF:tpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x
+SF:20port=2087;\x20secure\r\nCache-Control:\x20no-cache,\x20no-store,\x20m
+SF:ust-revalidate,\x20private\r\nPragma:\x20no-cache\r\nX-Frame-Options:\x
+SF:20SAMEORI")%r(HTTPOptions,4000,"HTTP/1\.0\x20200\x20OK\r\nConnection:\x
+SF:20close\r\nContent-Type:\x20text/html;\x20charset=\"utf-8\"\r\nDate:\x2
+SF:0Tue,\x2016\x20Dec\x202025\x2011:25:43\x20GMT\r\nCache-Control:\x20no-c
+SF:ache,\x20no-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-cach
+SF:e\r\nSet-Cookie:\x20whostmgrrelogin=no;\x20HttpOnly;\x20expires=Thu,\x2
+SF:001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2087;\x20secure\r\n
+SF:Set-Cookie:\x20whostmgrsession=%3ac6YYQFeBr_BBYjI2%2c8f541cf61e90aa047a
+SF:d5671786231e8b;\x20HttpOnly;\x20path=/;\x20port=2087;\x20secure\r\nSet-
+SF:Cookie:\x20roundcube_sessid=expired;\x20HttpOnly;\x20expires=Thu,\x2001
+SF:-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2087;\x20secure\r\nSet
+SF:-Cookie:\x20roundcube_sessauth=expired;\x20HttpOnly;\x20domain=eyewebso
+SF:lution\.dnshostserver\.in;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x
+SF:20GMT;\x20path=/;\x20port=2087;\x20secure\r\nSet-Cookie:\x20PPA_ID=expi
+SF:red;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x2
+SF:0path=/;\x20port=2087;\x20secure\r\nCache-Control:\x20no-cache,\x20no-s
+SF:tore,\x20must-revalidate,\x20private\r\nPragma:\x20no-cache\r\nX-Frame-
+SF:Options:\x20SAMEORI");
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port2095-TCP:V=7.95%I=7%D=12/16%Time=694141FB%P=x86_64-pc-linux-gnu%r(S
+SF:IPOptions,15C,"HTTP/1\.1\x20301\x20Moved\r\nContent-length:\x20137\r\nL
+SF:ocation:\x20https://eyewebsolution\.dnshostserver\.in:2096/sip%3anm\r\n
+SF:Content-type:\x20text/html;\x20charset=\"utf-8\"\r\nCache-Control:\x20n
+SF:o-cache,\x20no-store,\x20must-revalidate,\x20private\r\n\r\n<html><head
+SF:><META\x20HTTP-EQUIV=\"refresh\"\x20CONTENT=\"2;URL=https://eyewebsolut
+SF:ion\.dnshostserver\.in:2096/sip%3anm\"></head><body></body></html>\n");
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port2096-TCP:V=7.95%T=SSL%I=7%D=12/16%Time=694141B3%P=x86_64-pc-linux-g
+SF:nu%r(GetRequest,4000,"HTTP/1\.0\x20200\x20OK\r\nConnection:\x20close\r\
+SF:nContent-Type:\x20text/html;\x20charset=\"utf-8\"\r\nDate:\x20Tue,\x201
+SF:6\x20Dec\x202025\x2011:25:39\x20GMT\r\nCache-Control:\x20no-cache,\x20n
+SF:o-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-cache\r\nSet-C
+SF:ookie:\x20webmailrelogin=no;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-197
+SF:0\x2000:00:01\x20GMT;\x20path=/;\x20port=2096;\x20secure\r\nSet-Cookie:
+SF:\x20webmailsession=%3adiaxYdq1HGT2UzvF%2c1bb8163e1325607e457050c025fac4
+SF:2c;\x20HttpOnly;\x20path=/;\x20port=2096;\x20secure\r\nSet-Cookie:\x20r
+SF:oundcube_sessid=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2
+SF:000:00:01\x20GMT;\x20path=/;\x20port=2096;\x20secure\r\nSet-Cookie:\x20
+SF:roundcube_sessauth=expired;\x20HttpOnly;\x20domain=eyewebsolution\.dnsh
+SF:ostserver\.in;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20pa
+SF:th=/;\x20port=2096;\x20secure\r\nSet-Cookie:\x20PPA_ID=expired;\x20Http
+SF:Only;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20
+SF:port=2096;\x20secure\r\nSet-Cookie:\x20roundcube_cookies=enabled;\x20Ht
+SF:tpOnly;\x20expires=Wed,\x2016-Dec-2026\x2011:25:39\x20GMT;\x20path=/;\x
+SF:20port=2096")%r(HTTPOptions,4000,"HTTP/1\.0\x20200\x20OK\r\nConnection:
+SF:\x20close\r\nContent-Type:\x20text/html;\x20charset=\"utf-8\"\r\nDate:\
+SF:x20Tue,\x2016\x20Dec\x202025\x2011:25:39\x20GMT\r\nCache-Control:\x20no
+SF:-cache,\x20no-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-ca
+SF:che\r\nSet-Cookie:\x20webmailrelogin=no;\x20HttpOnly;\x20expires=Thu,\x
+SF:2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2096;\x20secure\r\
+SF:nSet-Cookie:\x20webmailsession=%3aSbm3PGPZkUV2NnoN%2cb69de5e6c1ec39b812
+SF:dd5084cfb41873;\x20HttpOnly;\x20path=/;\x20port=2096;\x20secure\r\nSet-
+SF:Cookie:\x20roundcube_sessid=expired;\x20HttpOnly;\x20expires=Thu,\x2001
+SF:-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2096;\x20secure\r\nSet
+SF:-Cookie:\x20roundcube_sessauth=expired;\x20HttpOnly;\x20domain=eyewebso
+SF:lution\.dnshostserver\.in;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x
+SF:20GMT;\x20path=/;\x20port=2096;\x20secure\r\nSet-Cookie:\x20PPA_ID=expi
+SF:red;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x2
+SF:0path=/;\x20port=2096;\x20secure\r\nSet-Cookie:\x20roundcube_cookies=en
+SF:abled;\x20HttpOnly;\x20expires=Wed,\x2016-Dec-2026\x2011:25:39\x20GMT;\
+SF:x20path=/;\x20port=2096");
+Service Info: OS: Linux; CPE: cpe:/o:redhat:enterprise_linux:7
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Tue Dec 16 16:59:37 2025 -- 1 IP address (1 host up) scanned in 524.16 seconds

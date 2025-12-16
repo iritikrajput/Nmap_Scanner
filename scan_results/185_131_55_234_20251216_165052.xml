@@ -1,0 +1,1170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.95 scan initiated Tue Dec 16 16:50:53 2025 as: /usr/lib/nmap/nmap -&#45;open -&#45;script ssl-cert,ssl-enum-ciphers,http-security-headers,http-headers -p - -sV -T4 -oN ./scan_results/185_131_55_234_20251216_165052.txt -oX ./scan_results/185_131_55_234_20251216_165052.xml -oG ./scan_results/185_131_55_234_20251216_165052.gnmap 185.131.55.234 -->
+<nmaprun scanner="nmap" args="/usr/lib/nmap/nmap -&#45;open -&#45;script ssl-cert,ssl-enum-ciphers,http-security-headers,http-headers -p - -sV -T4 -oN ./scan_results/185_131_55_234_20251216_165052.txt -oX ./scan_results/185_131_55_234_20251216_165052.xml -oG ./scan_results/185_131_55_234_20251216_165052.gnmap 185.131.55.234" start="1765884053" startstr="Tue Dec 16 16:50:53 2025" version="7.95" xmloutputversion="1.05">
+<scaninfo type="syn" protocol="tcp" numservices="65535" services="1-65535"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<hosthint><status state="up" reason="unknown-response" reason_ttl="0"/>
+<address addr="185.131.55.234" addrtype="ipv4"/>
+<hostnames>
+</hostnames>
+</hosthint>
+<taskprogress task="Service scan" time="1765884415" percent="58.33" remaining="76" etc="1765884490"/>
+<taskprogress task="NSE" time="1765884497" percent="89.44" remaining="3" etc="1765884499"/>
+<taskprogress task="NSE" time="1765884557" percent="97.59" remaining="2" etc="1765884559"/>
+<taskprogress task="NSE" time="1765884565" percent="98.19" remaining="2" etc="1765884567"/>
+<host starttime="1765884053" endtime="1765884577"><status state="up" reason="syn-ack" reason_ttl="55"/>
+<address addr="185.131.55.234" addrtype="ipv4"/>
+<hostnames>
+<hostname name="eyewebsolution.dnshostserver.in" type="PTR"/>
+</hostnames>
+<ports><extraports state="filtered" count="65470">
+<extrareasons reason="no-response" count="65462" proto="tcp" ports="1-19,23-24,26-52,54-79,81-109,111-112,114-142,144-442,444-464,466-586,588-852,854-992,994,996-1999,2001-2076,2081,2084-2085,2088-2094,2097-2231,2233-3305,3307-5059,5061-7766,7768-7769,7801-8442,8444-9279,9281-44444,44446-52222,52225-52226,52233-55555,55557-65535"/>
+<extrareasons reason="port-unreach" count="8" proto="tcp" ports="52223-52224,52227-52232"/>
+</extraports>
+<extraports state="closed" count="41">
+<extrareasons reason="reset" count="41" proto="tcp" ports="20,22,113,853,2079-2080,2232,7770-7800,8443,44445,55556"/>
+</extraports>
+<port protocol="tcp" portid="21"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="ftp" product="Pure-FTPd" method="probed" conf="10"><cpe>cpe:/a:pureftpd:pure-ftpd</cpe></service><script id="ssl-cert" output="Subject: commonName=eyewebsolution.dnshostserver.in&#xa;Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in&#xa;Issuer: commonName=R12/organizationName=Let&apos;s Encrypt/countryName=US&#xa;Public Key type: rsa&#xa;Public Key bits: 2048&#xa;Signature Algorithm: sha256WithRSAEncryption&#xa;Not valid before: 2025-11-16T02:35:21&#xa;Not valid after:  2026-02-14T02:35:20&#xa;MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39&#xa;SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112"><table key="subject">
+<elem key="commonName">eyewebsolution.dnshostserver.in</elem>
+</table>
+<table key="issuer">
+<elem key="commonName">R12</elem>
+<elem key="countryName">US</elem>
+<elem key="organizationName">Let&apos;s Encrypt</elem>
+</table>
+<table key="pubkey">
+<elem key="type">rsa</elem>
+<elem key="bits">2048</elem>
+<elem key="modulus">C94BAAEEA7101B861B4E20CE14DBC3635A3179B924D7AB913664D157D15C972D63A1FD6B9803A387EC5BC80B7F950088711384F0FF58A718D14609C6311D73DF760E1A200BA112B6D307051BD4CB496F4E9AD00F81D55FA32192B6E3CF701A49F52E25F68B6F9BEC1FA8823F3BFD467213F2F764420CD9CEA97CFFA9A0D9B082D050FE24CF9BB52838FD4692928189F190D59E683D9B3C21C85E1F0B6FAB8A18629C77E90551859576F494B70C6FF197E94989017FF57F946FBF5D658861F88ADC91C64DB596E6F3B0ED88508F4B7351AE5474128FAB2C55B0FC512F11299891C48E74CEE3DC5FF11B140E08C01DB9D1580D30D9FB753D37BC065D56F5C9CB8B</elem>
+<elem key="exponent">65537</elem>
+</table>
+<table key="extensions">
+<table>
+<elem key="name">X509v3 Key Usage</elem>
+<elem key="value">Digital Signature, Key Encipherment</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Extended Key Usage</elem>
+<elem key="value">TLS Web Server Authentication, TLS Web Client Authentication</elem>
+</table>
+<table>
+<elem key="name">X509v3 Basic Constraints</elem>
+<elem key="value">CA:FALSE</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Key Identifier</elem>
+<elem key="value">C1:8C:5E:33:73:C2:0E:C3:38:3C:F6:12:A3:80:D4:3E:0C:0F:22:0F</elem>
+</table>
+<table>
+<elem key="name">X509v3 Authority Key Identifier</elem>
+<elem key="value">00:B5:29:F2:2D:8E:6F:31:E8:9B:4C:AD:78:3E:FA:DC:E9:0C:D1:D2</elem>
+</table>
+<table>
+<elem key="name">Authority Information Access</elem>
+<elem key="value">CA Issuers - URI:http://r12.i.lencr.org/</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Alternative Name</elem>
+<elem key="value">DNS:eyewebsolution.dnshostserver.in</elem>
+</table>
+<table>
+<elem key="name">X509v3 Certificate Policies</elem>
+<elem key="value">Policy: 2.23.140.1.2.1</elem>
+</table>
+<table>
+<elem key="name">X509v3 CRL Distribution Points</elem>
+<elem key="value">Full Name:&#xa;  URI:http://r12.c.lencr.org/108.crl&#xa;</elem>
+</table>
+<table>
+<elem key="name">CT Precertificate SCTs</elem>
+<elem key="value">Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 0E:57:94:BC:F3:AE:A9:3E:33:1B:2C:99:07:B3:F7:90:&#xa;                DF:9B:C2:3D:71:32:25:DD:21:A9:25:AC:61:C5:4E:21&#xa;    Timestamp : Nov 16 03:33:51.167 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:44:02:20:6B:0A:4F:EA:F7:BB:5D:E0:8C:C2:59:88:&#xa;                12:7F:B6:4C:BB:69:B7:38:61:2F:92:48:D9:32:FB:E2:&#xa;                C6:40:54:9F:02:20:4B:59:D3:9A:36:3E:1F:73:27:25:&#xa;                1A:91:7B:5C:90:D3:4B:AC:FD:73:85:9D:4A:BB:C0:61:&#xa;                BC:BC:CB:91:1A:51&#xa;Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 64:11:C4:6C:A4:12:EC:A7:89:1C:A2:02:2E:00:BC:AB:&#xa;                4F:28:07:D4:1E:35:27:AB:EA:FE:D5:03:C9:7D:CD:F0&#xa;    Timestamp : Nov 16 03:33:53.166 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:45:02:21:00:E6:62:BD:F1:92:96:7A:07:C6:0B:88:&#xa;                7B:B4:12:53:11:FE:C4:97:53:74:96:3E:E9:B4:C3:3F:&#xa;                80:BB:67:31:BB:02:20:6E:8B:78:D4:08:26:EC:97:F1:&#xa;                72:99:FB:FC:84:1D:FD:56:77:90:41:F8:94:38:4A:5F:&#xa;                1F:DA:34:50:9A:F7:71</elem>
+</table>
+</table>
+<elem key="sig_algo">sha256WithRSAEncryption</elem>
+<table key="validity">
+<elem key="notBefore">2025-11-16T02:35:21</elem>
+<elem key="notAfter">2026-02-14T02:35:20</elem>
+</table>
+<elem key="md5">46283f2b4ee90640ebcbfb39b2280f39</elem>
+<elem key="sha1">7c399d3344a5c26a6eceee5a2e32ecf8ce2eb112</elem>
+<elem key="pem">-&#45;&#45;&#45;&#45;BEGIN CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;MIIFGjCCBAKgAwIBAgISBYRCPONqhoM/TGGvFJ6OE81rMA0GCSqGSIb3DQEBCwUA&#xa;MDMxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQwwCgYDVQQD&#xa;EwNSMTIwHhcNMjUxMTE2MDIzNTIxWhcNMjYwMjE0MDIzNTIwWjAqMSgwJgYDVQQD&#xa;Ex9leWV3ZWJzb2x1dGlvbi5kbnNob3N0c2VydmVyLmluMIIBIjANBgkqhkiG9w0B&#xa;AQEFAAOCAQ8AMIIBCgKCAQEAyUuq7qcQG4YbTiDOFNvDY1oxebkk16uRNmTRV9Fc&#xa;ly1jof1rmAOjh+xbyAt/lQCIcROE8P9YpxjRRgnGMR1z33YOGiALoRK20wcFG9TL&#xa;SW9OmtAPgdVfoyGStuPPcBpJ9S4l9otvm+wfqII/O/1GchPy92RCDNnOqXz/qaDZ&#xa;sILQUP4kz5u1KDj9RpKSgYnxkNWeaD2bPCHIXh8Lb6uKGGKcd+kFUYWVdvSUtwxv&#xa;8ZfpSYkBf/V/lG+/XWWIYfiK3JHGTbWW5vOw7YhQj0tzUa5UdBKPqyxVsPxRLxEp&#xa;mJHEjnTO49xf8RsUDgjAHbnRWA0w2ft1PTe8Bl1W9cnLiwIDAQABo4ICLzCCAisw&#xa;DgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAM&#xa;BgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTBjF4zc8IOwzg89hKjgNQ+DA8iDzAfBgNV&#xa;HSMEGDAWgBQAtSnyLY5vMeibTK14Pvrc6QzR0jAzBggrBgEFBQcBAQQnMCUwIwYI&#xa;KwYBBQUHMAKGF2h0dHA6Ly9yMTIuaS5sZW5jci5vcmcvMCoGA1UdEQQjMCGCH2V5&#xa;ZXdlYnNvbHV0aW9uLmRuc2hvc3RzZXJ2ZXIuaW4wEwYDVR0gBAwwCjAIBgZngQwB&#xa;AgEwLwYDVR0fBCgwJjAkoCKgIIYeaHR0cDovL3IxMi5jLmxlbmNyLm9yZy8xMDgu&#xa;Y3JsMIIBAwYKKwYBBAHWeQIEAgSB9ASB8QDvAHUADleUvPOuqT4zGyyZB7P3kN+b&#xa;wj1xMiXdIaklrGHFTiEAAAGairnpvwAABAMARjBEAiBrCk/q97td4IzCWYgSf7ZM&#xa;u2m3OGEvkkjZMvvixkBUnwIgS1nTmjY+H3MnJRqRe1yQ00us/XOFnUq7wGG8vMuR&#xa;GlEAdgBkEcRspBLsp4kcogIuALyrTygH1B41J6vq/tUDyX3N8AAAAZqKufGOAAAE&#xa;AwBHMEUCIQDmYr3xkpZ6B8YLiHu0ElMR/sSXU3SWPum0wz+Au2cxuwIgbot41Agm&#xa;7Jfxcpn7/IQd/VZ3kEH4lDhKXx/aNFCa93EwDQYJKoZIhvcNAQELBQADggEBAMW2&#xa;5zgcNBLrqRYc9m3VaaeN00Y/ki+lRz2N+SaVekYR3ctOo3PrTOOSClLOyEUIjQNi&#xa;y3RprVQ78OqFBzNS8bHA69SfhvlbCkY9QKyDl8AcKsoxSYdQeDJmmnkeLadNtwZf&#xa;Ie5xhlrvrccQ/G99WoIgRykI9mZPVTu4HdmG1vPkn9lPnhDFL7rOiDO3yNrAjnmS&#xa;XEaXnWwiRoCLoEKK4mXFg+MOw0R69kuypXCA385oDoOXZyJuS7gu3U0F2kf6GuY0&#xa;DvGqQ2ZhkNiHJBybaYqPIc0ZihXmfRbluXw4GgGByp5DUqUAZhaJpWRHT5KyCqDP&#xa;hy0IB9NofzwGw/IljQ8=&#xa;-&#45;&#45;&#45;&#45;END CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;</elem>
+</script></port>
+<port protocol="tcp" portid="25"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="53"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="domain" product="ISC BIND" version="9.11.4-P2" extrainfo="RedHat Enterprise Linux 7" ostype="Linux" method="probed" conf="10"><cpe>cpe:/a:isc:bind:9.11.4-p2</cpe><cpe>cpe:/o:redhat:enterprise_linux:7</cpe></service></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="http" product="Apache httpd" method="probed" conf="10"><cpe>cpe:/a:apache:http_server</cpe></service><script id="http-security-headers" output="&#xa;  Cache_Control: &#xa;    Header: Cache-Control: no-cache, no-store, must-revalidate&#xa;  Pragma: &#xa;    Header: Pragma: no-cache&#xa;  Expires: &#xa;    Header: Expires: 0"><table key="Cache_Control">
+<elem>Header: Cache-Control: no-cache, no-store, must-revalidate</elem>
+</table>
+<table key="Pragma">
+<elem>Header: Pragma: no-cache</elem>
+</table>
+<table key="Expires">
+<elem>Header: Expires: 0</elem>
+</table>
+</script><script id="http-server-header" output="Apache"><elem>Apache</elem>
+</script><script id="http-headers" output="&#xa;  Date: Tue, 16 Dec 2025 11:27:55 GMT&#xa;  Server: Apache&#xa;  Last-Modified: Tue, 05 Aug 2025 23:19:02 GMT&#xa;  Accept-Ranges: bytes&#xa;  Content-Length: 163&#xa;  Cache-Control: no-cache, no-store, must-revalidate&#xa;  Pragma: no-cache&#xa;  Expires: 0&#xa;  Connection: close&#xa;  Content-Type: text/html&#xa;  &#xa;  (Request type: HEAD)&#xa;"/></port>
+<port protocol="tcp" portid="110"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="pop3" product="Dovecot pop3d" method="probed" conf="10"><cpe>cpe:/a:dovecot:dovecot</cpe></service><script id="ssl-cert" output="Subject: commonName=eyewebsolution.dnshostserver.in&#xa;Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in&#xa;Issuer: commonName=R12/organizationName=Let&apos;s Encrypt/countryName=US&#xa;Public Key type: rsa&#xa;Public Key bits: 2048&#xa;Signature Algorithm: sha256WithRSAEncryption&#xa;Not valid before: 2025-11-16T02:35:21&#xa;Not valid after:  2026-02-14T02:35:20&#xa;MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39&#xa;SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112"><table key="subject">
+<elem key="commonName">eyewebsolution.dnshostserver.in</elem>
+</table>
+<table key="issuer">
+<elem key="commonName">R12</elem>
+<elem key="countryName">US</elem>
+<elem key="organizationName">Let&apos;s Encrypt</elem>
+</table>
+<table key="pubkey">
+<elem key="type">rsa</elem>
+<elem key="bits">2048</elem>
+<elem key="modulus">C94BAAEEA7101B861B4E20CE14DBC3635A3179B924D7AB913664D157D15C972D63A1FD6B9803A387EC5BC80B7F950088711384F0FF58A718D14609C6311D73DF760E1A200BA112B6D307051BD4CB496F4E9AD00F81D55FA32192B6E3CF701A49F52E25F68B6F9BEC1FA8823F3BFD467213F2F764420CD9CEA97CFFA9A0D9B082D050FE24CF9BB52838FD4692928189F190D59E683D9B3C21C85E1F0B6FAB8A18629C77E90551859576F494B70C6FF197E94989017FF57F946FBF5D658861F88ADC91C64DB596E6F3B0ED88508F4B7351AE5474128FAB2C55B0FC512F11299891C48E74CEE3DC5FF11B140E08C01DB9D1580D30D9FB753D37BC065D56F5C9CB8B</elem>
+<elem key="exponent">65537</elem>
+</table>
+<table key="extensions">
+<table>
+<elem key="name">X509v3 Key Usage</elem>
+<elem key="value">Digital Signature, Key Encipherment</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Extended Key Usage</elem>
+<elem key="value">TLS Web Server Authentication, TLS Web Client Authentication</elem>
+</table>
+<table>
+<elem key="name">X509v3 Basic Constraints</elem>
+<elem key="value">CA:FALSE</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Key Identifier</elem>
+<elem key="value">C1:8C:5E:33:73:C2:0E:C3:38:3C:F6:12:A3:80:D4:3E:0C:0F:22:0F</elem>
+</table>
+<table>
+<elem key="name">X509v3 Authority Key Identifier</elem>
+<elem key="value">00:B5:29:F2:2D:8E:6F:31:E8:9B:4C:AD:78:3E:FA:DC:E9:0C:D1:D2</elem>
+</table>
+<table>
+<elem key="name">Authority Information Access</elem>
+<elem key="value">CA Issuers - URI:http://r12.i.lencr.org/</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Alternative Name</elem>
+<elem key="value">DNS:eyewebsolution.dnshostserver.in</elem>
+</table>
+<table>
+<elem key="name">X509v3 Certificate Policies</elem>
+<elem key="value">Policy: 2.23.140.1.2.1</elem>
+</table>
+<table>
+<elem key="name">X509v3 CRL Distribution Points</elem>
+<elem key="value">Full Name:&#xa;  URI:http://r12.c.lencr.org/108.crl&#xa;</elem>
+</table>
+<table>
+<elem key="name">CT Precertificate SCTs</elem>
+<elem key="value">Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 0E:57:94:BC:F3:AE:A9:3E:33:1B:2C:99:07:B3:F7:90:&#xa;                DF:9B:C2:3D:71:32:25:DD:21:A9:25:AC:61:C5:4E:21&#xa;    Timestamp : Nov 16 03:33:51.167 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:44:02:20:6B:0A:4F:EA:F7:BB:5D:E0:8C:C2:59:88:&#xa;                12:7F:B6:4C:BB:69:B7:38:61:2F:92:48:D9:32:FB:E2:&#xa;                C6:40:54:9F:02:20:4B:59:D3:9A:36:3E:1F:73:27:25:&#xa;                1A:91:7B:5C:90:D3:4B:AC:FD:73:85:9D:4A:BB:C0:61:&#xa;                BC:BC:CB:91:1A:51&#xa;Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 64:11:C4:6C:A4:12:EC:A7:89:1C:A2:02:2E:00:BC:AB:&#xa;                4F:28:07:D4:1E:35:27:AB:EA:FE:D5:03:C9:7D:CD:F0&#xa;    Timestamp : Nov 16 03:33:53.166 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:45:02:21:00:E6:62:BD:F1:92:96:7A:07:C6:0B:88:&#xa;                7B:B4:12:53:11:FE:C4:97:53:74:96:3E:E9:B4:C3:3F:&#xa;                80:BB:67:31:BB:02:20:6E:8B:78:D4:08:26:EC:97:F1:&#xa;                72:99:FB:FC:84:1D:FD:56:77:90:41:F8:94:38:4A:5F:&#xa;                1F:DA:34:50:9A:F7:71</elem>
+</table>
+</table>
+<elem key="sig_algo">sha256WithRSAEncryption</elem>
+<table key="validity">
+<elem key="notBefore">2025-11-16T02:35:21</elem>
+<elem key="notAfter">2026-02-14T02:35:20</elem>
+</table>
+<elem key="md5">46283f2b4ee90640ebcbfb39b2280f39</elem>
+<elem key="sha1">7c399d3344a5c26a6eceee5a2e32ecf8ce2eb112</elem>
+<elem key="pem">-&#45;&#45;&#45;&#45;BEGIN CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;MIIFGjCCBAKgAwIBAgISBYRCPONqhoM/TGGvFJ6OE81rMA0GCSqGSIb3DQEBCwUA&#xa;MDMxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQwwCgYDVQQD&#xa;EwNSMTIwHhcNMjUxMTE2MDIzNTIxWhcNMjYwMjE0MDIzNTIwWjAqMSgwJgYDVQQD&#xa;Ex9leWV3ZWJzb2x1dGlvbi5kbnNob3N0c2VydmVyLmluMIIBIjANBgkqhkiG9w0B&#xa;AQEFAAOCAQ8AMIIBCgKCAQEAyUuq7qcQG4YbTiDOFNvDY1oxebkk16uRNmTRV9Fc&#xa;ly1jof1rmAOjh+xbyAt/lQCIcROE8P9YpxjRRgnGMR1z33YOGiALoRK20wcFG9TL&#xa;SW9OmtAPgdVfoyGStuPPcBpJ9S4l9otvm+wfqII/O/1GchPy92RCDNnOqXz/qaDZ&#xa;sILQUP4kz5u1KDj9RpKSgYnxkNWeaD2bPCHIXh8Lb6uKGGKcd+kFUYWVdvSUtwxv&#xa;8ZfpSYkBf/V/lG+/XWWIYfiK3JHGTbWW5vOw7YhQj0tzUa5UdBKPqyxVsPxRLxEp&#xa;mJHEjnTO49xf8RsUDgjAHbnRWA0w2ft1PTe8Bl1W9cnLiwIDAQABo4ICLzCCAisw&#xa;DgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAM&#xa;BgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTBjF4zc8IOwzg89hKjgNQ+DA8iDzAfBgNV&#xa;HSMEGDAWgBQAtSnyLY5vMeibTK14Pvrc6QzR0jAzBggrBgEFBQcBAQQnMCUwIwYI&#xa;KwYBBQUHMAKGF2h0dHA6Ly9yMTIuaS5sZW5jci5vcmcvMCoGA1UdEQQjMCGCH2V5&#xa;ZXdlYnNvbHV0aW9uLmRuc2hvc3RzZXJ2ZXIuaW4wEwYDVR0gBAwwCjAIBgZngQwB&#xa;AgEwLwYDVR0fBCgwJjAkoCKgIIYeaHR0cDovL3IxMi5jLmxlbmNyLm9yZy8xMDgu&#xa;Y3JsMIIBAwYKKwYBBAHWeQIEAgSB9ASB8QDvAHUADleUvPOuqT4zGyyZB7P3kN+b&#xa;wj1xMiXdIaklrGHFTiEAAAGairnpvwAABAMARjBEAiBrCk/q97td4IzCWYgSf7ZM&#xa;u2m3OGEvkkjZMvvixkBUnwIgS1nTmjY+H3MnJRqRe1yQ00us/XOFnUq7wGG8vMuR&#xa;GlEAdgBkEcRspBLsp4kcogIuALyrTygH1B41J6vq/tUDyX3N8AAAAZqKufGOAAAE&#xa;AwBHMEUCIQDmYr3xkpZ6B8YLiHu0ElMR/sSXU3SWPum0wz+Au2cxuwIgbot41Agm&#xa;7Jfxcpn7/IQd/VZ3kEH4lDhKXx/aNFCa93EwDQYJKoZIhvcNAQELBQADggEBAMW2&#xa;5zgcNBLrqRYc9m3VaaeN00Y/ki+lRz2N+SaVekYR3ctOo3PrTOOSClLOyEUIjQNi&#xa;y3RprVQ78OqFBzNS8bHA69SfhvlbCkY9QKyDl8AcKsoxSYdQeDJmmnkeLadNtwZf&#xa;Ie5xhlrvrccQ/G99WoIgRykI9mZPVTu4HdmG1vPkn9lPnhDFL7rOiDO3yNrAjnmS&#xa;XEaXnWwiRoCLoEKK4mXFg+MOw0R69kuypXCA385oDoOXZyJuS7gu3U0F2kf6GuY0&#xa;DvGqQ2ZhkNiHJBybaYqPIc0ZihXmfRbluXw4GgGByp5DUqUAZhaJpWRHT5KyCqDP&#xa;hy0IB9NofzwGw/IljQ8=&#xa;-&#45;&#45;&#45;&#45;END CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;</elem>
+</script></port>
+<port protocol="tcp" portid="143"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="imap" product="Dovecot imapd" method="probed" conf="10"><cpe>cpe:/a:dovecot:dovecot</cpe></service><script id="ssl-cert" output="Subject: commonName=eyewebsolution.dnshostserver.in&#xa;Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in&#xa;Issuer: commonName=R12/organizationName=Let&apos;s Encrypt/countryName=US&#xa;Public Key type: rsa&#xa;Public Key bits: 2048&#xa;Signature Algorithm: sha256WithRSAEncryption&#xa;Not valid before: 2025-11-16T02:35:21&#xa;Not valid after:  2026-02-14T02:35:20&#xa;MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39&#xa;SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112"><table key="subject">
+<elem key="commonName">eyewebsolution.dnshostserver.in</elem>
+</table>
+<table key="issuer">
+<elem key="commonName">R12</elem>
+<elem key="countryName">US</elem>
+<elem key="organizationName">Let&apos;s Encrypt</elem>
+</table>
+<table key="pubkey">
+<elem key="type">rsa</elem>
+<elem key="bits">2048</elem>
+<elem key="modulus">C94BAAEEA7101B861B4E20CE14DBC3635A3179B924D7AB913664D157D15C972D63A1FD6B9803A387EC5BC80B7F950088711384F0FF58A718D14609C6311D73DF760E1A200BA112B6D307051BD4CB496F4E9AD00F81D55FA32192B6E3CF701A49F52E25F68B6F9BEC1FA8823F3BFD467213F2F764420CD9CEA97CFFA9A0D9B082D050FE24CF9BB52838FD4692928189F190D59E683D9B3C21C85E1F0B6FAB8A18629C77E90551859576F494B70C6FF197E94989017FF57F946FBF5D658861F88ADC91C64DB596E6F3B0ED88508F4B7351AE5474128FAB2C55B0FC512F11299891C48E74CEE3DC5FF11B140E08C01DB9D1580D30D9FB753D37BC065D56F5C9CB8B</elem>
+<elem key="exponent">65537</elem>
+</table>
+<table key="extensions">
+<table>
+<elem key="name">X509v3 Key Usage</elem>
+<elem key="value">Digital Signature, Key Encipherment</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Extended Key Usage</elem>
+<elem key="value">TLS Web Server Authentication, TLS Web Client Authentication</elem>
+</table>
+<table>
+<elem key="name">X509v3 Basic Constraints</elem>
+<elem key="value">CA:FALSE</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Key Identifier</elem>
+<elem key="value">C1:8C:5E:33:73:C2:0E:C3:38:3C:F6:12:A3:80:D4:3E:0C:0F:22:0F</elem>
+</table>
+<table>
+<elem key="name">X509v3 Authority Key Identifier</elem>
+<elem key="value">00:B5:29:F2:2D:8E:6F:31:E8:9B:4C:AD:78:3E:FA:DC:E9:0C:D1:D2</elem>
+</table>
+<table>
+<elem key="name">Authority Information Access</elem>
+<elem key="value">CA Issuers - URI:http://r12.i.lencr.org/</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Alternative Name</elem>
+<elem key="value">DNS:eyewebsolution.dnshostserver.in</elem>
+</table>
+<table>
+<elem key="name">X509v3 Certificate Policies</elem>
+<elem key="value">Policy: 2.23.140.1.2.1</elem>
+</table>
+<table>
+<elem key="name">X509v3 CRL Distribution Points</elem>
+<elem key="value">Full Name:&#xa;  URI:http://r12.c.lencr.org/108.crl&#xa;</elem>
+</table>
+<table>
+<elem key="name">CT Precertificate SCTs</elem>
+<elem key="value">Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 0E:57:94:BC:F3:AE:A9:3E:33:1B:2C:99:07:B3:F7:90:&#xa;                DF:9B:C2:3D:71:32:25:DD:21:A9:25:AC:61:C5:4E:21&#xa;    Timestamp : Nov 16 03:33:51.167 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:44:02:20:6B:0A:4F:EA:F7:BB:5D:E0:8C:C2:59:88:&#xa;                12:7F:B6:4C:BB:69:B7:38:61:2F:92:48:D9:32:FB:E2:&#xa;                C6:40:54:9F:02:20:4B:59:D3:9A:36:3E:1F:73:27:25:&#xa;                1A:91:7B:5C:90:D3:4B:AC:FD:73:85:9D:4A:BB:C0:61:&#xa;                BC:BC:CB:91:1A:51&#xa;Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 64:11:C4:6C:A4:12:EC:A7:89:1C:A2:02:2E:00:BC:AB:&#xa;                4F:28:07:D4:1E:35:27:AB:EA:FE:D5:03:C9:7D:CD:F0&#xa;    Timestamp : Nov 16 03:33:53.166 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:45:02:21:00:E6:62:BD:F1:92:96:7A:07:C6:0B:88:&#xa;                7B:B4:12:53:11:FE:C4:97:53:74:96:3E:E9:B4:C3:3F:&#xa;                80:BB:67:31:BB:02:20:6E:8B:78:D4:08:26:EC:97:F1:&#xa;                72:99:FB:FC:84:1D:FD:56:77:90:41:F8:94:38:4A:5F:&#xa;                1F:DA:34:50:9A:F7:71</elem>
+</table>
+</table>
+<elem key="sig_algo">sha256WithRSAEncryption</elem>
+<table key="validity">
+<elem key="notBefore">2025-11-16T02:35:21</elem>
+<elem key="notAfter">2026-02-14T02:35:20</elem>
+</table>
+<elem key="md5">46283f2b4ee90640ebcbfb39b2280f39</elem>
+<elem key="sha1">7c399d3344a5c26a6eceee5a2e32ecf8ce2eb112</elem>
+<elem key="pem">-&#45;&#45;&#45;&#45;BEGIN CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;MIIFGjCCBAKgAwIBAgISBYRCPONqhoM/TGGvFJ6OE81rMA0GCSqGSIb3DQEBCwUA&#xa;MDMxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQwwCgYDVQQD&#xa;EwNSMTIwHhcNMjUxMTE2MDIzNTIxWhcNMjYwMjE0MDIzNTIwWjAqMSgwJgYDVQQD&#xa;Ex9leWV3ZWJzb2x1dGlvbi5kbnNob3N0c2VydmVyLmluMIIBIjANBgkqhkiG9w0B&#xa;AQEFAAOCAQ8AMIIBCgKCAQEAyUuq7qcQG4YbTiDOFNvDY1oxebkk16uRNmTRV9Fc&#xa;ly1jof1rmAOjh+xbyAt/lQCIcROE8P9YpxjRRgnGMR1z33YOGiALoRK20wcFG9TL&#xa;SW9OmtAPgdVfoyGStuPPcBpJ9S4l9otvm+wfqII/O/1GchPy92RCDNnOqXz/qaDZ&#xa;sILQUP4kz5u1KDj9RpKSgYnxkNWeaD2bPCHIXh8Lb6uKGGKcd+kFUYWVdvSUtwxv&#xa;8ZfpSYkBf/V/lG+/XWWIYfiK3JHGTbWW5vOw7YhQj0tzUa5UdBKPqyxVsPxRLxEp&#xa;mJHEjnTO49xf8RsUDgjAHbnRWA0w2ft1PTe8Bl1W9cnLiwIDAQABo4ICLzCCAisw&#xa;DgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAM&#xa;BgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTBjF4zc8IOwzg89hKjgNQ+DA8iDzAfBgNV&#xa;HSMEGDAWgBQAtSnyLY5vMeibTK14Pvrc6QzR0jAzBggrBgEFBQcBAQQnMCUwIwYI&#xa;KwYBBQUHMAKGF2h0dHA6Ly9yMTIuaS5sZW5jci5vcmcvMCoGA1UdEQQjMCGCH2V5&#xa;ZXdlYnNvbHV0aW9uLmRuc2hvc3RzZXJ2ZXIuaW4wEwYDVR0gBAwwCjAIBgZngQwB&#xa;AgEwLwYDVR0fBCgwJjAkoCKgIIYeaHR0cDovL3IxMi5jLmxlbmNyLm9yZy8xMDgu&#xa;Y3JsMIIBAwYKKwYBBAHWeQIEAgSB9ASB8QDvAHUADleUvPOuqT4zGyyZB7P3kN+b&#xa;wj1xMiXdIaklrGHFTiEAAAGairnpvwAABAMARjBEAiBrCk/q97td4IzCWYgSf7ZM&#xa;u2m3OGEvkkjZMvvixkBUnwIgS1nTmjY+H3MnJRqRe1yQ00us/XOFnUq7wGG8vMuR&#xa;GlEAdgBkEcRspBLsp4kcogIuALyrTygH1B41J6vq/tUDyX3N8AAAAZqKufGOAAAE&#xa;AwBHMEUCIQDmYr3xkpZ6B8YLiHu0ElMR/sSXU3SWPum0wz+Au2cxuwIgbot41Agm&#xa;7Jfxcpn7/IQd/VZ3kEH4lDhKXx/aNFCa93EwDQYJKoZIhvcNAQELBQADggEBAMW2&#xa;5zgcNBLrqRYc9m3VaaeN00Y/ki+lRz2N+SaVekYR3ctOo3PrTOOSClLOyEUIjQNi&#xa;y3RprVQ78OqFBzNS8bHA69SfhvlbCkY9QKyDl8AcKsoxSYdQeDJmmnkeLadNtwZf&#xa;Ie5xhlrvrccQ/G99WoIgRykI9mZPVTu4HdmG1vPkn9lPnhDFL7rOiDO3yNrAjnmS&#xa;XEaXnWwiRoCLoEKK4mXFg+MOw0R69kuypXCA385oDoOXZyJuS7gu3U0F2kf6GuY0&#xa;DvGqQ2ZhkNiHJBybaYqPIc0ZihXmfRbluXw4GgGByp5DUqUAZhaJpWRHT5KyCqDP&#xa;hy0IB9NofzwGw/IljQ8=&#xa;-&#45;&#45;&#45;&#45;END CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;</elem>
+</script></port>
+<port protocol="tcp" portid="443"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="http" product="Apache httpd" tunnel="ssl" method="probed" conf="10"><cpe>cpe:/a:apache:http_server</cpe></service><script id="ssl-enum-ciphers" output="&#xa;  TLSv1.2: &#xa;    ciphers: &#xa;      TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A&#xa;      TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A&#xa;      TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (secp256r1) - A&#xa;    compressors: &#xa;      NULL&#xa;    cipher preference: client&#xa;  TLSv1.3: &#xa;    ciphers: &#xa;      TLS_AKE_WITH_AES_128_GCM_SHA256 (ecdh_x25519) - A&#xa;      TLS_AKE_WITH_AES_256_GCM_SHA384 (ecdh_x25519) - A&#xa;      TLS_AKE_WITH_CHACHA20_POLY1305_SHA256 (ecdh_x25519) - A&#xa;    cipher preference: client&#xa;  least strength: A"><table key="TLSv1.2">
+<table key="ciphers">
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+</table>
+<table key="compressors">
+<elem>NULL</elem>
+</table>
+<elem key="cipher preference">client</elem>
+</table>
+<table key="TLSv1.3">
+<table key="ciphers">
+<table>
+<elem key="name">TLS_AKE_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">ecdh_x25519</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_AKE_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">ecdh_x25519</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_AKE_WITH_CHACHA20_POLY1305_SHA256</elem>
+<elem key="kex_info">ecdh_x25519</elem>
+<elem key="strength">A</elem>
+</table>
+</table>
+<elem key="cipher preference">client</elem>
+</table>
+<elem key="least strength">A</elem>
+</script><script id="http-server-header" output="Apache"><elem>Apache</elem>
+</script><script id="http-security-headers" output="&#xa;  Strict_Transport_Security: &#xa;    HSTS not configured in HTTPS Server"><table key="Strict_Transport_Security">
+<elem>HSTS not configured in HTTPS Server</elem>
+</table>
+</script><script id="ssl-cert" output="Subject: commonName=aadhunikpacker.in&#xa;Subject Alternative Name: DNS:*.aadhunikpacker.in, DNS:aadhunikpacker.in&#xa;Issuer: commonName=R11/organizationName=Let&apos;s Encrypt/countryName=US&#xa;Public Key type: rsa&#xa;Public Key bits: 2048&#xa;Signature Algorithm: sha256WithRSAEncryption&#xa;Not valid before: 2025-08-10T05:19:16&#xa;Not valid after:  2025-11-08T05:19:15&#xa;MD5:   7d02:40be:12f3:2e4a:33d9:f414:517f:9a33&#xa;SHA-1: 33da:336f:d423:16f1:a622:4ce0:6d08:f115:320d:9d1d"><table key="subject">
+<elem key="commonName">aadhunikpacker.in</elem>
+</table>
+<table key="issuer">
+<elem key="commonName">R11</elem>
+<elem key="countryName">US</elem>
+<elem key="organizationName">Let&apos;s Encrypt</elem>
+</table>
+<table key="pubkey">
+<elem key="type">rsa</elem>
+<elem key="bits">2048</elem>
+<elem key="modulus">B641CE82DC906EB6D8F1C723CA656517EAAFF5F94F6741FA8CF07FBA2AA1337CE77EBF0EADE32589BD8D56FCAC33882561AF66D7ADADD2350C3900E9B6DC6F96359B68C8A42DBFEE5A05E0D66A451579EFF60E300B482BDC685FD278C0F09BB4DA1F17ABC8C4DABD479BFF4B39F92A61B280D3992C1D58EA6777A6ADC582BD7A0BE01F24E0D34BB7DD3ACB19EFC10456804BD1C9A06AE1A6485EE4E00DEF0A279C0972BA5898B56BB633662D7CDE1C131B5E14259CDD9408B4CD2158D2CCD20E3368514EAEAA097CAAEBE969CBB3E179D5A056C18535370ADE21E5D8120932DF4EA44B25DD7E1E40678809C9BC579E7940F77F23F9FBBDDE582B6C91EDC2D757</elem>
+<elem key="exponent">65537</elem>
+</table>
+<table key="extensions">
+<table>
+<elem key="name">X509v3 Key Usage</elem>
+<elem key="value">Digital Signature, Key Encipherment</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Extended Key Usage</elem>
+<elem key="value">TLS Web Server Authentication, TLS Web Client Authentication</elem>
+</table>
+<table>
+<elem key="name">X509v3 Basic Constraints</elem>
+<elem key="value">CA:FALSE</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Key Identifier</elem>
+<elem key="value">6E:F1:BE:01:74:FE:CC:D3:82:3B:77:47:55:D7:1B:58:76:62:25:F4</elem>
+</table>
+<table>
+<elem key="name">X509v3 Authority Key Identifier</elem>
+<elem key="value">C5:CF:46:A4:EA:F4:C3:C0:7A:6C:95:C4:2D:B0:5E:92:2F:26:E3:B9</elem>
+</table>
+<table>
+<elem key="name">Authority Information Access</elem>
+<elem key="value">CA Issuers - URI:http://r11.i.lencr.org/</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Alternative Name</elem>
+<elem key="value">DNS:*.aadhunikpacker.in, DNS:aadhunikpacker.in</elem>
+</table>
+<table>
+<elem key="name">X509v3 Certificate Policies</elem>
+<elem key="value">Policy: 2.23.140.1.2.1</elem>
+</table>
+<table>
+<elem key="name">X509v3 CRL Distribution Points</elem>
+<elem key="value">Full Name:&#xa;  URI:http://r11.c.lencr.org/19.crl&#xa;</elem>
+</table>
+<table>
+<elem key="name">CT Precertificate SCTs</elem>
+<elem key="value">Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : DD:DC:CA:34:95:D7:E1:16:05:E7:95:32:FA:C7:9F:F8:&#xa;                3D:1C:50:DF:DB:00:3A:14:12:76:0A:2C:AC:BB:C8:2A&#xa;    Timestamp : Aug 10 06:17:46.355 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:45:02:20:71:3F:BE:31:BD:22:C6:05:C9:59:91:8B:&#xa;                96:2E:F0:BB:B5:5B:8D:DE:F8:2B:E1:47:79:90:10:ED:&#xa;                28:35:6E:0E:02:21:00:A8:FA:7C:2D:75:3A:15:EC:44:&#xa;                D4:BB:46:08:7B:5C:A3:0D:F5:2B:1B:05:33:08:6E:72:&#xa;                25:BF:78:4A:4D:89:19&#xa;Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : AF:18:1A:28:D6:8C:A3:E0:A9:8A:4C:9C:67:AB:09:F8:&#xa;                BB:BC:22:BA:AE:BC:B1:38:A3:A1:9D:D3:F9:B6:03:0D&#xa;    Timestamp : Aug 10 06:17:46.539 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:45:02:20:71:3C:4B:CA:48:13:8A:CA:D3:F5:26:AB:&#xa;                23:9B:39:AD:66:53:F1:78:39:DD:FE:AC:A2:83:EC:6C:&#xa;                FD:E9:C0:D8:02:21:00:C3:E7:D3:1F:1D:06:81:61:51:&#xa;                F1:CE:6C:9C:2A:B0:67:3F:67:49:F4:B0:D1:FB:7C:5D:&#xa;                C1:FB:70:18:E9:EF:6A</elem>
+</table>
+</table>
+<elem key="sig_algo">sha256WithRSAEncryption</elem>
+<table key="validity">
+<elem key="notBefore">2025-08-10T05:19:16</elem>
+<elem key="notAfter">2025-11-08T05:19:15</elem>
+</table>
+<elem key="md5">7d0240be12f32e4a33d9f414517f9a33</elem>
+<elem key="sha1">33da336fd42316f1a6224ce06d08f115320d9d1d</elem>
+<elem key="pem">-&#45;&#45;&#45;&#45;BEGIN CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;MIIFEzCCA/ugAwIBAgISBXNZdg3pdrl8eiTs1VvO1rCSMA0GCSqGSIb3DQEBCwUA&#xa;MDMxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQwwCgYDVQQD&#xa;EwNSMTEwHhcNMjUwODEwMDUxOTE2WhcNMjUxMTA4MDUxOTE1WjAcMRowGAYDVQQD&#xa;ExFhYWRodW5pa3BhY2tlci5pbjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC&#xa;ggEBALZBzoLckG622PHHI8plZRfqr/X5T2dB+ozwf7oqoTN8536/Dq3jJYm9jVb8&#xa;rDOIJWGvZtetrdI1DDkA6bbcb5Y1m2jIpC2/7loF4NZqRRV57/YOMAtIK9xoX9J4&#xa;wPCbtNofF6vIxNq9R5v/Szn5KmGygNOZLB1Y6md3pq3Fgr16C+AfJODTS7fdOssZ&#xa;78EEVoBL0cmgauGmSF7k4A3vCiecCXK6WJi1a7YzZi183hwTG14UJZzdlAi0zSFY&#xa;0szSDjNoUU6uqgl8quvpacuz4XnVoFbBhTU3Ct4h5dgSCTLfTqRLJd1+HkBniAnJ&#xa;vFeeeUD3fyP5+73eWCtske3C11cCAwEAAaOCAjYwggIyMA4GA1UdDwEB/wQEAwIF&#xa;oDAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDAYDVR0TAQH/BAIwADAd&#xa;BgNVHQ4EFgQUbvG+AXT+zNOCO3dHVdcbWHZiJfQwHwYDVR0jBBgwFoAUxc9GpOr0&#xa;w8B6bJXELbBeki8m47kwMwYIKwYBBQUHAQEEJzAlMCMGCCsGAQUFBzAChhdodHRw&#xa;Oi8vcjExLmkubGVuY3Iub3JnLzAxBgNVHREEKjAoghMqLmFhZGh1bmlrcGFja2Vy&#xa;LmlughFhYWRodW5pa3BhY2tlci5pbjATBgNVHSAEDDAKMAgGBmeBDAECATAuBgNV&#xa;HR8EJzAlMCOgIaAfhh1odHRwOi8vcjExLmMubGVuY3Iub3JnLzE5LmNybDCCAQQG&#xa;CisGAQQB1nkCBAIEgfUEgfIA8AB2AN3cyjSV1+EWBeeVMvrHn/g9HFDf2wA6FBJ2&#xa;Ciysu8gqAAABmJKgxHMAAAQDAEcwRQIgcT++Mb0ixgXJWZGLli7wu7Vbjd74K+FH&#xa;eZAQ7Sg1bg4CIQCo+nwtdToV7ETUu0YIe1yjDfUrGwUzCG5yJb94Sk2JGQB2AK8Y&#xa;GijWjKPgqYpMnGerCfi7vCK6rryxOKOhndP5tgMNAAABmJKgxSsAAAQDAEcwRQIg&#xa;cTxLykgTisrT9SarI5s5rWZT8Xg53f6sooPsbP3pwNgCIQDD59MfHQaBYVHxzmyc&#xa;KrBnP2dJ9LDR+3xdwftwGOnvajANBgkqhkiG9w0BAQsFAAOCAQEAfWxb+ppN6v75&#xa;JeHN2Wuy+nCWB3alohA25xEof3v8UHICVeb+j+B2Ay6z+XKcv0CDfTlJ/898tiCP&#xa;vHPEZ2oOcuobiVvtoOl8N6IF1FWj2KT8ItLUVsy2IETNpj2lHZ2TyqHBybx6WnBQ&#xa;+Bttkb3rk/aT8/cQ42+C0xJ7+AJDPpH1ed6ubMKpXs4Jo8hN+1WMSRgdrdTxnUV0&#xa;iJWOfXwR920sxM8jUfsbzCJ9LkY/2xBK0SmxOmek+3Mc2Pkwo+s4A5tweWDuRRkZ&#xa;6jI5aEngkgNV93c2E8KxPEpw3veatE9Qnqx7OTXAw0ASFV6a3Vz9s20elqla3j7T&#xa;eWFi/wtmig==&#xa;-&#45;&#45;&#45;&#45;END CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;</elem>
+</script><script id="http-headers" output="&#xa;  Date: Tue, 16 Dec 2025 11:27:55 GMT&#xa;  Server: Apache&#xa;  Content-Length: 362&#xa;  Connection: close&#xa;  Content-Type: text/html; charset=iso-8859-1&#xa;  &#xa;  (Request type: GET)&#xa;"/></port>
+<port protocol="tcp" portid="465"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="smtp" product="Exim smtpd" version="4.96.2" hostname="eyewebsolution.dnshostserver.in" tunnel="ssl" method="probed" conf="10"><cpe>cpe:/a:exim:exim:4.96.2</cpe></service><script id="ssl-cert" output="Subject: commonName=eyewebsolution.dnshostserver.in&#xa;Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in&#xa;Issuer: commonName=R12/organizationName=Let&apos;s Encrypt/countryName=US&#xa;Public Key type: rsa&#xa;Public Key bits: 2048&#xa;Signature Algorithm: sha256WithRSAEncryption&#xa;Not valid before: 2025-11-16T02:35:21&#xa;Not valid after:  2026-02-14T02:35:20&#xa;MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39&#xa;SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112"><table key="subject">
+<elem key="commonName">eyewebsolution.dnshostserver.in</elem>
+</table>
+<table key="issuer">
+<elem key="commonName">R12</elem>
+<elem key="countryName">US</elem>
+<elem key="organizationName">Let&apos;s Encrypt</elem>
+</table>
+<table key="pubkey">
+<elem key="type">rsa</elem>
+<elem key="bits">2048</elem>
+<elem key="modulus">C94BAAEEA7101B861B4E20CE14DBC3635A3179B924D7AB913664D157D15C972D63A1FD6B9803A387EC5BC80B7F950088711384F0FF58A718D14609C6311D73DF760E1A200BA112B6D307051BD4CB496F4E9AD00F81D55FA32192B6E3CF701A49F52E25F68B6F9BEC1FA8823F3BFD467213F2F764420CD9CEA97CFFA9A0D9B082D050FE24CF9BB52838FD4692928189F190D59E683D9B3C21C85E1F0B6FAB8A18629C77E90551859576F494B70C6FF197E94989017FF57F946FBF5D658861F88ADC91C64DB596E6F3B0ED88508F4B7351AE5474128FAB2C55B0FC512F11299891C48E74CEE3DC5FF11B140E08C01DB9D1580D30D9FB753D37BC065D56F5C9CB8B</elem>
+<elem key="exponent">65537</elem>
+</table>
+<table key="extensions">
+<table>
+<elem key="name">X509v3 Key Usage</elem>
+<elem key="value">Digital Signature, Key Encipherment</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Extended Key Usage</elem>
+<elem key="value">TLS Web Server Authentication, TLS Web Client Authentication</elem>
+</table>
+<table>
+<elem key="name">X509v3 Basic Constraints</elem>
+<elem key="value">CA:FALSE</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Key Identifier</elem>
+<elem key="value">C1:8C:5E:33:73:C2:0E:C3:38:3C:F6:12:A3:80:D4:3E:0C:0F:22:0F</elem>
+</table>
+<table>
+<elem key="name">X509v3 Authority Key Identifier</elem>
+<elem key="value">00:B5:29:F2:2D:8E:6F:31:E8:9B:4C:AD:78:3E:FA:DC:E9:0C:D1:D2</elem>
+</table>
+<table>
+<elem key="name">Authority Information Access</elem>
+<elem key="value">CA Issuers - URI:http://r12.i.lencr.org/</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Alternative Name</elem>
+<elem key="value">DNS:eyewebsolution.dnshostserver.in</elem>
+</table>
+<table>
+<elem key="name">X509v3 Certificate Policies</elem>
+<elem key="value">Policy: 2.23.140.1.2.1</elem>
+</table>
+<table>
+<elem key="name">X509v3 CRL Distribution Points</elem>
+<elem key="value">Full Name:&#xa;  URI:http://r12.c.lencr.org/108.crl&#xa;</elem>
+</table>
+<table>
+<elem key="name">CT Precertificate SCTs</elem>
+<elem key="value">Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 0E:57:94:BC:F3:AE:A9:3E:33:1B:2C:99:07:B3:F7:90:&#xa;                DF:9B:C2:3D:71:32:25:DD:21:A9:25:AC:61:C5:4E:21&#xa;    Timestamp : Nov 16 03:33:51.167 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:44:02:20:6B:0A:4F:EA:F7:BB:5D:E0:8C:C2:59:88:&#xa;                12:7F:B6:4C:BB:69:B7:38:61:2F:92:48:D9:32:FB:E2:&#xa;                C6:40:54:9F:02:20:4B:59:D3:9A:36:3E:1F:73:27:25:&#xa;                1A:91:7B:5C:90:D3:4B:AC:FD:73:85:9D:4A:BB:C0:61:&#xa;                BC:BC:CB:91:1A:51&#xa;Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 64:11:C4:6C:A4:12:EC:A7:89:1C:A2:02:2E:00:BC:AB:&#xa;                4F:28:07:D4:1E:35:27:AB:EA:FE:D5:03:C9:7D:CD:F0&#xa;    Timestamp : Nov 16 03:33:53.166 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:45:02:21:00:E6:62:BD:F1:92:96:7A:07:C6:0B:88:&#xa;                7B:B4:12:53:11:FE:C4:97:53:74:96:3E:E9:B4:C3:3F:&#xa;                80:BB:67:31:BB:02:20:6E:8B:78:D4:08:26:EC:97:F1:&#xa;                72:99:FB:FC:84:1D:FD:56:77:90:41:F8:94:38:4A:5F:&#xa;                1F:DA:34:50:9A:F7:71</elem>
+</table>
+</table>
+<elem key="sig_algo">sha256WithRSAEncryption</elem>
+<table key="validity">
+<elem key="notBefore">2025-11-16T02:35:21</elem>
+<elem key="notAfter">2026-02-14T02:35:20</elem>
+</table>
+<elem key="md5">46283f2b4ee90640ebcbfb39b2280f39</elem>
+<elem key="sha1">7c399d3344a5c26a6eceee5a2e32ecf8ce2eb112</elem>
+<elem key="pem">-&#45;&#45;&#45;&#45;BEGIN CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;MIIFGjCCBAKgAwIBAgISBYRCPONqhoM/TGGvFJ6OE81rMA0GCSqGSIb3DQEBCwUA&#xa;MDMxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQwwCgYDVQQD&#xa;EwNSMTIwHhcNMjUxMTE2MDIzNTIxWhcNMjYwMjE0MDIzNTIwWjAqMSgwJgYDVQQD&#xa;Ex9leWV3ZWJzb2x1dGlvbi5kbnNob3N0c2VydmVyLmluMIIBIjANBgkqhkiG9w0B&#xa;AQEFAAOCAQ8AMIIBCgKCAQEAyUuq7qcQG4YbTiDOFNvDY1oxebkk16uRNmTRV9Fc&#xa;ly1jof1rmAOjh+xbyAt/lQCIcROE8P9YpxjRRgnGMR1z33YOGiALoRK20wcFG9TL&#xa;SW9OmtAPgdVfoyGStuPPcBpJ9S4l9otvm+wfqII/O/1GchPy92RCDNnOqXz/qaDZ&#xa;sILQUP4kz5u1KDj9RpKSgYnxkNWeaD2bPCHIXh8Lb6uKGGKcd+kFUYWVdvSUtwxv&#xa;8ZfpSYkBf/V/lG+/XWWIYfiK3JHGTbWW5vOw7YhQj0tzUa5UdBKPqyxVsPxRLxEp&#xa;mJHEjnTO49xf8RsUDgjAHbnRWA0w2ft1PTe8Bl1W9cnLiwIDAQABo4ICLzCCAisw&#xa;DgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAM&#xa;BgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTBjF4zc8IOwzg89hKjgNQ+DA8iDzAfBgNV&#xa;HSMEGDAWgBQAtSnyLY5vMeibTK14Pvrc6QzR0jAzBggrBgEFBQcBAQQnMCUwIwYI&#xa;KwYBBQUHMAKGF2h0dHA6Ly9yMTIuaS5sZW5jci5vcmcvMCoGA1UdEQQjMCGCH2V5&#xa;ZXdlYnNvbHV0aW9uLmRuc2hvc3RzZXJ2ZXIuaW4wEwYDVR0gBAwwCjAIBgZngQwB&#xa;AgEwLwYDVR0fBCgwJjAkoCKgIIYeaHR0cDovL3IxMi5jLmxlbmNyLm9yZy8xMDgu&#xa;Y3JsMIIBAwYKKwYBBAHWeQIEAgSB9ASB8QDvAHUADleUvPOuqT4zGyyZB7P3kN+b&#xa;wj1xMiXdIaklrGHFTiEAAAGairnpvwAABAMARjBEAiBrCk/q97td4IzCWYgSf7ZM&#xa;u2m3OGEvkkjZMvvixkBUnwIgS1nTmjY+H3MnJRqRe1yQ00us/XOFnUq7wGG8vMuR&#xa;GlEAdgBkEcRspBLsp4kcogIuALyrTygH1B41J6vq/tUDyX3N8AAAAZqKufGOAAAE&#xa;AwBHMEUCIQDmYr3xkpZ6B8YLiHu0ElMR/sSXU3SWPum0wz+Au2cxuwIgbot41Agm&#xa;7Jfxcpn7/IQd/VZ3kEH4lDhKXx/aNFCa93EwDQYJKoZIhvcNAQELBQADggEBAMW2&#xa;5zgcNBLrqRYc9m3VaaeN00Y/ki+lRz2N+SaVekYR3ctOo3PrTOOSClLOyEUIjQNi&#xa;y3RprVQ78OqFBzNS8bHA69SfhvlbCkY9QKyDl8AcKsoxSYdQeDJmmnkeLadNtwZf&#xa;Ie5xhlrvrccQ/G99WoIgRykI9mZPVTu4HdmG1vPkn9lPnhDFL7rOiDO3yNrAjnmS&#xa;XEaXnWwiRoCLoEKK4mXFg+MOw0R69kuypXCA385oDoOXZyJuS7gu3U0F2kf6GuY0&#xa;DvGqQ2ZhkNiHJBybaYqPIc0ZihXmfRbluXw4GgGByp5DUqUAZhaJpWRHT5KyCqDP&#xa;hy0IB9NofzwGw/IljQ8=&#xa;-&#45;&#45;&#45;&#45;END CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;</elem>
+</script><script id="ssl-enum-ciphers" output="&#xa;  TLSv1.2: &#xa;    ciphers: &#xa;      TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A&#xa;      TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A&#xa;    compressors: &#xa;      NULL&#xa;    cipher preference: client&#xa;  least strength: A"><table key="TLSv1.2">
+<table key="ciphers">
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+</table>
+<table key="compressors">
+<elem>NULL</elem>
+</table>
+<elem key="cipher preference">client</elem>
+</table>
+<elem key="least strength">A</elem>
+</script></port>
+<port protocol="tcp" portid="587"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="smtp" product="Exim smtpd" version="4.96.2" hostname="eyewebsolution.dnshostserver.in" method="probed" conf="10"><cpe>cpe:/a:exim:exim:4.96.2</cpe></service><script id="ssl-enum-ciphers" output="&#xa;  TLSv1.2: &#xa;    ciphers: &#xa;      TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A&#xa;      TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A&#xa;    compressors: &#xa;      NULL&#xa;    cipher preference: client&#xa;  least strength: A"><table key="TLSv1.2">
+<table key="ciphers">
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+</table>
+<table key="compressors">
+<elem>NULL</elem>
+</table>
+<elem key="cipher preference">client</elem>
+</table>
+<elem key="least strength">A</elem>
+</script><script id="ssl-cert" output="Subject: commonName=eyewebsolution.dnshostserver.in&#xa;Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in&#xa;Issuer: commonName=R12/organizationName=Let&apos;s Encrypt/countryName=US&#xa;Public Key type: rsa&#xa;Public Key bits: 2048&#xa;Signature Algorithm: sha256WithRSAEncryption&#xa;Not valid before: 2025-11-16T02:35:21&#xa;Not valid after:  2026-02-14T02:35:20&#xa;MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39&#xa;SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112"><table key="subject">
+<elem key="commonName">eyewebsolution.dnshostserver.in</elem>
+</table>
+<table key="issuer">
+<elem key="commonName">R12</elem>
+<elem key="countryName">US</elem>
+<elem key="organizationName">Let&apos;s Encrypt</elem>
+</table>
+<table key="pubkey">
+<elem key="type">rsa</elem>
+<elem key="bits">2048</elem>
+<elem key="modulus">C94BAAEEA7101B861B4E20CE14DBC3635A3179B924D7AB913664D157D15C972D63A1FD6B9803A387EC5BC80B7F950088711384F0FF58A718D14609C6311D73DF760E1A200BA112B6D307051BD4CB496F4E9AD00F81D55FA32192B6E3CF701A49F52E25F68B6F9BEC1FA8823F3BFD467213F2F764420CD9CEA97CFFA9A0D9B082D050FE24CF9BB52838FD4692928189F190D59E683D9B3C21C85E1F0B6FAB8A18629C77E90551859576F494B70C6FF197E94989017FF57F946FBF5D658861F88ADC91C64DB596E6F3B0ED88508F4B7351AE5474128FAB2C55B0FC512F11299891C48E74CEE3DC5FF11B140E08C01DB9D1580D30D9FB753D37BC065D56F5C9CB8B</elem>
+<elem key="exponent">65537</elem>
+</table>
+<table key="extensions">
+<table>
+<elem key="name">X509v3 Key Usage</elem>
+<elem key="value">Digital Signature, Key Encipherment</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Extended Key Usage</elem>
+<elem key="value">TLS Web Server Authentication, TLS Web Client Authentication</elem>
+</table>
+<table>
+<elem key="name">X509v3 Basic Constraints</elem>
+<elem key="value">CA:FALSE</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Key Identifier</elem>
+<elem key="value">C1:8C:5E:33:73:C2:0E:C3:38:3C:F6:12:A3:80:D4:3E:0C:0F:22:0F</elem>
+</table>
+<table>
+<elem key="name">X509v3 Authority Key Identifier</elem>
+<elem key="value">00:B5:29:F2:2D:8E:6F:31:E8:9B:4C:AD:78:3E:FA:DC:E9:0C:D1:D2</elem>
+</table>
+<table>
+<elem key="name">Authority Information Access</elem>
+<elem key="value">CA Issuers - URI:http://r12.i.lencr.org/</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Alternative Name</elem>
+<elem key="value">DNS:eyewebsolution.dnshostserver.in</elem>
+</table>
+<table>
+<elem key="name">X509v3 Certificate Policies</elem>
+<elem key="value">Policy: 2.23.140.1.2.1</elem>
+</table>
+<table>
+<elem key="name">X509v3 CRL Distribution Points</elem>
+<elem key="value">Full Name:&#xa;  URI:http://r12.c.lencr.org/108.crl&#xa;</elem>
+</table>
+<table>
+<elem key="name">CT Precertificate SCTs</elem>
+<elem key="value">Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 0E:57:94:BC:F3:AE:A9:3E:33:1B:2C:99:07:B3:F7:90:&#xa;                DF:9B:C2:3D:71:32:25:DD:21:A9:25:AC:61:C5:4E:21&#xa;    Timestamp : Nov 16 03:33:51.167 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:44:02:20:6B:0A:4F:EA:F7:BB:5D:E0:8C:C2:59:88:&#xa;                12:7F:B6:4C:BB:69:B7:38:61:2F:92:48:D9:32:FB:E2:&#xa;                C6:40:54:9F:02:20:4B:59:D3:9A:36:3E:1F:73:27:25:&#xa;                1A:91:7B:5C:90:D3:4B:AC:FD:73:85:9D:4A:BB:C0:61:&#xa;                BC:BC:CB:91:1A:51&#xa;Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 64:11:C4:6C:A4:12:EC:A7:89:1C:A2:02:2E:00:BC:AB:&#xa;                4F:28:07:D4:1E:35:27:AB:EA:FE:D5:03:C9:7D:CD:F0&#xa;    Timestamp : Nov 16 03:33:53.166 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:45:02:21:00:E6:62:BD:F1:92:96:7A:07:C6:0B:88:&#xa;                7B:B4:12:53:11:FE:C4:97:53:74:96:3E:E9:B4:C3:3F:&#xa;                80:BB:67:31:BB:02:20:6E:8B:78:D4:08:26:EC:97:F1:&#xa;                72:99:FB:FC:84:1D:FD:56:77:90:41:F8:94:38:4A:5F:&#xa;                1F:DA:34:50:9A:F7:71</elem>
+</table>
+</table>
+<elem key="sig_algo">sha256WithRSAEncryption</elem>
+<table key="validity">
+<elem key="notBefore">2025-11-16T02:35:21</elem>
+<elem key="notAfter">2026-02-14T02:35:20</elem>
+</table>
+<elem key="md5">46283f2b4ee90640ebcbfb39b2280f39</elem>
+<elem key="sha1">7c399d3344a5c26a6eceee5a2e32ecf8ce2eb112</elem>
+<elem key="pem">-&#45;&#45;&#45;&#45;BEGIN CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;MIIFGjCCBAKgAwIBAgISBYRCPONqhoM/TGGvFJ6OE81rMA0GCSqGSIb3DQEBCwUA&#xa;MDMxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQwwCgYDVQQD&#xa;EwNSMTIwHhcNMjUxMTE2MDIzNTIxWhcNMjYwMjE0MDIzNTIwWjAqMSgwJgYDVQQD&#xa;Ex9leWV3ZWJzb2x1dGlvbi5kbnNob3N0c2VydmVyLmluMIIBIjANBgkqhkiG9w0B&#xa;AQEFAAOCAQ8AMIIBCgKCAQEAyUuq7qcQG4YbTiDOFNvDY1oxebkk16uRNmTRV9Fc&#xa;ly1jof1rmAOjh+xbyAt/lQCIcROE8P9YpxjRRgnGMR1z33YOGiALoRK20wcFG9TL&#xa;SW9OmtAPgdVfoyGStuPPcBpJ9S4l9otvm+wfqII/O/1GchPy92RCDNnOqXz/qaDZ&#xa;sILQUP4kz5u1KDj9RpKSgYnxkNWeaD2bPCHIXh8Lb6uKGGKcd+kFUYWVdvSUtwxv&#xa;8ZfpSYkBf/V/lG+/XWWIYfiK3JHGTbWW5vOw7YhQj0tzUa5UdBKPqyxVsPxRLxEp&#xa;mJHEjnTO49xf8RsUDgjAHbnRWA0w2ft1PTe8Bl1W9cnLiwIDAQABo4ICLzCCAisw&#xa;DgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAM&#xa;BgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTBjF4zc8IOwzg89hKjgNQ+DA8iDzAfBgNV&#xa;HSMEGDAWgBQAtSnyLY5vMeibTK14Pvrc6QzR0jAzBggrBgEFBQcBAQQnMCUwIwYI&#xa;KwYBBQUHMAKGF2h0dHA6Ly9yMTIuaS5sZW5jci5vcmcvMCoGA1UdEQQjMCGCH2V5&#xa;ZXdlYnNvbHV0aW9uLmRuc2hvc3RzZXJ2ZXIuaW4wEwYDVR0gBAwwCjAIBgZngQwB&#xa;AgEwLwYDVR0fBCgwJjAkoCKgIIYeaHR0cDovL3IxMi5jLmxlbmNyLm9yZy8xMDgu&#xa;Y3JsMIIBAwYKKwYBBAHWeQIEAgSB9ASB8QDvAHUADleUvPOuqT4zGyyZB7P3kN+b&#xa;wj1xMiXdIaklrGHFTiEAAAGairnpvwAABAMARjBEAiBrCk/q97td4IzCWYgSf7ZM&#xa;u2m3OGEvkkjZMvvixkBUnwIgS1nTmjY+H3MnJRqRe1yQ00us/XOFnUq7wGG8vMuR&#xa;GlEAdgBkEcRspBLsp4kcogIuALyrTygH1B41J6vq/tUDyX3N8AAAAZqKufGOAAAE&#xa;AwBHMEUCIQDmYr3xkpZ6B8YLiHu0ElMR/sSXU3SWPum0wz+Au2cxuwIgbot41Agm&#xa;7Jfxcpn7/IQd/VZ3kEH4lDhKXx/aNFCa93EwDQYJKoZIhvcNAQELBQADggEBAMW2&#xa;5zgcNBLrqRYc9m3VaaeN00Y/ki+lRz2N+SaVekYR3ctOo3PrTOOSClLOyEUIjQNi&#xa;y3RprVQ78OqFBzNS8bHA69SfhvlbCkY9QKyDl8AcKsoxSYdQeDJmmnkeLadNtwZf&#xa;Ie5xhlrvrccQ/G99WoIgRykI9mZPVTu4HdmG1vPkn9lPnhDFL7rOiDO3yNrAjnmS&#xa;XEaXnWwiRoCLoEKK4mXFg+MOw0R69kuypXCA385oDoOXZyJuS7gu3U0F2kf6GuY0&#xa;DvGqQ2ZhkNiHJBybaYqPIc0ZihXmfRbluXw4GgGByp5DUqUAZhaJpWRHT5KyCqDP&#xa;hy0IB9NofzwGw/IljQ8=&#xa;-&#45;&#45;&#45;&#45;END CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;</elem>
+</script></port>
+<port protocol="tcp" portid="993"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="imaps" method="table" conf="3"/><script id="ssl-cert" output="Subject: commonName=eyewebsolution.dnshostserver.in&#xa;Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in&#xa;Issuer: commonName=R12/organizationName=Let&apos;s Encrypt/countryName=US&#xa;Public Key type: rsa&#xa;Public Key bits: 2048&#xa;Signature Algorithm: sha256WithRSAEncryption&#xa;Not valid before: 2025-11-16T02:35:21&#xa;Not valid after:  2026-02-14T02:35:20&#xa;MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39&#xa;SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112"><table key="subject">
+<elem key="commonName">eyewebsolution.dnshostserver.in</elem>
+</table>
+<table key="issuer">
+<elem key="commonName">R12</elem>
+<elem key="countryName">US</elem>
+<elem key="organizationName">Let&apos;s Encrypt</elem>
+</table>
+<table key="pubkey">
+<elem key="type">rsa</elem>
+<elem key="bits">2048</elem>
+<elem key="modulus">C94BAAEEA7101B861B4E20CE14DBC3635A3179B924D7AB913664D157D15C972D63A1FD6B9803A387EC5BC80B7F950088711384F0FF58A718D14609C6311D73DF760E1A200BA112B6D307051BD4CB496F4E9AD00F81D55FA32192B6E3CF701A49F52E25F68B6F9BEC1FA8823F3BFD467213F2F764420CD9CEA97CFFA9A0D9B082D050FE24CF9BB52838FD4692928189F190D59E683D9B3C21C85E1F0B6FAB8A18629C77E90551859576F494B70C6FF197E94989017FF57F946FBF5D658861F88ADC91C64DB596E6F3B0ED88508F4B7351AE5474128FAB2C55B0FC512F11299891C48E74CEE3DC5FF11B140E08C01DB9D1580D30D9FB753D37BC065D56F5C9CB8B</elem>
+<elem key="exponent">65537</elem>
+</table>
+<table key="extensions">
+<table>
+<elem key="name">X509v3 Key Usage</elem>
+<elem key="value">Digital Signature, Key Encipherment</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Extended Key Usage</elem>
+<elem key="value">TLS Web Server Authentication, TLS Web Client Authentication</elem>
+</table>
+<table>
+<elem key="name">X509v3 Basic Constraints</elem>
+<elem key="value">CA:FALSE</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Key Identifier</elem>
+<elem key="value">C1:8C:5E:33:73:C2:0E:C3:38:3C:F6:12:A3:80:D4:3E:0C:0F:22:0F</elem>
+</table>
+<table>
+<elem key="name">X509v3 Authority Key Identifier</elem>
+<elem key="value">00:B5:29:F2:2D:8E:6F:31:E8:9B:4C:AD:78:3E:FA:DC:E9:0C:D1:D2</elem>
+</table>
+<table>
+<elem key="name">Authority Information Access</elem>
+<elem key="value">CA Issuers - URI:http://r12.i.lencr.org/</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Alternative Name</elem>
+<elem key="value">DNS:eyewebsolution.dnshostserver.in</elem>
+</table>
+<table>
+<elem key="name">X509v3 Certificate Policies</elem>
+<elem key="value">Policy: 2.23.140.1.2.1</elem>
+</table>
+<table>
+<elem key="name">X509v3 CRL Distribution Points</elem>
+<elem key="value">Full Name:&#xa;  URI:http://r12.c.lencr.org/108.crl&#xa;</elem>
+</table>
+<table>
+<elem key="name">CT Precertificate SCTs</elem>
+<elem key="value">Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 0E:57:94:BC:F3:AE:A9:3E:33:1B:2C:99:07:B3:F7:90:&#xa;                DF:9B:C2:3D:71:32:25:DD:21:A9:25:AC:61:C5:4E:21&#xa;    Timestamp : Nov 16 03:33:51.167 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:44:02:20:6B:0A:4F:EA:F7:BB:5D:E0:8C:C2:59:88:&#xa;                12:7F:B6:4C:BB:69:B7:38:61:2F:92:48:D9:32:FB:E2:&#xa;                C6:40:54:9F:02:20:4B:59:D3:9A:36:3E:1F:73:27:25:&#xa;                1A:91:7B:5C:90:D3:4B:AC:FD:73:85:9D:4A:BB:C0:61:&#xa;                BC:BC:CB:91:1A:51&#xa;Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 64:11:C4:6C:A4:12:EC:A7:89:1C:A2:02:2E:00:BC:AB:&#xa;                4F:28:07:D4:1E:35:27:AB:EA:FE:D5:03:C9:7D:CD:F0&#xa;    Timestamp : Nov 16 03:33:53.166 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:45:02:21:00:E6:62:BD:F1:92:96:7A:07:C6:0B:88:&#xa;                7B:B4:12:53:11:FE:C4:97:53:74:96:3E:E9:B4:C3:3F:&#xa;                80:BB:67:31:BB:02:20:6E:8B:78:D4:08:26:EC:97:F1:&#xa;                72:99:FB:FC:84:1D:FD:56:77:90:41:F8:94:38:4A:5F:&#xa;                1F:DA:34:50:9A:F7:71</elem>
+</table>
+</table>
+<elem key="sig_algo">sha256WithRSAEncryption</elem>
+<table key="validity">
+<elem key="notBefore">2025-11-16T02:35:21</elem>
+<elem key="notAfter">2026-02-14T02:35:20</elem>
+</table>
+<elem key="md5">46283f2b4ee90640ebcbfb39b2280f39</elem>
+<elem key="sha1">7c399d3344a5c26a6eceee5a2e32ecf8ce2eb112</elem>
+<elem key="pem">-&#45;&#45;&#45;&#45;BEGIN CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;MIIFGjCCBAKgAwIBAgISBYRCPONqhoM/TGGvFJ6OE81rMA0GCSqGSIb3DQEBCwUA&#xa;MDMxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQwwCgYDVQQD&#xa;EwNSMTIwHhcNMjUxMTE2MDIzNTIxWhcNMjYwMjE0MDIzNTIwWjAqMSgwJgYDVQQD&#xa;Ex9leWV3ZWJzb2x1dGlvbi5kbnNob3N0c2VydmVyLmluMIIBIjANBgkqhkiG9w0B&#xa;AQEFAAOCAQ8AMIIBCgKCAQEAyUuq7qcQG4YbTiDOFNvDY1oxebkk16uRNmTRV9Fc&#xa;ly1jof1rmAOjh+xbyAt/lQCIcROE8P9YpxjRRgnGMR1z33YOGiALoRK20wcFG9TL&#xa;SW9OmtAPgdVfoyGStuPPcBpJ9S4l9otvm+wfqII/O/1GchPy92RCDNnOqXz/qaDZ&#xa;sILQUP4kz5u1KDj9RpKSgYnxkNWeaD2bPCHIXh8Lb6uKGGKcd+kFUYWVdvSUtwxv&#xa;8ZfpSYkBf/V/lG+/XWWIYfiK3JHGTbWW5vOw7YhQj0tzUa5UdBKPqyxVsPxRLxEp&#xa;mJHEjnTO49xf8RsUDgjAHbnRWA0w2ft1PTe8Bl1W9cnLiwIDAQABo4ICLzCCAisw&#xa;DgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAM&#xa;BgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTBjF4zc8IOwzg89hKjgNQ+DA8iDzAfBgNV&#xa;HSMEGDAWgBQAtSnyLY5vMeibTK14Pvrc6QzR0jAzBggrBgEFBQcBAQQnMCUwIwYI&#xa;KwYBBQUHMAKGF2h0dHA6Ly9yMTIuaS5sZW5jci5vcmcvMCoGA1UdEQQjMCGCH2V5&#xa;ZXdlYnNvbHV0aW9uLmRuc2hvc3RzZXJ2ZXIuaW4wEwYDVR0gBAwwCjAIBgZngQwB&#xa;AgEwLwYDVR0fBCgwJjAkoCKgIIYeaHR0cDovL3IxMi5jLmxlbmNyLm9yZy8xMDgu&#xa;Y3JsMIIBAwYKKwYBBAHWeQIEAgSB9ASB8QDvAHUADleUvPOuqT4zGyyZB7P3kN+b&#xa;wj1xMiXdIaklrGHFTiEAAAGairnpvwAABAMARjBEAiBrCk/q97td4IzCWYgSf7ZM&#xa;u2m3OGEvkkjZMvvixkBUnwIgS1nTmjY+H3MnJRqRe1yQ00us/XOFnUq7wGG8vMuR&#xa;GlEAdgBkEcRspBLsp4kcogIuALyrTygH1B41J6vq/tUDyX3N8AAAAZqKufGOAAAE&#xa;AwBHMEUCIQDmYr3xkpZ6B8YLiHu0ElMR/sSXU3SWPum0wz+Au2cxuwIgbot41Agm&#xa;7Jfxcpn7/IQd/VZ3kEH4lDhKXx/aNFCa93EwDQYJKoZIhvcNAQELBQADggEBAMW2&#xa;5zgcNBLrqRYc9m3VaaeN00Y/ki+lRz2N+SaVekYR3ctOo3PrTOOSClLOyEUIjQNi&#xa;y3RprVQ78OqFBzNS8bHA69SfhvlbCkY9QKyDl8AcKsoxSYdQeDJmmnkeLadNtwZf&#xa;Ie5xhlrvrccQ/G99WoIgRykI9mZPVTu4HdmG1vPkn9lPnhDFL7rOiDO3yNrAjnmS&#xa;XEaXnWwiRoCLoEKK4mXFg+MOw0R69kuypXCA385oDoOXZyJuS7gu3U0F2kf6GuY0&#xa;DvGqQ2ZhkNiHJBybaYqPIc0ZihXmfRbluXw4GgGByp5DUqUAZhaJpWRHT5KyCqDP&#xa;hy0IB9NofzwGw/IljQ8=&#xa;-&#45;&#45;&#45;&#45;END CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;</elem>
+</script><script id="ssl-enum-ciphers" output="&#xa;  TLSv1.2: &#xa;    ciphers: &#xa;      TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A&#xa;      TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A&#xa;    compressors: &#xa;      NULL&#xa;    cipher preference: client&#xa;  least strength: A"><table key="TLSv1.2">
+<table key="ciphers">
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+</table>
+<table key="compressors">
+<elem>NULL</elem>
+</table>
+<elem key="cipher preference">client</elem>
+</table>
+<elem key="least strength">A</elem>
+</script></port>
+<port protocol="tcp" portid="995"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="pop3s" method="table" conf="3"/><script id="ssl-cert" output="Subject: commonName=eyewebsolution.dnshostserver.in&#xa;Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in&#xa;Issuer: commonName=R12/organizationName=Let&apos;s Encrypt/countryName=US&#xa;Public Key type: rsa&#xa;Public Key bits: 2048&#xa;Signature Algorithm: sha256WithRSAEncryption&#xa;Not valid before: 2025-11-16T02:35:21&#xa;Not valid after:  2026-02-14T02:35:20&#xa;MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39&#xa;SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112"><table key="subject">
+<elem key="commonName">eyewebsolution.dnshostserver.in</elem>
+</table>
+<table key="issuer">
+<elem key="commonName">R12</elem>
+<elem key="countryName">US</elem>
+<elem key="organizationName">Let&apos;s Encrypt</elem>
+</table>
+<table key="pubkey">
+<elem key="type">rsa</elem>
+<elem key="bits">2048</elem>
+<elem key="modulus">C94BAAEEA7101B861B4E20CE14DBC3635A3179B924D7AB913664D157D15C972D63A1FD6B9803A387EC5BC80B7F950088711384F0FF58A718D14609C6311D73DF760E1A200BA112B6D307051BD4CB496F4E9AD00F81D55FA32192B6E3CF701A49F52E25F68B6F9BEC1FA8823F3BFD467213F2F764420CD9CEA97CFFA9A0D9B082D050FE24CF9BB52838FD4692928189F190D59E683D9B3C21C85E1F0B6FAB8A18629C77E90551859576F494B70C6FF197E94989017FF57F946FBF5D658861F88ADC91C64DB596E6F3B0ED88508F4B7351AE5474128FAB2C55B0FC512F11299891C48E74CEE3DC5FF11B140E08C01DB9D1580D30D9FB753D37BC065D56F5C9CB8B</elem>
+<elem key="exponent">65537</elem>
+</table>
+<table key="extensions">
+<table>
+<elem key="name">X509v3 Key Usage</elem>
+<elem key="value">Digital Signature, Key Encipherment</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Extended Key Usage</elem>
+<elem key="value">TLS Web Server Authentication, TLS Web Client Authentication</elem>
+</table>
+<table>
+<elem key="name">X509v3 Basic Constraints</elem>
+<elem key="value">CA:FALSE</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Key Identifier</elem>
+<elem key="value">C1:8C:5E:33:73:C2:0E:C3:38:3C:F6:12:A3:80:D4:3E:0C:0F:22:0F</elem>
+</table>
+<table>
+<elem key="name">X509v3 Authority Key Identifier</elem>
+<elem key="value">00:B5:29:F2:2D:8E:6F:31:E8:9B:4C:AD:78:3E:FA:DC:E9:0C:D1:D2</elem>
+</table>
+<table>
+<elem key="name">Authority Information Access</elem>
+<elem key="value">CA Issuers - URI:http://r12.i.lencr.org/</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Alternative Name</elem>
+<elem key="value">DNS:eyewebsolution.dnshostserver.in</elem>
+</table>
+<table>
+<elem key="name">X509v3 Certificate Policies</elem>
+<elem key="value">Policy: 2.23.140.1.2.1</elem>
+</table>
+<table>
+<elem key="name">X509v3 CRL Distribution Points</elem>
+<elem key="value">Full Name:&#xa;  URI:http://r12.c.lencr.org/108.crl&#xa;</elem>
+</table>
+<table>
+<elem key="name">CT Precertificate SCTs</elem>
+<elem key="value">Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 0E:57:94:BC:F3:AE:A9:3E:33:1B:2C:99:07:B3:F7:90:&#xa;                DF:9B:C2:3D:71:32:25:DD:21:A9:25:AC:61:C5:4E:21&#xa;    Timestamp : Nov 16 03:33:51.167 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:44:02:20:6B:0A:4F:EA:F7:BB:5D:E0:8C:C2:59:88:&#xa;                12:7F:B6:4C:BB:69:B7:38:61:2F:92:48:D9:32:FB:E2:&#xa;                C6:40:54:9F:02:20:4B:59:D3:9A:36:3E:1F:73:27:25:&#xa;                1A:91:7B:5C:90:D3:4B:AC:FD:73:85:9D:4A:BB:C0:61:&#xa;                BC:BC:CB:91:1A:51&#xa;Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 64:11:C4:6C:A4:12:EC:A7:89:1C:A2:02:2E:00:BC:AB:&#xa;                4F:28:07:D4:1E:35:27:AB:EA:FE:D5:03:C9:7D:CD:F0&#xa;    Timestamp : Nov 16 03:33:53.166 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:45:02:21:00:E6:62:BD:F1:92:96:7A:07:C6:0B:88:&#xa;                7B:B4:12:53:11:FE:C4:97:53:74:96:3E:E9:B4:C3:3F:&#xa;                80:BB:67:31:BB:02:20:6E:8B:78:D4:08:26:EC:97:F1:&#xa;                72:99:FB:FC:84:1D:FD:56:77:90:41:F8:94:38:4A:5F:&#xa;                1F:DA:34:50:9A:F7:71</elem>
+</table>
+</table>
+<elem key="sig_algo">sha256WithRSAEncryption</elem>
+<table key="validity">
+<elem key="notBefore">2025-11-16T02:35:21</elem>
+<elem key="notAfter">2026-02-14T02:35:20</elem>
+</table>
+<elem key="md5">46283f2b4ee90640ebcbfb39b2280f39</elem>
+<elem key="sha1">7c399d3344a5c26a6eceee5a2e32ecf8ce2eb112</elem>
+<elem key="pem">-&#45;&#45;&#45;&#45;BEGIN CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;MIIFGjCCBAKgAwIBAgISBYRCPONqhoM/TGGvFJ6OE81rMA0GCSqGSIb3DQEBCwUA&#xa;MDMxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQwwCgYDVQQD&#xa;EwNSMTIwHhcNMjUxMTE2MDIzNTIxWhcNMjYwMjE0MDIzNTIwWjAqMSgwJgYDVQQD&#xa;Ex9leWV3ZWJzb2x1dGlvbi5kbnNob3N0c2VydmVyLmluMIIBIjANBgkqhkiG9w0B&#xa;AQEFAAOCAQ8AMIIBCgKCAQEAyUuq7qcQG4YbTiDOFNvDY1oxebkk16uRNmTRV9Fc&#xa;ly1jof1rmAOjh+xbyAt/lQCIcROE8P9YpxjRRgnGMR1z33YOGiALoRK20wcFG9TL&#xa;SW9OmtAPgdVfoyGStuPPcBpJ9S4l9otvm+wfqII/O/1GchPy92RCDNnOqXz/qaDZ&#xa;sILQUP4kz5u1KDj9RpKSgYnxkNWeaD2bPCHIXh8Lb6uKGGKcd+kFUYWVdvSUtwxv&#xa;8ZfpSYkBf/V/lG+/XWWIYfiK3JHGTbWW5vOw7YhQj0tzUa5UdBKPqyxVsPxRLxEp&#xa;mJHEjnTO49xf8RsUDgjAHbnRWA0w2ft1PTe8Bl1W9cnLiwIDAQABo4ICLzCCAisw&#xa;DgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAM&#xa;BgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTBjF4zc8IOwzg89hKjgNQ+DA8iDzAfBgNV&#xa;HSMEGDAWgBQAtSnyLY5vMeibTK14Pvrc6QzR0jAzBggrBgEFBQcBAQQnMCUwIwYI&#xa;KwYBBQUHMAKGF2h0dHA6Ly9yMTIuaS5sZW5jci5vcmcvMCoGA1UdEQQjMCGCH2V5&#xa;ZXdlYnNvbHV0aW9uLmRuc2hvc3RzZXJ2ZXIuaW4wEwYDVR0gBAwwCjAIBgZngQwB&#xa;AgEwLwYDVR0fBCgwJjAkoCKgIIYeaHR0cDovL3IxMi5jLmxlbmNyLm9yZy8xMDgu&#xa;Y3JsMIIBAwYKKwYBBAHWeQIEAgSB9ASB8QDvAHUADleUvPOuqT4zGyyZB7P3kN+b&#xa;wj1xMiXdIaklrGHFTiEAAAGairnpvwAABAMARjBEAiBrCk/q97td4IzCWYgSf7ZM&#xa;u2m3OGEvkkjZMvvixkBUnwIgS1nTmjY+H3MnJRqRe1yQ00us/XOFnUq7wGG8vMuR&#xa;GlEAdgBkEcRspBLsp4kcogIuALyrTygH1B41J6vq/tUDyX3N8AAAAZqKufGOAAAE&#xa;AwBHMEUCIQDmYr3xkpZ6B8YLiHu0ElMR/sSXU3SWPum0wz+Au2cxuwIgbot41Agm&#xa;7Jfxcpn7/IQd/VZ3kEH4lDhKXx/aNFCa93EwDQYJKoZIhvcNAQELBQADggEBAMW2&#xa;5zgcNBLrqRYc9m3VaaeN00Y/ki+lRz2N+SaVekYR3ctOo3PrTOOSClLOyEUIjQNi&#xa;y3RprVQ78OqFBzNS8bHA69SfhvlbCkY9QKyDl8AcKsoxSYdQeDJmmnkeLadNtwZf&#xa;Ie5xhlrvrccQ/G99WoIgRykI9mZPVTu4HdmG1vPkn9lPnhDFL7rOiDO3yNrAjnmS&#xa;XEaXnWwiRoCLoEKK4mXFg+MOw0R69kuypXCA385oDoOXZyJuS7gu3U0F2kf6GuY0&#xa;DvGqQ2ZhkNiHJBybaYqPIc0ZihXmfRbluXw4GgGByp5DUqUAZhaJpWRHT5KyCqDP&#xa;hy0IB9NofzwGw/IljQ8=&#xa;-&#45;&#45;&#45;&#45;END CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;</elem>
+</script><script id="ssl-enum-ciphers" output="&#xa;  TLSv1.2: &#xa;    ciphers: &#xa;      TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A&#xa;      TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A&#xa;    compressors: &#xa;      NULL&#xa;    cipher preference: client&#xa;  least strength: A"><table key="TLSv1.2">
+<table key="ciphers">
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+</table>
+<table key="compressors">
+<elem>NULL</elem>
+</table>
+<elem key="cipher preference">client</elem>
+</table>
+<elem key="least strength">A</elem>
+</script></port>
+<port protocol="tcp" portid="2000"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="cisco-sccp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="2077"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="tsrmagt" servicefp="SF-Port2077-TCP:V=7.95%I=7%D=12/16%Time=694141FA%P=x86_64-pc-linux-gnu%r(SIPOptions,17B,&quot;HTTP/1\.1\x20302\x20Moved\r\nDate:\x20Tue,\x2016\x20Dec\x202025\x2011:26:50\x20GMT\r\nServer:\x20cPanel\r\nPersistent-Auth:\x20false\r\nHost:\x20eyewebsolution\.dnshostserver\.in:2077\r\nCache-Control:\x20no-cache,\x20no-store,\x20must-revalidate,\x20private\r\nConnection:\x20close\r\nLocation:\x20https://eyewebsolution\.dnshostserver\.in:2078sip:nm\r\nVary:\x20Accept-Encoding\r\nExpires:\x20Fri,\x2001\x20Jan\x201990\x2000:00:00\x20GMT\r\nX-Redirect-Reason:\x20requiressl\r\n\r\n&quot;);" method="table" conf="3"/><script id="fingerprint-strings" output="&#xa;  SIPOptions: &#xa;    HTTP/1.1 302 Moved&#xa;    Date: Tue, 16 Dec 2025 11:26:50 GMT&#xa;    Server: cPanel&#xa;    Persistent-Auth: false&#xa;    Host: eyewebsolution.dnshostserver.in:2077&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Connection: close&#xa;    Location: https://eyewebsolution.dnshostserver.in:2078sip:nm&#xa;    Vary: Accept-Encoding&#xa;    Expires: Fri, 01 Jan 1990 00:00:00 GMT&#xa;    X-Redirect-Reason: requiressl"><elem key="SIPOptions">&#xa;    HTTP/1.1 302 Moved&#xa;    Date: Tue, 16 Dec 2025 11:26:50 GMT&#xa;    Server: cPanel&#xa;    Persistent-Auth: false&#xa;    Host: eyewebsolution.dnshostserver.in:2077&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Connection: close&#xa;    Location: https://eyewebsolution.dnshostserver.in:2078sip:nm&#xa;    Vary: Accept-Encoding&#xa;    Expires: Fri, 01 Jan 1990 00:00:00 GMT&#xa;    X-Redirect-Reason: requiressl</elem>
+</script></port>
+<port protocol="tcp" portid="2078"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="http" product="cPanel httpd" extrainfo="unauthorized" tunnel="ssl" method="probed" conf="10"/><script id="http-headers" output="&#xa;  Date: Tue, 16 Dec 2025 11:27:55 GMT&#xa;  Server: cPanel&#xa;  Persistent-Auth: false&#xa;  Host: eyewebsolution.dnshostserver.in:2078&#xa;  Cache-Control: no-cache, no-store, must-revalidate, private&#xa;  Connection: close&#xa;  Vary: Accept-Encoding&#xa;  WWW-Authenticate: Basic realm=&quot;Restricted Area&quot;&#xa;  Content-Length: 35&#xa;  Content-Type: text/html; charset=&quot;utf-8&quot;&#xa;  Expires: Fri, 01 Jan 1990 00:00:00 GMT&#xa;  &#xa;  (Request type: GET)&#xa;"/><script id="ssl-cert" output="Subject: commonName=eyewebsolution.dnshostserver.in&#xa;Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in&#xa;Issuer: commonName=R12/organizationName=Let&apos;s Encrypt/countryName=US&#xa;Public Key type: rsa&#xa;Public Key bits: 2048&#xa;Signature Algorithm: sha256WithRSAEncryption&#xa;Not valid before: 2025-11-16T02:35:21&#xa;Not valid after:  2026-02-14T02:35:20&#xa;MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39&#xa;SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112"><table key="subject">
+<elem key="commonName">eyewebsolution.dnshostserver.in</elem>
+</table>
+<table key="issuer">
+<elem key="commonName">R12</elem>
+<elem key="countryName">US</elem>
+<elem key="organizationName">Let&apos;s Encrypt</elem>
+</table>
+<table key="pubkey">
+<elem key="type">rsa</elem>
+<elem key="bits">2048</elem>
+<elem key="modulus">C94BAAEEA7101B861B4E20CE14DBC3635A3179B924D7AB913664D157D15C972D63A1FD6B9803A387EC5BC80B7F950088711384F0FF58A718D14609C6311D73DF760E1A200BA112B6D307051BD4CB496F4E9AD00F81D55FA32192B6E3CF701A49F52E25F68B6F9BEC1FA8823F3BFD467213F2F764420CD9CEA97CFFA9A0D9B082D050FE24CF9BB52838FD4692928189F190D59E683D9B3C21C85E1F0B6FAB8A18629C77E90551859576F494B70C6FF197E94989017FF57F946FBF5D658861F88ADC91C64DB596E6F3B0ED88508F4B7351AE5474128FAB2C55B0FC512F11299891C48E74CEE3DC5FF11B140E08C01DB9D1580D30D9FB753D37BC065D56F5C9CB8B</elem>
+<elem key="exponent">65537</elem>
+</table>
+<table key="extensions">
+<table>
+<elem key="name">X509v3 Key Usage</elem>
+<elem key="value">Digital Signature, Key Encipherment</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Extended Key Usage</elem>
+<elem key="value">TLS Web Server Authentication, TLS Web Client Authentication</elem>
+</table>
+<table>
+<elem key="name">X509v3 Basic Constraints</elem>
+<elem key="value">CA:FALSE</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Key Identifier</elem>
+<elem key="value">C1:8C:5E:33:73:C2:0E:C3:38:3C:F6:12:A3:80:D4:3E:0C:0F:22:0F</elem>
+</table>
+<table>
+<elem key="name">X509v3 Authority Key Identifier</elem>
+<elem key="value">00:B5:29:F2:2D:8E:6F:31:E8:9B:4C:AD:78:3E:FA:DC:E9:0C:D1:D2</elem>
+</table>
+<table>
+<elem key="name">Authority Information Access</elem>
+<elem key="value">CA Issuers - URI:http://r12.i.lencr.org/</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Alternative Name</elem>
+<elem key="value">DNS:eyewebsolution.dnshostserver.in</elem>
+</table>
+<table>
+<elem key="name">X509v3 Certificate Policies</elem>
+<elem key="value">Policy: 2.23.140.1.2.1</elem>
+</table>
+<table>
+<elem key="name">X509v3 CRL Distribution Points</elem>
+<elem key="value">Full Name:&#xa;  URI:http://r12.c.lencr.org/108.crl&#xa;</elem>
+</table>
+<table>
+<elem key="name">CT Precertificate SCTs</elem>
+<elem key="value">Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 0E:57:94:BC:F3:AE:A9:3E:33:1B:2C:99:07:B3:F7:90:&#xa;                DF:9B:C2:3D:71:32:25:DD:21:A9:25:AC:61:C5:4E:21&#xa;    Timestamp : Nov 16 03:33:51.167 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:44:02:20:6B:0A:4F:EA:F7:BB:5D:E0:8C:C2:59:88:&#xa;                12:7F:B6:4C:BB:69:B7:38:61:2F:92:48:D9:32:FB:E2:&#xa;                C6:40:54:9F:02:20:4B:59:D3:9A:36:3E:1F:73:27:25:&#xa;                1A:91:7B:5C:90:D3:4B:AC:FD:73:85:9D:4A:BB:C0:61:&#xa;                BC:BC:CB:91:1A:51&#xa;Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 64:11:C4:6C:A4:12:EC:A7:89:1C:A2:02:2E:00:BC:AB:&#xa;                4F:28:07:D4:1E:35:27:AB:EA:FE:D5:03:C9:7D:CD:F0&#xa;    Timestamp : Nov 16 03:33:53.166 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:45:02:21:00:E6:62:BD:F1:92:96:7A:07:C6:0B:88:&#xa;                7B:B4:12:53:11:FE:C4:97:53:74:96:3E:E9:B4:C3:3F:&#xa;                80:BB:67:31:BB:02:20:6E:8B:78:D4:08:26:EC:97:F1:&#xa;                72:99:FB:FC:84:1D:FD:56:77:90:41:F8:94:38:4A:5F:&#xa;                1F:DA:34:50:9A:F7:71</elem>
+</table>
+</table>
+<elem key="sig_algo">sha256WithRSAEncryption</elem>
+<table key="validity">
+<elem key="notBefore">2025-11-16T02:35:21</elem>
+<elem key="notAfter">2026-02-14T02:35:20</elem>
+</table>
+<elem key="md5">46283f2b4ee90640ebcbfb39b2280f39</elem>
+<elem key="sha1">7c399d3344a5c26a6eceee5a2e32ecf8ce2eb112</elem>
+<elem key="pem">-&#45;&#45;&#45;&#45;BEGIN CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;MIIFGjCCBAKgAwIBAgISBYRCPONqhoM/TGGvFJ6OE81rMA0GCSqGSIb3DQEBCwUA&#xa;MDMxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQwwCgYDVQQD&#xa;EwNSMTIwHhcNMjUxMTE2MDIzNTIxWhcNMjYwMjE0MDIzNTIwWjAqMSgwJgYDVQQD&#xa;Ex9leWV3ZWJzb2x1dGlvbi5kbnNob3N0c2VydmVyLmluMIIBIjANBgkqhkiG9w0B&#xa;AQEFAAOCAQ8AMIIBCgKCAQEAyUuq7qcQG4YbTiDOFNvDY1oxebkk16uRNmTRV9Fc&#xa;ly1jof1rmAOjh+xbyAt/lQCIcROE8P9YpxjRRgnGMR1z33YOGiALoRK20wcFG9TL&#xa;SW9OmtAPgdVfoyGStuPPcBpJ9S4l9otvm+wfqII/O/1GchPy92RCDNnOqXz/qaDZ&#xa;sILQUP4kz5u1KDj9RpKSgYnxkNWeaD2bPCHIXh8Lb6uKGGKcd+kFUYWVdvSUtwxv&#xa;8ZfpSYkBf/V/lG+/XWWIYfiK3JHGTbWW5vOw7YhQj0tzUa5UdBKPqyxVsPxRLxEp&#xa;mJHEjnTO49xf8RsUDgjAHbnRWA0w2ft1PTe8Bl1W9cnLiwIDAQABo4ICLzCCAisw&#xa;DgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAM&#xa;BgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTBjF4zc8IOwzg89hKjgNQ+DA8iDzAfBgNV&#xa;HSMEGDAWgBQAtSnyLY5vMeibTK14Pvrc6QzR0jAzBggrBgEFBQcBAQQnMCUwIwYI&#xa;KwYBBQUHMAKGF2h0dHA6Ly9yMTIuaS5sZW5jci5vcmcvMCoGA1UdEQQjMCGCH2V5&#xa;ZXdlYnNvbHV0aW9uLmRuc2hvc3RzZXJ2ZXIuaW4wEwYDVR0gBAwwCjAIBgZngQwB&#xa;AgEwLwYDVR0fBCgwJjAkoCKgIIYeaHR0cDovL3IxMi5jLmxlbmNyLm9yZy8xMDgu&#xa;Y3JsMIIBAwYKKwYBBAHWeQIEAgSB9ASB8QDvAHUADleUvPOuqT4zGyyZB7P3kN+b&#xa;wj1xMiXdIaklrGHFTiEAAAGairnpvwAABAMARjBEAiBrCk/q97td4IzCWYgSf7ZM&#xa;u2m3OGEvkkjZMvvixkBUnwIgS1nTmjY+H3MnJRqRe1yQ00us/XOFnUq7wGG8vMuR&#xa;GlEAdgBkEcRspBLsp4kcogIuALyrTygH1B41J6vq/tUDyX3N8AAAAZqKufGOAAAE&#xa;AwBHMEUCIQDmYr3xkpZ6B8YLiHu0ElMR/sSXU3SWPum0wz+Au2cxuwIgbot41Agm&#xa;7Jfxcpn7/IQd/VZ3kEH4lDhKXx/aNFCa93EwDQYJKoZIhvcNAQELBQADggEBAMW2&#xa;5zgcNBLrqRYc9m3VaaeN00Y/ki+lRz2N+SaVekYR3ctOo3PrTOOSClLOyEUIjQNi&#xa;y3RprVQ78OqFBzNS8bHA69SfhvlbCkY9QKyDl8AcKsoxSYdQeDJmmnkeLadNtwZf&#xa;Ie5xhlrvrccQ/G99WoIgRykI9mZPVTu4HdmG1vPkn9lPnhDFL7rOiDO3yNrAjnmS&#xa;XEaXnWwiRoCLoEKK4mXFg+MOw0R69kuypXCA385oDoOXZyJuS7gu3U0F2kf6GuY0&#xa;DvGqQ2ZhkNiHJBybaYqPIc0ZihXmfRbluXw4GgGByp5DUqUAZhaJpWRHT5KyCqDP&#xa;hy0IB9NofzwGw/IljQ8=&#xa;-&#45;&#45;&#45;&#45;END CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;</elem>
+</script><script id="ssl-enum-ciphers" output="&#xa;  TLSv1.2: &#xa;    ciphers: &#xa;      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A&#xa;      TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A&#xa;      TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A&#xa;    compressors: &#xa;      NULL&#xa;    cipher preference: server&#xa;  least strength: A"><table key="TLSv1.2">
+<table key="ciphers">
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+</table>
+<table key="compressors">
+<elem>NULL</elem>
+</table>
+<elem key="cipher preference">server</elem>
+</table>
+<elem key="least strength">A</elem>
+</script><script id="http-security-headers" output="&#xa;  Strict_Transport_Security: &#xa;    HSTS not configured in HTTPS Server&#xa;  Cache_Control: &#xa;    Header: Cache-Control: no-cache, no-store, must-revalidate, private&#xa;  Expires: &#xa;    Header: Expires: Fri, 01 Jan 1990 00:00:00 GMT"><table key="Strict_Transport_Security">
+<elem>HSTS not configured in HTTPS Server</elem>
+</table>
+<table key="Cache_Control">
+<elem>Header: Cache-Control: no-cache, no-store, must-revalidate, private</elem>
+</table>
+<table key="Expires">
+<elem>Header: Expires: Fri, 01 Jan 1990 00:00:00 GMT</elem>
+</table>
+</script></port>
+<port protocol="tcp" portid="2082"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="infowave" servicefp="SF-Port2082-TCP:V=7.95%I=7%D=12/16%Time=694141FC%P=x86_64-pc-linux-gnu%r(SIPOptions,15C,&quot;HTTP/1\.1\x20301\x20Moved\r\nContent-length:\x20137\r\nLocation:\x20https://eyewebsolution\.dnshostserver\.in:2083/sip%3anm\r\nContent-type:\x20text/html;\x20charset=\&quot;utf-8\&quot;\r\nCache-Control:\x20no-cache,\x20no-store,\x20must-revalidate,\x20private\r\n\r\n&lt;html&gt;&lt;head&gt;&lt;META\x20HTTP-EQUIV=\&quot;refresh\&quot;\x20CONTENT=\&quot;2;URL=https://eyewebsolution\.dnshostserver\.in:2083/sip%3anm\&quot;&gt;&lt;/head&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;\n&quot;);" method="table" conf="3"/><script id="fingerprint-strings" output="&#xa;  SIPOptions: &#xa;    HTTP/1.1 301 Moved&#xa;    Content-length: 137&#xa;    Location: https://eyewebsolution.dnshostserver.in:2083/sip%3anm&#xa;    Content-type: text/html; charset=&quot;utf-8&quot;&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    &lt;html&gt;&lt;head&gt;&lt;META HTTP-EQUIV=&quot;refresh&quot; CONTENT=&quot;2;URL=https://eyewebsolution.dnshostserver.in:2083/sip%3anm&quot;&gt;&lt;/head&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;"><elem key="SIPOptions">&#xa;    HTTP/1.1 301 Moved&#xa;    Content-length: 137&#xa;    Location: https://eyewebsolution.dnshostserver.in:2083/sip%3anm&#xa;    Content-type: text/html; charset=&quot;utf-8&quot;&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    &lt;html&gt;&lt;head&gt;&lt;META HTTP-EQUIV=&quot;refresh&quot; CONTENT=&quot;2;URL=https://eyewebsolution.dnshostserver.in:2083/sip%3anm&quot;&gt;&lt;/head&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;</elem>
+</script></port>
+<port protocol="tcp" portid="2083"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="radsec" servicefp="SF-Port2083-TCP:V=7.95%T=SSL%I=7%D=12/16%Time=694141AF%P=x86_64-pc-linux-gnu%r(GetRequest,4000,&quot;HTTP/1\.0\x20200\x20OK\r\nConnection:\x20close\r\nContent-Type:\x20text/html;\x20charset=\&quot;utf-8\&quot;\r\nDate:\x20Tue,\x2016\x20Dec\x202025\x2011:25:35\x20GMT\r\nCache-Control:\x20no-cache,\x20no-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-cache\r\nSet-Cookie:\x20cprelogin=no;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2083;\x20secure\r\nSet-Cookie:\x20cpsession=%3a1jVAWvfnrEbTk3UR%2c6adf0cd58979ec392eb399df7382aec0;\x20HttpOnly;\x20path=/;\x20port=2083;\x20secure\r\nSet-Cookie:\x20roundcube_sessid=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2083;\x20secure\r\nSet-Cookie:\x20roundcube_sessauth=expired;\x20HttpOnly;\x20domain=eyewebsolution\.dnshostserver\.in;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2083;\x20secure\r\nSet-Cookie:\x20PPA_ID=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2083;\x20secure\r\nCache-Control:\x20no-cache,\x20no-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-cache\r\nX-Frame-Options:\x20SAMEORIGIN\r\nX-Conte&quot;)%r(HTTPOptions,4000,&quot;HTTP/1\.0\x20200\x20OK\r\nConnection:\x20close\r\nContent-Type:\x20text/html;\x20charset=\&quot;utf-8\&quot;\r\nDate:\x20Tue,\x2016\x20Dec\x202025\x2011:25:35\x20GMT\r\nCache-Control:\x20no-cache,\x20no-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-cache\r\nSet-Cookie:\x20cprelogin=no;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2083;\x20secure\r\nSet-Cookie:\x20cpsession=%3aPwyqwi4s4zIGVkDw%2c93a0c7cff83d0ba97abc2969bc954fef;\x20HttpOnly;\x20path=/;\x20port=2083;\x20secure\r\nSet-Cookie:\x20roundcube_sessid=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2083;\x20secure\r\nSet-Cookie:\x20roundcube_sessauth=expired;\x20HttpOnly;\x20domain=eyewebsolution\.dnshostserver\.in;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2083;\x20secure\r\nSet-Cookie:\x20PPA_ID=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2083;\x20secure\r\nCache-Control:\x20no-cache,\x20no-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-cache\r\nX-Frame-Options:\x20SAMEORIGIN\r\nX-Conte&quot;);" tunnel="ssl" method="table" conf="3"/><script id="ssl-enum-ciphers" output="&#xa;  TLSv1.2: &#xa;    ciphers: &#xa;      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A&#xa;      TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A&#xa;      TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A&#xa;    compressors: &#xa;      NULL&#xa;    cipher preference: server&#xa;  least strength: A"><table key="TLSv1.2">
+<table key="ciphers">
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+</table>
+<table key="compressors">
+<elem>NULL</elem>
+</table>
+<elem key="cipher preference">server</elem>
+</table>
+<elem key="least strength">A</elem>
+</script><script id="ssl-cert" output="Subject: commonName=eyewebsolution.dnshostserver.in&#xa;Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in&#xa;Issuer: commonName=R12/organizationName=Let&apos;s Encrypt/countryName=US&#xa;Public Key type: rsa&#xa;Public Key bits: 2048&#xa;Signature Algorithm: sha256WithRSAEncryption&#xa;Not valid before: 2025-11-16T02:35:21&#xa;Not valid after:  2026-02-14T02:35:20&#xa;MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39&#xa;SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112"><table key="subject">
+<elem key="commonName">eyewebsolution.dnshostserver.in</elem>
+</table>
+<table key="issuer">
+<elem key="commonName">R12</elem>
+<elem key="countryName">US</elem>
+<elem key="organizationName">Let&apos;s Encrypt</elem>
+</table>
+<table key="pubkey">
+<elem key="type">rsa</elem>
+<elem key="bits">2048</elem>
+<elem key="modulus">C94BAAEEA7101B861B4E20CE14DBC3635A3179B924D7AB913664D157D15C972D63A1FD6B9803A387EC5BC80B7F950088711384F0FF58A718D14609C6311D73DF760E1A200BA112B6D307051BD4CB496F4E9AD00F81D55FA32192B6E3CF701A49F52E25F68B6F9BEC1FA8823F3BFD467213F2F764420CD9CEA97CFFA9A0D9B082D050FE24CF9BB52838FD4692928189F190D59E683D9B3C21C85E1F0B6FAB8A18629C77E90551859576F494B70C6FF197E94989017FF57F946FBF5D658861F88ADC91C64DB596E6F3B0ED88508F4B7351AE5474128FAB2C55B0FC512F11299891C48E74CEE3DC5FF11B140E08C01DB9D1580D30D9FB753D37BC065D56F5C9CB8B</elem>
+<elem key="exponent">65537</elem>
+</table>
+<table key="extensions">
+<table>
+<elem key="name">X509v3 Key Usage</elem>
+<elem key="value">Digital Signature, Key Encipherment</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Extended Key Usage</elem>
+<elem key="value">TLS Web Server Authentication, TLS Web Client Authentication</elem>
+</table>
+<table>
+<elem key="name">X509v3 Basic Constraints</elem>
+<elem key="value">CA:FALSE</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Key Identifier</elem>
+<elem key="value">C1:8C:5E:33:73:C2:0E:C3:38:3C:F6:12:A3:80:D4:3E:0C:0F:22:0F</elem>
+</table>
+<table>
+<elem key="name">X509v3 Authority Key Identifier</elem>
+<elem key="value">00:B5:29:F2:2D:8E:6F:31:E8:9B:4C:AD:78:3E:FA:DC:E9:0C:D1:D2</elem>
+</table>
+<table>
+<elem key="name">Authority Information Access</elem>
+<elem key="value">CA Issuers - URI:http://r12.i.lencr.org/</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Alternative Name</elem>
+<elem key="value">DNS:eyewebsolution.dnshostserver.in</elem>
+</table>
+<table>
+<elem key="name">X509v3 Certificate Policies</elem>
+<elem key="value">Policy: 2.23.140.1.2.1</elem>
+</table>
+<table>
+<elem key="name">X509v3 CRL Distribution Points</elem>
+<elem key="value">Full Name:&#xa;  URI:http://r12.c.lencr.org/108.crl&#xa;</elem>
+</table>
+<table>
+<elem key="name">CT Precertificate SCTs</elem>
+<elem key="value">Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 0E:57:94:BC:F3:AE:A9:3E:33:1B:2C:99:07:B3:F7:90:&#xa;                DF:9B:C2:3D:71:32:25:DD:21:A9:25:AC:61:C5:4E:21&#xa;    Timestamp : Nov 16 03:33:51.167 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:44:02:20:6B:0A:4F:EA:F7:BB:5D:E0:8C:C2:59:88:&#xa;                12:7F:B6:4C:BB:69:B7:38:61:2F:92:48:D9:32:FB:E2:&#xa;                C6:40:54:9F:02:20:4B:59:D3:9A:36:3E:1F:73:27:25:&#xa;                1A:91:7B:5C:90:D3:4B:AC:FD:73:85:9D:4A:BB:C0:61:&#xa;                BC:BC:CB:91:1A:51&#xa;Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 64:11:C4:6C:A4:12:EC:A7:89:1C:A2:02:2E:00:BC:AB:&#xa;                4F:28:07:D4:1E:35:27:AB:EA:FE:D5:03:C9:7D:CD:F0&#xa;    Timestamp : Nov 16 03:33:53.166 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:45:02:21:00:E6:62:BD:F1:92:96:7A:07:C6:0B:88:&#xa;                7B:B4:12:53:11:FE:C4:97:53:74:96:3E:E9:B4:C3:3F:&#xa;                80:BB:67:31:BB:02:20:6E:8B:78:D4:08:26:EC:97:F1:&#xa;                72:99:FB:FC:84:1D:FD:56:77:90:41:F8:94:38:4A:5F:&#xa;                1F:DA:34:50:9A:F7:71</elem>
+</table>
+</table>
+<elem key="sig_algo">sha256WithRSAEncryption</elem>
+<table key="validity">
+<elem key="notBefore">2025-11-16T02:35:21</elem>
+<elem key="notAfter">2026-02-14T02:35:20</elem>
+</table>
+<elem key="md5">46283f2b4ee90640ebcbfb39b2280f39</elem>
+<elem key="sha1">7c399d3344a5c26a6eceee5a2e32ecf8ce2eb112</elem>
+<elem key="pem">-&#45;&#45;&#45;&#45;BEGIN CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;MIIFGjCCBAKgAwIBAgISBYRCPONqhoM/TGGvFJ6OE81rMA0GCSqGSIb3DQEBCwUA&#xa;MDMxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQwwCgYDVQQD&#xa;EwNSMTIwHhcNMjUxMTE2MDIzNTIxWhcNMjYwMjE0MDIzNTIwWjAqMSgwJgYDVQQD&#xa;Ex9leWV3ZWJzb2x1dGlvbi5kbnNob3N0c2VydmVyLmluMIIBIjANBgkqhkiG9w0B&#xa;AQEFAAOCAQ8AMIIBCgKCAQEAyUuq7qcQG4YbTiDOFNvDY1oxebkk16uRNmTRV9Fc&#xa;ly1jof1rmAOjh+xbyAt/lQCIcROE8P9YpxjRRgnGMR1z33YOGiALoRK20wcFG9TL&#xa;SW9OmtAPgdVfoyGStuPPcBpJ9S4l9otvm+wfqII/O/1GchPy92RCDNnOqXz/qaDZ&#xa;sILQUP4kz5u1KDj9RpKSgYnxkNWeaD2bPCHIXh8Lb6uKGGKcd+kFUYWVdvSUtwxv&#xa;8ZfpSYkBf/V/lG+/XWWIYfiK3JHGTbWW5vOw7YhQj0tzUa5UdBKPqyxVsPxRLxEp&#xa;mJHEjnTO49xf8RsUDgjAHbnRWA0w2ft1PTe8Bl1W9cnLiwIDAQABo4ICLzCCAisw&#xa;DgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAM&#xa;BgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTBjF4zc8IOwzg89hKjgNQ+DA8iDzAfBgNV&#xa;HSMEGDAWgBQAtSnyLY5vMeibTK14Pvrc6QzR0jAzBggrBgEFBQcBAQQnMCUwIwYI&#xa;KwYBBQUHMAKGF2h0dHA6Ly9yMTIuaS5sZW5jci5vcmcvMCoGA1UdEQQjMCGCH2V5&#xa;ZXdlYnNvbHV0aW9uLmRuc2hvc3RzZXJ2ZXIuaW4wEwYDVR0gBAwwCjAIBgZngQwB&#xa;AgEwLwYDVR0fBCgwJjAkoCKgIIYeaHR0cDovL3IxMi5jLmxlbmNyLm9yZy8xMDgu&#xa;Y3JsMIIBAwYKKwYBBAHWeQIEAgSB9ASB8QDvAHUADleUvPOuqT4zGyyZB7P3kN+b&#xa;wj1xMiXdIaklrGHFTiEAAAGairnpvwAABAMARjBEAiBrCk/q97td4IzCWYgSf7ZM&#xa;u2m3OGEvkkjZMvvixkBUnwIgS1nTmjY+H3MnJRqRe1yQ00us/XOFnUq7wGG8vMuR&#xa;GlEAdgBkEcRspBLsp4kcogIuALyrTygH1B41J6vq/tUDyX3N8AAAAZqKufGOAAAE&#xa;AwBHMEUCIQDmYr3xkpZ6B8YLiHu0ElMR/sSXU3SWPum0wz+Au2cxuwIgbot41Agm&#xa;7Jfxcpn7/IQd/VZ3kEH4lDhKXx/aNFCa93EwDQYJKoZIhvcNAQELBQADggEBAMW2&#xa;5zgcNBLrqRYc9m3VaaeN00Y/ki+lRz2N+SaVekYR3ctOo3PrTOOSClLOyEUIjQNi&#xa;y3RprVQ78OqFBzNS8bHA69SfhvlbCkY9QKyDl8AcKsoxSYdQeDJmmnkeLadNtwZf&#xa;Ie5xhlrvrccQ/G99WoIgRykI9mZPVTu4HdmG1vPkn9lPnhDFL7rOiDO3yNrAjnmS&#xa;XEaXnWwiRoCLoEKK4mXFg+MOw0R69kuypXCA385oDoOXZyJuS7gu3U0F2kf6GuY0&#xa;DvGqQ2ZhkNiHJBybaYqPIc0ZihXmfRbluXw4GgGByp5DUqUAZhaJpWRHT5KyCqDP&#xa;hy0IB9NofzwGw/IljQ8=&#xa;-&#45;&#45;&#45;&#45;END CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;</elem>
+</script><script id="fingerprint-strings" output="&#xa;  GetRequest: &#xa;    HTTP/1.0 200 OK&#xa;    Connection: close&#xa;    Content-Type: text/html; charset=&quot;utf-8&quot;&#xa;    Date: Tue, 16 Dec 2025 11:25:35 GMT&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    Set-Cookie: cprelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Set-Cookie: cpsession=%3a1jVAWvfnrEbTk3UR%2c6adf0cd58979ec392eb399df7382aec0; HttpOnly; path=/; port=2083; secure&#xa;    Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    X-Frame-Options: SAMEORIGIN&#xa;    X-Conte&#xa;  HTTPOptions: &#xa;    HTTP/1.0 200 OK&#xa;    Connection: close&#xa;    Content-Type: text/html; charset=&quot;utf-8&quot;&#xa;    Date: Tue, 16 Dec 2025 11:25:35 GMT&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    Set-Cookie: cprelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Set-Cookie: cpsession=%3aPwyqwi4s4zIGVkDw%2c93a0c7cff83d0ba97abc2969bc954fef; HttpOnly; path=/; port=2083; secure&#xa;    Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    X-Frame-Options: SAMEORIGIN&#xa;    X-Conte"><elem key="GetRequest">&#xa;    HTTP/1.0 200 OK&#xa;    Connection: close&#xa;    Content-Type: text/html; charset=&quot;utf-8&quot;&#xa;    Date: Tue, 16 Dec 2025 11:25:35 GMT&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    Set-Cookie: cprelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Set-Cookie: cpsession=%3a1jVAWvfnrEbTk3UR%2c6adf0cd58979ec392eb399df7382aec0; HttpOnly; path=/; port=2083; secure&#xa;    Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    X-Frame-Options: SAMEORIGIN&#xa;    X-Conte</elem>
+<elem key="HTTPOptions">&#xa;    HTTP/1.0 200 OK&#xa;    Connection: close&#xa;    Content-Type: text/html; charset=&quot;utf-8&quot;&#xa;    Date: Tue, 16 Dec 2025 11:25:35 GMT&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    Set-Cookie: cprelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Set-Cookie: cpsession=%3aPwyqwi4s4zIGVkDw%2c93a0c7cff83d0ba97abc2969bc954fef; HttpOnly; path=/; port=2083; secure&#xa;    Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2083; secure&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    X-Frame-Options: SAMEORIGIN&#xa;    X-Conte</elem>
+</script></port>
+<port protocol="tcp" portid="2086"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="gnunet" servicefp="SF-Port2086-TCP:V=7.95%I=7%D=12/16%Time=694141FB%P=x86_64-pc-linux-gnu%r(SIPOptions,15C,&quot;HTTP/1\.1\x20301\x20Moved\r\nContent-length:\x20137\r\nLocation:\x20https://eyewebsolution\.dnshostserver\.in:2087/sip%3anm\r\nContent-type:\x20text/html;\x20charset=\&quot;utf-8\&quot;\r\nCache-Control:\x20no-cache,\x20no-store,\x20must-revalidate,\x20private\r\n\r\n&lt;html&gt;&lt;head&gt;&lt;META\x20HTTP-EQUIV=\&quot;refresh\&quot;\x20CONTENT=\&quot;2;URL=https://eyewebsolution\.dnshostserver\.in:2087/sip%3anm\&quot;&gt;&lt;/head&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;\n&quot;);" method="table" conf="3"/><script id="fingerprint-strings" output="&#xa;  SIPOptions: &#xa;    HTTP/1.1 301 Moved&#xa;    Content-length: 137&#xa;    Location: https://eyewebsolution.dnshostserver.in:2087/sip%3anm&#xa;    Content-type: text/html; charset=&quot;utf-8&quot;&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    &lt;html&gt;&lt;head&gt;&lt;META HTTP-EQUIV=&quot;refresh&quot; CONTENT=&quot;2;URL=https://eyewebsolution.dnshostserver.in:2087/sip%3anm&quot;&gt;&lt;/head&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;"><elem key="SIPOptions">&#xa;    HTTP/1.1 301 Moved&#xa;    Content-length: 137&#xa;    Location: https://eyewebsolution.dnshostserver.in:2087/sip%3anm&#xa;    Content-type: text/html; charset=&quot;utf-8&quot;&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    &lt;html&gt;&lt;head&gt;&lt;META HTTP-EQUIV=&quot;refresh&quot; CONTENT=&quot;2;URL=https://eyewebsolution.dnshostserver.in:2087/sip%3anm&quot;&gt;&lt;/head&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;</elem>
+</script></port>
+<port protocol="tcp" portid="2087"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="eli" servicefp="SF-Port2087-TCP:V=7.95%T=SSL%I=7%D=12/16%Time=694141B6%P=x86_64-pc-linux-gnu%r(GetRequest,4000,&quot;HTTP/1\.0\x20200\x20OK\r\nConnection:\x20close\r\nContent-Type:\x20text/html;\x20charset=\&quot;utf-8\&quot;\r\nDate:\x20Tue,\x2016\x20Dec\x202025\x2011:25:42\x20GMT\r\nCache-Control:\x20no-cache,\x20no-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-cache\r\nSet-Cookie:\x20whostmgrrelogin=no;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2087;\x20secure\r\nSet-Cookie:\x20whostmgrsession=%3a2QvtL3siByjQzDBC%2c6cccf2a750f950626e9336410f12793f;\x20HttpOnly;\x20path=/;\x20port=2087;\x20secure\r\nSet-Cookie:\x20roundcube_sessid=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2087;\x20secure\r\nSet-Cookie:\x20roundcube_sessauth=expired;\x20HttpOnly;\x20domain=eyewebsolution\.dnshostserver\.in;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2087;\x20secure\r\nSet-Cookie:\x20PPA_ID=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2087;\x20secure\r\nCache-Control:\x20no-cache,\x20no-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-cache\r\nX-Frame-Options:\x20SAMEORI&quot;)%r(HTTPOptions,4000,&quot;HTTP/1\.0\x20200\x20OK\r\nConnection:\x20close\r\nContent-Type:\x20text/html;\x20charset=\&quot;utf-8\&quot;\r\nDate:\x20Tue,\x2016\x20Dec\x202025\x2011:25:43\x20GMT\r\nCache-Control:\x20no-cache,\x20no-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-cache\r\nSet-Cookie:\x20whostmgrrelogin=no;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2087;\x20secure\r\nSet-Cookie:\x20whostmgrsession=%3ac6YYQFeBr_BBYjI2%2c8f541cf61e90aa047ad5671786231e8b;\x20HttpOnly;\x20path=/;\x20port=2087;\x20secure\r\nSet-Cookie:\x20roundcube_sessid=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2087;\x20secure\r\nSet-Cookie:\x20roundcube_sessauth=expired;\x20HttpOnly;\x20domain=eyewebsolution\.dnshostserver\.in;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2087;\x20secure\r\nSet-Cookie:\x20PPA_ID=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2087;\x20secure\r\nCache-Control:\x20no-cache,\x20no-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-cache\r\nX-Frame-Options:\x20SAMEORI&quot;);" tunnel="ssl" method="table" conf="3"/><script id="ssl-cert" output="Subject: commonName=eyewebsolution.dnshostserver.in&#xa;Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in&#xa;Issuer: commonName=R12/organizationName=Let&apos;s Encrypt/countryName=US&#xa;Public Key type: rsa&#xa;Public Key bits: 2048&#xa;Signature Algorithm: sha256WithRSAEncryption&#xa;Not valid before: 2025-11-16T02:35:21&#xa;Not valid after:  2026-02-14T02:35:20&#xa;MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39&#xa;SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112"><table key="subject">
+<elem key="commonName">eyewebsolution.dnshostserver.in</elem>
+</table>
+<table key="issuer">
+<elem key="commonName">R12</elem>
+<elem key="countryName">US</elem>
+<elem key="organizationName">Let&apos;s Encrypt</elem>
+</table>
+<table key="pubkey">
+<elem key="type">rsa</elem>
+<elem key="bits">2048</elem>
+<elem key="modulus">C94BAAEEA7101B861B4E20CE14DBC3635A3179B924D7AB913664D157D15C972D63A1FD6B9803A387EC5BC80B7F950088711384F0FF58A718D14609C6311D73DF760E1A200BA112B6D307051BD4CB496F4E9AD00F81D55FA32192B6E3CF701A49F52E25F68B6F9BEC1FA8823F3BFD467213F2F764420CD9CEA97CFFA9A0D9B082D050FE24CF9BB52838FD4692928189F190D59E683D9B3C21C85E1F0B6FAB8A18629C77E90551859576F494B70C6FF197E94989017FF57F946FBF5D658861F88ADC91C64DB596E6F3B0ED88508F4B7351AE5474128FAB2C55B0FC512F11299891C48E74CEE3DC5FF11B140E08C01DB9D1580D30D9FB753D37BC065D56F5C9CB8B</elem>
+<elem key="exponent">65537</elem>
+</table>
+<table key="extensions">
+<table>
+<elem key="name">X509v3 Key Usage</elem>
+<elem key="value">Digital Signature, Key Encipherment</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Extended Key Usage</elem>
+<elem key="value">TLS Web Server Authentication, TLS Web Client Authentication</elem>
+</table>
+<table>
+<elem key="name">X509v3 Basic Constraints</elem>
+<elem key="value">CA:FALSE</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Key Identifier</elem>
+<elem key="value">C1:8C:5E:33:73:C2:0E:C3:38:3C:F6:12:A3:80:D4:3E:0C:0F:22:0F</elem>
+</table>
+<table>
+<elem key="name">X509v3 Authority Key Identifier</elem>
+<elem key="value">00:B5:29:F2:2D:8E:6F:31:E8:9B:4C:AD:78:3E:FA:DC:E9:0C:D1:D2</elem>
+</table>
+<table>
+<elem key="name">Authority Information Access</elem>
+<elem key="value">CA Issuers - URI:http://r12.i.lencr.org/</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Alternative Name</elem>
+<elem key="value">DNS:eyewebsolution.dnshostserver.in</elem>
+</table>
+<table>
+<elem key="name">X509v3 Certificate Policies</elem>
+<elem key="value">Policy: 2.23.140.1.2.1</elem>
+</table>
+<table>
+<elem key="name">X509v3 CRL Distribution Points</elem>
+<elem key="value">Full Name:&#xa;  URI:http://r12.c.lencr.org/108.crl&#xa;</elem>
+</table>
+<table>
+<elem key="name">CT Precertificate SCTs</elem>
+<elem key="value">Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 0E:57:94:BC:F3:AE:A9:3E:33:1B:2C:99:07:B3:F7:90:&#xa;                DF:9B:C2:3D:71:32:25:DD:21:A9:25:AC:61:C5:4E:21&#xa;    Timestamp : Nov 16 03:33:51.167 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:44:02:20:6B:0A:4F:EA:F7:BB:5D:E0:8C:C2:59:88:&#xa;                12:7F:B6:4C:BB:69:B7:38:61:2F:92:48:D9:32:FB:E2:&#xa;                C6:40:54:9F:02:20:4B:59:D3:9A:36:3E:1F:73:27:25:&#xa;                1A:91:7B:5C:90:D3:4B:AC:FD:73:85:9D:4A:BB:C0:61:&#xa;                BC:BC:CB:91:1A:51&#xa;Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 64:11:C4:6C:A4:12:EC:A7:89:1C:A2:02:2E:00:BC:AB:&#xa;                4F:28:07:D4:1E:35:27:AB:EA:FE:D5:03:C9:7D:CD:F0&#xa;    Timestamp : Nov 16 03:33:53.166 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:45:02:21:00:E6:62:BD:F1:92:96:7A:07:C6:0B:88:&#xa;                7B:B4:12:53:11:FE:C4:97:53:74:96:3E:E9:B4:C3:3F:&#xa;                80:BB:67:31:BB:02:20:6E:8B:78:D4:08:26:EC:97:F1:&#xa;                72:99:FB:FC:84:1D:FD:56:77:90:41:F8:94:38:4A:5F:&#xa;                1F:DA:34:50:9A:F7:71</elem>
+</table>
+</table>
+<elem key="sig_algo">sha256WithRSAEncryption</elem>
+<table key="validity">
+<elem key="notBefore">2025-11-16T02:35:21</elem>
+<elem key="notAfter">2026-02-14T02:35:20</elem>
+</table>
+<elem key="md5">46283f2b4ee90640ebcbfb39b2280f39</elem>
+<elem key="sha1">7c399d3344a5c26a6eceee5a2e32ecf8ce2eb112</elem>
+<elem key="pem">-&#45;&#45;&#45;&#45;BEGIN CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;MIIFGjCCBAKgAwIBAgISBYRCPONqhoM/TGGvFJ6OE81rMA0GCSqGSIb3DQEBCwUA&#xa;MDMxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQwwCgYDVQQD&#xa;EwNSMTIwHhcNMjUxMTE2MDIzNTIxWhcNMjYwMjE0MDIzNTIwWjAqMSgwJgYDVQQD&#xa;Ex9leWV3ZWJzb2x1dGlvbi5kbnNob3N0c2VydmVyLmluMIIBIjANBgkqhkiG9w0B&#xa;AQEFAAOCAQ8AMIIBCgKCAQEAyUuq7qcQG4YbTiDOFNvDY1oxebkk16uRNmTRV9Fc&#xa;ly1jof1rmAOjh+xbyAt/lQCIcROE8P9YpxjRRgnGMR1z33YOGiALoRK20wcFG9TL&#xa;SW9OmtAPgdVfoyGStuPPcBpJ9S4l9otvm+wfqII/O/1GchPy92RCDNnOqXz/qaDZ&#xa;sILQUP4kz5u1KDj9RpKSgYnxkNWeaD2bPCHIXh8Lb6uKGGKcd+kFUYWVdvSUtwxv&#xa;8ZfpSYkBf/V/lG+/XWWIYfiK3JHGTbWW5vOw7YhQj0tzUa5UdBKPqyxVsPxRLxEp&#xa;mJHEjnTO49xf8RsUDgjAHbnRWA0w2ft1PTe8Bl1W9cnLiwIDAQABo4ICLzCCAisw&#xa;DgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAM&#xa;BgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTBjF4zc8IOwzg89hKjgNQ+DA8iDzAfBgNV&#xa;HSMEGDAWgBQAtSnyLY5vMeibTK14Pvrc6QzR0jAzBggrBgEFBQcBAQQnMCUwIwYI&#xa;KwYBBQUHMAKGF2h0dHA6Ly9yMTIuaS5sZW5jci5vcmcvMCoGA1UdEQQjMCGCH2V5&#xa;ZXdlYnNvbHV0aW9uLmRuc2hvc3RzZXJ2ZXIuaW4wEwYDVR0gBAwwCjAIBgZngQwB&#xa;AgEwLwYDVR0fBCgwJjAkoCKgIIYeaHR0cDovL3IxMi5jLmxlbmNyLm9yZy8xMDgu&#xa;Y3JsMIIBAwYKKwYBBAHWeQIEAgSB9ASB8QDvAHUADleUvPOuqT4zGyyZB7P3kN+b&#xa;wj1xMiXdIaklrGHFTiEAAAGairnpvwAABAMARjBEAiBrCk/q97td4IzCWYgSf7ZM&#xa;u2m3OGEvkkjZMvvixkBUnwIgS1nTmjY+H3MnJRqRe1yQ00us/XOFnUq7wGG8vMuR&#xa;GlEAdgBkEcRspBLsp4kcogIuALyrTygH1B41J6vq/tUDyX3N8AAAAZqKufGOAAAE&#xa;AwBHMEUCIQDmYr3xkpZ6B8YLiHu0ElMR/sSXU3SWPum0wz+Au2cxuwIgbot41Agm&#xa;7Jfxcpn7/IQd/VZ3kEH4lDhKXx/aNFCa93EwDQYJKoZIhvcNAQELBQADggEBAMW2&#xa;5zgcNBLrqRYc9m3VaaeN00Y/ki+lRz2N+SaVekYR3ctOo3PrTOOSClLOyEUIjQNi&#xa;y3RprVQ78OqFBzNS8bHA69SfhvlbCkY9QKyDl8AcKsoxSYdQeDJmmnkeLadNtwZf&#xa;Ie5xhlrvrccQ/G99WoIgRykI9mZPVTu4HdmG1vPkn9lPnhDFL7rOiDO3yNrAjnmS&#xa;XEaXnWwiRoCLoEKK4mXFg+MOw0R69kuypXCA385oDoOXZyJuS7gu3U0F2kf6GuY0&#xa;DvGqQ2ZhkNiHJBybaYqPIc0ZihXmfRbluXw4GgGByp5DUqUAZhaJpWRHT5KyCqDP&#xa;hy0IB9NofzwGw/IljQ8=&#xa;-&#45;&#45;&#45;&#45;END CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;</elem>
+</script><script id="fingerprint-strings" output="&#xa;  GetRequest: &#xa;    HTTP/1.0 200 OK&#xa;    Connection: close&#xa;    Content-Type: text/html; charset=&quot;utf-8&quot;&#xa;    Date: Tue, 16 Dec 2025 11:25:42 GMT&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    Set-Cookie: whostmgrrelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Set-Cookie: whostmgrsession=%3a2QvtL3siByjQzDBC%2c6cccf2a750f950626e9336410f12793f; HttpOnly; path=/; port=2087; secure&#xa;    Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    X-Frame-Options: SAMEORI&#xa;  HTTPOptions: &#xa;    HTTP/1.0 200 OK&#xa;    Connection: close&#xa;    Content-Type: text/html; charset=&quot;utf-8&quot;&#xa;    Date: Tue, 16 Dec 2025 11:25:43 GMT&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    Set-Cookie: whostmgrrelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Set-Cookie: whostmgrsession=%3ac6YYQFeBr_BBYjI2%2c8f541cf61e90aa047ad5671786231e8b; HttpOnly; path=/; port=2087; secure&#xa;    Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    X-Frame-Options: SAMEORI"><elem key="GetRequest">&#xa;    HTTP/1.0 200 OK&#xa;    Connection: close&#xa;    Content-Type: text/html; charset=&quot;utf-8&quot;&#xa;    Date: Tue, 16 Dec 2025 11:25:42 GMT&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    Set-Cookie: whostmgrrelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Set-Cookie: whostmgrsession=%3a2QvtL3siByjQzDBC%2c6cccf2a750f950626e9336410f12793f; HttpOnly; path=/; port=2087; secure&#xa;    Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    X-Frame-Options: SAMEORI</elem>
+<elem key="HTTPOptions">&#xa;    HTTP/1.0 200 OK&#xa;    Connection: close&#xa;    Content-Type: text/html; charset=&quot;utf-8&quot;&#xa;    Date: Tue, 16 Dec 2025 11:25:43 GMT&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    Set-Cookie: whostmgrrelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Set-Cookie: whostmgrsession=%3ac6YYQFeBr_BBYjI2%2c8f541cf61e90aa047ad5671786231e8b; HttpOnly; path=/; port=2087; secure&#xa;    Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2087; secure&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    X-Frame-Options: SAMEORI</elem>
+</script><script id="ssl-enum-ciphers" output="&#xa;  TLSv1.2: &#xa;    ciphers: &#xa;      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A&#xa;      TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A&#xa;      TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A&#xa;    compressors: &#xa;      NULL&#xa;    cipher preference: server&#xa;  least strength: A"><table key="TLSv1.2">
+<table key="ciphers">
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+</table>
+<table key="compressors">
+<elem>NULL</elem>
+</table>
+<elem key="cipher preference">server</elem>
+</table>
+<elem key="least strength">A</elem>
+</script></port>
+<port protocol="tcp" portid="2095"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="nbx-ser" servicefp="SF-Port2095-TCP:V=7.95%I=7%D=12/16%Time=694141FB%P=x86_64-pc-linux-gnu%r(SIPOptions,15C,&quot;HTTP/1\.1\x20301\x20Moved\r\nContent-length:\x20137\r\nLocation:\x20https://eyewebsolution\.dnshostserver\.in:2096/sip%3anm\r\nContent-type:\x20text/html;\x20charset=\&quot;utf-8\&quot;\r\nCache-Control:\x20no-cache,\x20no-store,\x20must-revalidate,\x20private\r\n\r\n&lt;html&gt;&lt;head&gt;&lt;META\x20HTTP-EQUIV=\&quot;refresh\&quot;\x20CONTENT=\&quot;2;URL=https://eyewebsolution\.dnshostserver\.in:2096/sip%3anm\&quot;&gt;&lt;/head&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;\n&quot;);" method="table" conf="3"/><script id="fingerprint-strings" output="&#xa;  SIPOptions: &#xa;    HTTP/1.1 301 Moved&#xa;    Content-length: 137&#xa;    Location: https://eyewebsolution.dnshostserver.in:2096/sip%3anm&#xa;    Content-type: text/html; charset=&quot;utf-8&quot;&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    &lt;html&gt;&lt;head&gt;&lt;META HTTP-EQUIV=&quot;refresh&quot; CONTENT=&quot;2;URL=https://eyewebsolution.dnshostserver.in:2096/sip%3anm&quot;&gt;&lt;/head&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;"><elem key="SIPOptions">&#xa;    HTTP/1.1 301 Moved&#xa;    Content-length: 137&#xa;    Location: https://eyewebsolution.dnshostserver.in:2096/sip%3anm&#xa;    Content-type: text/html; charset=&quot;utf-8&quot;&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    &lt;html&gt;&lt;head&gt;&lt;META HTTP-EQUIV=&quot;refresh&quot; CONTENT=&quot;2;URL=https://eyewebsolution.dnshostserver.in:2096/sip%3anm&quot;&gt;&lt;/head&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;</elem>
+</script></port>
+<port protocol="tcp" portid="2096"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="nbx-dir" servicefp="SF-Port2096-TCP:V=7.95%T=SSL%I=7%D=12/16%Time=694141B3%P=x86_64-pc-linux-gnu%r(GetRequest,4000,&quot;HTTP/1\.0\x20200\x20OK\r\nConnection:\x20close\r\nContent-Type:\x20text/html;\x20charset=\&quot;utf-8\&quot;\r\nDate:\x20Tue,\x2016\x20Dec\x202025\x2011:25:39\x20GMT\r\nCache-Control:\x20no-cache,\x20no-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-cache\r\nSet-Cookie:\x20webmailrelogin=no;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2096;\x20secure\r\nSet-Cookie:\x20webmailsession=%3adiaxYdq1HGT2UzvF%2c1bb8163e1325607e457050c025fac42c;\x20HttpOnly;\x20path=/;\x20port=2096;\x20secure\r\nSet-Cookie:\x20roundcube_sessid=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2096;\x20secure\r\nSet-Cookie:\x20roundcube_sessauth=expired;\x20HttpOnly;\x20domain=eyewebsolution\.dnshostserver\.in;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2096;\x20secure\r\nSet-Cookie:\x20PPA_ID=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2096;\x20secure\r\nSet-Cookie:\x20roundcube_cookies=enabled;\x20HttpOnly;\x20expires=Wed,\x2016-Dec-2026\x2011:25:39\x20GMT;\x20path=/;\x20port=2096&quot;)%r(HTTPOptions,4000,&quot;HTTP/1\.0\x20200\x20OK\r\nConnection:\x20close\r\nContent-Type:\x20text/html;\x20charset=\&quot;utf-8\&quot;\r\nDate:\x20Tue,\x2016\x20Dec\x202025\x2011:25:39\x20GMT\r\nCache-Control:\x20no-cache,\x20no-store,\x20must-revalidate,\x20private\r\nPragma:\x20no-cache\r\nSet-Cookie:\x20webmailrelogin=no;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2096;\x20secure\r\nSet-Cookie:\x20webmailsession=%3aSbm3PGPZkUV2NnoN%2cb69de5e6c1ec39b812dd5084cfb41873;\x20HttpOnly;\x20path=/;\x20port=2096;\x20secure\r\nSet-Cookie:\x20roundcube_sessid=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2096;\x20secure\r\nSet-Cookie:\x20roundcube_sessauth=expired;\x20HttpOnly;\x20domain=eyewebsolution\.dnshostserver\.in;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2096;\x20secure\r\nSet-Cookie:\x20PPA_ID=expired;\x20HttpOnly;\x20expires=Thu,\x2001-Jan-1970\x2000:00:01\x20GMT;\x20path=/;\x20port=2096;\x20secure\r\nSet-Cookie:\x20roundcube_cookies=enabled;\x20HttpOnly;\x20expires=Wed,\x2016-Dec-2026\x2011:25:39\x20GMT;\x20path=/;\x20port=2096&quot;);" tunnel="ssl" method="table" conf="3"/><script id="ssl-cert" output="Subject: commonName=eyewebsolution.dnshostserver.in&#xa;Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in&#xa;Issuer: commonName=R12/organizationName=Let&apos;s Encrypt/countryName=US&#xa;Public Key type: rsa&#xa;Public Key bits: 2048&#xa;Signature Algorithm: sha256WithRSAEncryption&#xa;Not valid before: 2025-11-16T02:35:21&#xa;Not valid after:  2026-02-14T02:35:20&#xa;MD5:   4628:3f2b:4ee9:0640:ebcb:fb39:b228:0f39&#xa;SHA-1: 7c39:9d33:44a5:c26a:6ece:ee5a:2e32:ecf8:ce2e:b112"><table key="subject">
+<elem key="commonName">eyewebsolution.dnshostserver.in</elem>
+</table>
+<table key="issuer">
+<elem key="commonName">R12</elem>
+<elem key="countryName">US</elem>
+<elem key="organizationName">Let&apos;s Encrypt</elem>
+</table>
+<table key="pubkey">
+<elem key="type">rsa</elem>
+<elem key="bits">2048</elem>
+<elem key="modulus">C94BAAEEA7101B861B4E20CE14DBC3635A3179B924D7AB913664D157D15C972D63A1FD6B9803A387EC5BC80B7F950088711384F0FF58A718D14609C6311D73DF760E1A200BA112B6D307051BD4CB496F4E9AD00F81D55FA32192B6E3CF701A49F52E25F68B6F9BEC1FA8823F3BFD467213F2F764420CD9CEA97CFFA9A0D9B082D050FE24CF9BB52838FD4692928189F190D59E683D9B3C21C85E1F0B6FAB8A18629C77E90551859576F494B70C6FF197E94989017FF57F946FBF5D658861F88ADC91C64DB596E6F3B0ED88508F4B7351AE5474128FAB2C55B0FC512F11299891C48E74CEE3DC5FF11B140E08C01DB9D1580D30D9FB753D37BC065D56F5C9CB8B</elem>
+<elem key="exponent">65537</elem>
+</table>
+<table key="extensions">
+<table>
+<elem key="name">X509v3 Key Usage</elem>
+<elem key="value">Digital Signature, Key Encipherment</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Extended Key Usage</elem>
+<elem key="value">TLS Web Server Authentication, TLS Web Client Authentication</elem>
+</table>
+<table>
+<elem key="name">X509v3 Basic Constraints</elem>
+<elem key="value">CA:FALSE</elem>
+<elem key="critical">true</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Key Identifier</elem>
+<elem key="value">C1:8C:5E:33:73:C2:0E:C3:38:3C:F6:12:A3:80:D4:3E:0C:0F:22:0F</elem>
+</table>
+<table>
+<elem key="name">X509v3 Authority Key Identifier</elem>
+<elem key="value">00:B5:29:F2:2D:8E:6F:31:E8:9B:4C:AD:78:3E:FA:DC:E9:0C:D1:D2</elem>
+</table>
+<table>
+<elem key="name">Authority Information Access</elem>
+<elem key="value">CA Issuers - URI:http://r12.i.lencr.org/</elem>
+</table>
+<table>
+<elem key="name">X509v3 Subject Alternative Name</elem>
+<elem key="value">DNS:eyewebsolution.dnshostserver.in</elem>
+</table>
+<table>
+<elem key="name">X509v3 Certificate Policies</elem>
+<elem key="value">Policy: 2.23.140.1.2.1</elem>
+</table>
+<table>
+<elem key="name">X509v3 CRL Distribution Points</elem>
+<elem key="value">Full Name:&#xa;  URI:http://r12.c.lencr.org/108.crl&#xa;</elem>
+</table>
+<table>
+<elem key="name">CT Precertificate SCTs</elem>
+<elem key="value">Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 0E:57:94:BC:F3:AE:A9:3E:33:1B:2C:99:07:B3:F7:90:&#xa;                DF:9B:C2:3D:71:32:25:DD:21:A9:25:AC:61:C5:4E:21&#xa;    Timestamp : Nov 16 03:33:51.167 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:44:02:20:6B:0A:4F:EA:F7:BB:5D:E0:8C:C2:59:88:&#xa;                12:7F:B6:4C:BB:69:B7:38:61:2F:92:48:D9:32:FB:E2:&#xa;                C6:40:54:9F:02:20:4B:59:D3:9A:36:3E:1F:73:27:25:&#xa;                1A:91:7B:5C:90:D3:4B:AC:FD:73:85:9D:4A:BB:C0:61:&#xa;                BC:BC:CB:91:1A:51&#xa;Signed Certificate Timestamp:&#xa;    Version   : v1 (0x0)&#xa;    Log ID    : 64:11:C4:6C:A4:12:EC:A7:89:1C:A2:02:2E:00:BC:AB:&#xa;                4F:28:07:D4:1E:35:27:AB:EA:FE:D5:03:C9:7D:CD:F0&#xa;    Timestamp : Nov 16 03:33:53.166 2025 GMT&#xa;    Extensions: none&#xa;    Signature : ecdsa-with-SHA256&#xa;                30:45:02:21:00:E6:62:BD:F1:92:96:7A:07:C6:0B:88:&#xa;                7B:B4:12:53:11:FE:C4:97:53:74:96:3E:E9:B4:C3:3F:&#xa;                80:BB:67:31:BB:02:20:6E:8B:78:D4:08:26:EC:97:F1:&#xa;                72:99:FB:FC:84:1D:FD:56:77:90:41:F8:94:38:4A:5F:&#xa;                1F:DA:34:50:9A:F7:71</elem>
+</table>
+</table>
+<elem key="sig_algo">sha256WithRSAEncryption</elem>
+<table key="validity">
+<elem key="notBefore">2025-11-16T02:35:21</elem>
+<elem key="notAfter">2026-02-14T02:35:20</elem>
+</table>
+<elem key="md5">46283f2b4ee90640ebcbfb39b2280f39</elem>
+<elem key="sha1">7c399d3344a5c26a6eceee5a2e32ecf8ce2eb112</elem>
+<elem key="pem">-&#45;&#45;&#45;&#45;BEGIN CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;MIIFGjCCBAKgAwIBAgISBYRCPONqhoM/TGGvFJ6OE81rMA0GCSqGSIb3DQEBCwUA&#xa;MDMxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQwwCgYDVQQD&#xa;EwNSMTIwHhcNMjUxMTE2MDIzNTIxWhcNMjYwMjE0MDIzNTIwWjAqMSgwJgYDVQQD&#xa;Ex9leWV3ZWJzb2x1dGlvbi5kbnNob3N0c2VydmVyLmluMIIBIjANBgkqhkiG9w0B&#xa;AQEFAAOCAQ8AMIIBCgKCAQEAyUuq7qcQG4YbTiDOFNvDY1oxebkk16uRNmTRV9Fc&#xa;ly1jof1rmAOjh+xbyAt/lQCIcROE8P9YpxjRRgnGMR1z33YOGiALoRK20wcFG9TL&#xa;SW9OmtAPgdVfoyGStuPPcBpJ9S4l9otvm+wfqII/O/1GchPy92RCDNnOqXz/qaDZ&#xa;sILQUP4kz5u1KDj9RpKSgYnxkNWeaD2bPCHIXh8Lb6uKGGKcd+kFUYWVdvSUtwxv&#xa;8ZfpSYkBf/V/lG+/XWWIYfiK3JHGTbWW5vOw7YhQj0tzUa5UdBKPqyxVsPxRLxEp&#xa;mJHEjnTO49xf8RsUDgjAHbnRWA0w2ft1PTe8Bl1W9cnLiwIDAQABo4ICLzCCAisw&#xa;DgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAM&#xa;BgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTBjF4zc8IOwzg89hKjgNQ+DA8iDzAfBgNV&#xa;HSMEGDAWgBQAtSnyLY5vMeibTK14Pvrc6QzR0jAzBggrBgEFBQcBAQQnMCUwIwYI&#xa;KwYBBQUHMAKGF2h0dHA6Ly9yMTIuaS5sZW5jci5vcmcvMCoGA1UdEQQjMCGCH2V5&#xa;ZXdlYnNvbHV0aW9uLmRuc2hvc3RzZXJ2ZXIuaW4wEwYDVR0gBAwwCjAIBgZngQwB&#xa;AgEwLwYDVR0fBCgwJjAkoCKgIIYeaHR0cDovL3IxMi5jLmxlbmNyLm9yZy8xMDgu&#xa;Y3JsMIIBAwYKKwYBBAHWeQIEAgSB9ASB8QDvAHUADleUvPOuqT4zGyyZB7P3kN+b&#xa;wj1xMiXdIaklrGHFTiEAAAGairnpvwAABAMARjBEAiBrCk/q97td4IzCWYgSf7ZM&#xa;u2m3OGEvkkjZMvvixkBUnwIgS1nTmjY+H3MnJRqRe1yQ00us/XOFnUq7wGG8vMuR&#xa;GlEAdgBkEcRspBLsp4kcogIuALyrTygH1B41J6vq/tUDyX3N8AAAAZqKufGOAAAE&#xa;AwBHMEUCIQDmYr3xkpZ6B8YLiHu0ElMR/sSXU3SWPum0wz+Au2cxuwIgbot41Agm&#xa;7Jfxcpn7/IQd/VZ3kEH4lDhKXx/aNFCa93EwDQYJKoZIhvcNAQELBQADggEBAMW2&#xa;5zgcNBLrqRYc9m3VaaeN00Y/ki+lRz2N+SaVekYR3ctOo3PrTOOSClLOyEUIjQNi&#xa;y3RprVQ78OqFBzNS8bHA69SfhvlbCkY9QKyDl8AcKsoxSYdQeDJmmnkeLadNtwZf&#xa;Ie5xhlrvrccQ/G99WoIgRykI9mZPVTu4HdmG1vPkn9lPnhDFL7rOiDO3yNrAjnmS&#xa;XEaXnWwiRoCLoEKK4mXFg+MOw0R69kuypXCA385oDoOXZyJuS7gu3U0F2kf6GuY0&#xa;DvGqQ2ZhkNiHJBybaYqPIc0ZihXmfRbluXw4GgGByp5DUqUAZhaJpWRHT5KyCqDP&#xa;hy0IB9NofzwGw/IljQ8=&#xa;-&#45;&#45;&#45;&#45;END CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;</elem>
+</script><script id="fingerprint-strings" output="&#xa;  GetRequest: &#xa;    HTTP/1.0 200 OK&#xa;    Connection: close&#xa;    Content-Type: text/html; charset=&quot;utf-8&quot;&#xa;    Date: Tue, 16 Dec 2025 11:25:39 GMT&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    Set-Cookie: webmailrelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: webmailsession=%3adiaxYdq1HGT2UzvF%2c1bb8163e1325607e457050c025fac42c; HttpOnly; path=/; port=2096; secure&#xa;    Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: roundcube_cookies=enabled; HttpOnly; expires=Wed, 16-Dec-2026 11:25:39 GMT; path=/; port=2096&#xa;  HTTPOptions: &#xa;    HTTP/1.0 200 OK&#xa;    Connection: close&#xa;    Content-Type: text/html; charset=&quot;utf-8&quot;&#xa;    Date: Tue, 16 Dec 2025 11:25:39 GMT&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    Set-Cookie: webmailrelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: webmailsession=%3aSbm3PGPZkUV2NnoN%2cb69de5e6c1ec39b812dd5084cfb41873; HttpOnly; path=/; port=2096; secure&#xa;    Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: roundcube_cookies=enabled; HttpOnly; expires=Wed, 16-Dec-2026 11:25:39 GMT; path=/; port=2096"><elem key="GetRequest">&#xa;    HTTP/1.0 200 OK&#xa;    Connection: close&#xa;    Content-Type: text/html; charset=&quot;utf-8&quot;&#xa;    Date: Tue, 16 Dec 2025 11:25:39 GMT&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    Set-Cookie: webmailrelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: webmailsession=%3adiaxYdq1HGT2UzvF%2c1bb8163e1325607e457050c025fac42c; HttpOnly; path=/; port=2096; secure&#xa;    Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: roundcube_cookies=enabled; HttpOnly; expires=Wed, 16-Dec-2026 11:25:39 GMT; path=/; port=2096</elem>
+<elem key="HTTPOptions">&#xa;    HTTP/1.0 200 OK&#xa;    Connection: close&#xa;    Content-Type: text/html; charset=&quot;utf-8&quot;&#xa;    Date: Tue, 16 Dec 2025 11:25:39 GMT&#xa;    Cache-Control: no-cache, no-store, must-revalidate, private&#xa;    Pragma: no-cache&#xa;    Set-Cookie: webmailrelogin=no; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: webmailsession=%3aSbm3PGPZkUV2NnoN%2cb69de5e6c1ec39b812dd5084cfb41873; HttpOnly; path=/; port=2096; secure&#xa;    Set-Cookie: roundcube_sessid=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: roundcube_sessauth=expired; HttpOnly; domain=eyewebsolution.dnshostserver.in; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: PPA_ID=expired; HttpOnly; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; port=2096; secure&#xa;    Set-Cookie: roundcube_cookies=enabled; HttpOnly; expires=Wed, 16-Dec-2026 11:25:39 GMT; path=/; port=2096</elem>
+</script><script id="ssl-enum-ciphers" output="&#xa;  TLSv1.2: &#xa;    ciphers: &#xa;      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A&#xa;      TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A&#xa;      TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A&#xa;      TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A&#xa;    compressors: &#xa;      NULL&#xa;    cipher preference: server&#xa;  least strength: A"><table key="TLSv1.2">
+<table key="ciphers">
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">secp256r1</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_128_GCM_SHA256</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+<table>
+<elem key="name">TLS_DHE_RSA_WITH_AES_256_GCM_SHA384</elem>
+<elem key="kex_info">dh 2048</elem>
+<elem key="strength">A</elem>
+</table>
+</table>
+<table key="compressors">
+<elem>NULL</elem>
+</table>
+<elem key="cipher preference">server</elem>
+</table>
+<elem key="least strength">A</elem>
+</script></port>
+<port protocol="tcp" portid="3306"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="mysql" product="MySQL" extrainfo="unauthorized" method="probed" conf="10"><cpe>cpe:/a:mysql:mysql</cpe></service></port>
+<port protocol="tcp" portid="5060"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="sip" method="table" conf="3"/></port>
+<port protocol="tcp" portid="7767"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="ssh" product="OpenSSH" version="7.4" extrainfo="protocol 2.0" method="probed" conf="10"><cpe>cpe:/a:openbsd:openssh:7.4</cpe></service></port>
+<port protocol="tcp" portid="9280"><state state="open" reason="syn-ack" reason_ttl="55"/><service name="http" product="Prometheus exporter Node Exporter" version="1.7.0" method="probed" conf="10"><cpe>cpe:/a:prometheus:node_exporter:1.7.0</cpe></service><script id="http-security-headers" output=""></script><script id="http-headers" output="&#xa;  Content-Type: text/html; charset=UTF-8&#xa;  Date: Tue, 16 Dec 2025 11:27:56 GMT&#xa;  Content-Length: 961&#xa;  Connection: close&#xa;  &#xa;  (Request type: GET)&#xa;"/></port>
+</ports>
+<times srtt="21132" rttvar="6150" to="100000"/>
+</host>
+<runstats><finished time="1765884577" timestr="Tue Dec 16 16:59:37 2025" summary="Nmap done at Tue Dec 16 16:59:37 2025; 1 IP address (1 host up) scanned in 524.16 seconds" elapsed="524.16" exit="success"/><hosts up="1" down="0" total="1"/>
+</runstats>
+</nmaprun>

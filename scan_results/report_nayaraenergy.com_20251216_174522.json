@@ -1,0 +1,33 @@
+{
+  "target": "nayaraenergy.com",
+  "ip": "23.196.14.32",
+  "hostname": "a23-196-14-32.deploy.static.akamaitechnologies.com",
+  "scan_time": "20251216_174522",
+  "risk_score": 0,
+  "risk_level": "LOW",
+  "open_ports": [
+    {
+      "port": 80,
+      "service": "http",
+      "product": "AkamaiGHost"
+    },
+    {
+      "port": 2000,
+      "service": "cisco-sccp",
+      "product": ""
+    },
+    {
+      "port": 5060,
+      "service": "sip",
+      "product": ""
+    }
+  ],
+  "tls_info": {
+    "cn": "",
+    "issuer": "",
+    "expiry": ""
+  },
+  "missing_headers": [],
+  "flags": [],
+  "nuclei_findings": []
+}

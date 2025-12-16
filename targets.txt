@@ -8,6 +8,6 @@
 # scanme.nmap.org
 # example.com
 
-# Sample target (Nmap's public test server)
+# Sample target (Nmap public test server)
 scanme.nmap.org
 
