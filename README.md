@@ -399,8 +399,3 @@ MIT License - Use responsibly!
 5. Open a Pull Request
 
 ---
-
-**Made with ❤️ for security professionals**
-# Nmap_Scanner
-# Nmap_Scanner
-# Nmap_Scanner
