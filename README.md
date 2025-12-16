@@ -1,15 +1,15 @@
-# NSE Scanner
+# NSE Scanner v2.0
 
-A powerful scanner that uses **Nmap Scripting Engine (NSE)** to scan single IP/domain or multiple targets from a file.
+A security-focused scanner using **Nmap Scripting Engine (NSE)** with SSL/TLS certificate checking, HTTP security headers analysis, and clean output formatting.
 
-## Features
+## ✨ Features
 
-- 🎯 Scan single IP/domain directly from command line
-- 📁 Read multiple targets from a file (one per line)
-- 🔧 Support for all NSE script categories
-- 📊 Real-time scan output
-- 💾 Saves results in both TXT and XML formats
-- ⚡ Easy to use command-line interface
+- 🔍 **Full Port Scanning** - Scans all 65535 ports by default
+- 🔐 **SSL/TLS Certificate Check** - Validates certificates, ciphers, and protocols
+- 🛡️ **HTTP Security Headers** - Checks HSTS, CSP, X-Frame-Options, etc.
+- ✅ **Clean Output** - Only displays open ports (no closed port clutter)
+- 📋 **Scan Profiles** - Pre-configured profiles for common use cases
+- 📊 **Formatted Results** - Beautiful, readable scan summaries
 
 ## Requirements
 
@@ -19,11 +19,21 @@ A powerful scanner that uses **Nmap Scripting Engine (NSE)** to scan single IP/d
 ## Installation
 
 ```bash
-# Clone or download the scanner
 cd /home/ritikrajput/Documents/Nmap_Scan
-
-# Make the script executable
 chmod +x nse_scanner.py
+```
+
+## Quick Start
+
+```bash
+# Security scan with SSL + HTTP headers (recommended)
+sudo python3 nse_scanner.py -t example.com --profile security
+
+# HTTPS-only security check
+sudo python3 nse_scanner.py -t example.com --profile https
+
+# Full port scan
+sudo python3 nse_scanner.py -t 192.168.1.1 --profile full
 ```
 
 ## Usage
@@ -31,127 +41,140 @@ chmod +x nse_scanner.py
 ### Single Target Scanning
 
 ```bash
-# Scan a single IP
-sudo python3 nse_scanner.py -t 192.168.1.1
+# Quick scan (top 100 ports)
+sudo python3 nse_scanner.py -t example.com --profile quick
 
-# Scan a domain
-sudo python3 nse_scanner.py -t example.com
+# Standard scan (top 1000 ports)
+sudo python3 nse_scanner.py -t example.com --profile standard
 
-# Vulnerability scan on single target
-sudo python3 nse_scanner.py -t 192.168.1.1 -s vuln
+# Full port scan (all 65535 ports)
+sudo python3 nse_scanner.py -t 192.168.1.1 --profile full
 
-# HTTP scan with specific ports
-sudo python3 nse_scanner.py -t example.com -s "http-*" -p 80,443,8080
+# Security scan (SSL + Headers + Vulns)
+sudo python3 nse_scanner.py -t example.com --profile security
 
-# Full scan with version detection
-sudo python3 nse_scanner.py -t 10.0.0.1 -s vuln -e "-sV -A"
+# HTTPS security check
+sudo python3 nse_scanner.py -t example.com --profile https
+
+# Web application scan
+sudo python3 nse_scanner.py -t example.com --profile web
 ```
 
 ### Multiple Targets from File
 
 ```bash
-# Default scan (uses -sC scripts)
-sudo python3 nse_scanner.py -f targets.txt
+# Security scan on all targets
+sudo python3 nse_scanner.py -f targets.txt --profile security
 
-# Vulnerability scan
-sudo python3 nse_scanner.py -f targets.txt -s vuln
-
-# HTTP scripts only
-sudo python3 nse_scanner.py -f targets.txt -s "http-*"
-
-# Scan specific ports
-sudo python3 nse_scanner.py -f targets.txt -p 80,443,8080
-
-# Combined options
-sudo python3 nse_scanner.py -f targets.txt -s vuln -p 1-1000 -e "-sV -T4"
+# Full scan on all targets
+sudo python3 nse_scanner.py -f targets.txt --profile full
 ```
 
-### Command Line Options
+### Custom Scans
+
+```bash
+# Custom scripts
+sudo python3 nse_scanner.py -t example.com -s "ssl-cert,http-security-headers" -p 443
+
+# Specific ports
+sudo python3 nse_scanner.py -t example.com -s vuln -p 80,443,8080
+
+# With extra nmap arguments
+sudo python3 nse_scanner.py -t example.com --profile security -e "-A -T5"
+```
+
+## Command Line Options
 
 | Option | Description |
 |--------|-------------|
 | `-t, --target` | Single target IP or domain |
 | `-f, --file` | Target file (one per line) |
-| `-s, --scripts` | NSE scripts/categories (default: default) |
-| `-p, --ports` | Ports to scan (e.g., 80,443 or 1-1000) |
+| `-s, --scripts` | NSE scripts to run |
+| `-p, --ports` | Ports to scan (default: ALL) |
+| `--profile` | Use predefined scan profile |
 | `-o, --output` | Output directory (default: ./scan_results) |
 | `-e, --extra` | Extra nmap arguments |
-| `--list-scripts` | List available NSE scripts |
+| `--show-closed` | Show closed ports (default: only open) |
+| `--list-profiles` | List available scan profiles |
+| `--list-scripts` | List security-focused NSE scripts |
 
-> **Note:** You must use either `-t` (single target) or `-f` (file) - not both.
+## 📋 Scan Profiles
 
-### NSE Script Categories
+| Profile | Description | Ports |
+|---------|-------------|-------|
+| `quick` | Fast scan, top 100 ports | Top 100 |
+| `standard` | Standard scan | Top 1000 |
+| `full` | Complete scan, all ports | 1-65535 |
+| `security` | SSL + Headers + Vulnerabilities | 1-65535 |
+| `https` | HTTPS security check | 443,8443,8080,4443 |
+| `web` | Web application scan | 80,443,8080,8443,8000,3000,5000 |
 
-| Category | Description |
-|----------|-------------|
-| `auth` | Authentication related scripts |
-| `broadcast` | Discover hosts by broadcasting |
-| `brute` | Brute force attacks |
-| `default` | Default scripts (-sC) |
-| `discovery` | Discovery scripts |
-| `dos` | Denial of Service scripts |
-| `exploit` | Exploitation scripts |
-| `intrusive` | Intrusive scripts (may crash targets) |
-| `malware` | Malware detection |
-| `safe` | Safe scripts |
-| `version` | Version detection |
-| `vuln` | Vulnerability detection |
+## 🔐 Security Scripts Included
 
-### Target File Format
+### SSL/TLS Certificate Scripts
+| Script | Description |
+|--------|-------------|
+| `ssl-cert` | Retrieves SSL certificate information |
+| `ssl-enum-ciphers` | Enumerates SSL/TLS ciphers and protocols |
+| `ssl-heartbleed` | Checks for Heartbleed vulnerability |
+| `ssl-poodle` | Checks for POODLE vulnerability |
+| `ssl-dh-params` | Checks Diffie-Hellman parameters |
+| `ssl-ccs-injection` | Checks for CCS injection vulnerability |
 
-Create a `targets.txt` file with one target per line:
+### HTTP Security Header Scripts
+| Script | Description |
+|--------|-------------|
+| `http-security-headers` | Checks HSTS, CSP, X-Frame-Options, etc. |
+| `http-headers` | Retrieves all HTTP headers |
+| `http-cookie-flags` | Checks cookie security flags |
+| `http-cors` | Checks CORS configuration |
 
-```
-# This is a comment
-192.168.1.1
-192.168.1.0/24
-example.com
-scanme.nmap.org
-```
-
-## Examples
-
-### 1. Quick Vulnerability Scan
-
-```bash
-sudo python3 nse_scanner.py -f targets.txt -s vuln -p 80,443
-```
-
-### 2. Full Service Scan with Version Detection
-
-```bash
-sudo python3 nse_scanner.py -f targets.txt -s default -e "-sV -A"
-```
-
-### 3. Web Application Scan
-
-```bash
-sudo python3 nse_scanner.py -f targets.txt -s "http-*" -p 80,443,8080,8443
-```
-
-### 4. SSL/TLS Security Scan
-
-```bash
-sudo python3 nse_scanner.py -f targets.txt -s "ssl-*" -p 443
-```
-
-### 5. SMB Security Scan
-
-```bash
-sudo python3 nse_scanner.py -f targets.txt -s "smb-*" -p 445
-```
-
-## Output
+## Output Format
 
 Results are saved in the `scan_results/` directory:
 - `target_timestamp.txt` - Human-readable output
-- `target_timestamp.xml` - XML format for parsing
+- `target_timestamp.xml` - XML format (for tools like Metasploit)
+- `target_timestamp.gnmap` - Grepable format
+
+### Sample Output
+
+```
+═══════════════════════════════════════════════════════════════════
+🔍 SCANNING: example.com
+═══════════════════════════════════════════════════════════════════
+
+📊 SCAN RESULTS SUMMARY
+───────────────────────────────────────────────────────────────────
+🎯 Nmap scan report for example.com (93.184.216.34)
+   ├─ ✅ 80/tcp          http
+   ├─ ✅ 443/tcp         https
+   │  🔐 Subject: CN=example.com
+   │  📜 Issuer: DigiCert Inc
+   │  ⏰ Not valid after: 2025-12-15
+   │  🛡️  HSTS: ✅ Present
+   │  🛡️  CSP: ✅ Present
+   │  🛡️  X-Frame-Options: ✅ Present
+   │  ✅ TLSv1.2
+   │  ✅ TLSv1.3
+```
+
+## Target File Format
+
+Create a `targets.txt` file:
+
+```
+# Comments start with #
+192.168.1.1
+10.0.0.0/24
+example.com
+scanme.nmap.org
+```
 
 ## ⚠️ Legal Disclaimer
 
 **Only scan networks and systems you have permission to test!**
 
-Unauthorized scanning is illegal and unethical. Always:
+Unauthorized scanning is illegal. Always:
 - Get written permission before scanning
 - Only scan your own systems or authorized targets
 - Use `scanme.nmap.org` for testing (Nmap's public test server)
@@ -159,7 +182,4 @@ Unauthorized scanning is illegal and unethical. Always:
 ## License
 
 MIT License - Use responsibly!
-
-# Nmap_Scanner
-# Nmap_Scanner
 # Nmap_Scanner
