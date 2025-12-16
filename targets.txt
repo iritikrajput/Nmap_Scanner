@@ -1,0 +1,13 @@
+# NSE Scanner - Target List
+# Add one target per line (IP addresses or domain names)
+# Lines starting with # are comments
+#
+# Examples:
+# 192.168.1.1
+# 10.0.0.0/24
+# scanme.nmap.org
+# example.com
+
+# Sample target (Nmap's public test server)
+scanme.nmap.org
+

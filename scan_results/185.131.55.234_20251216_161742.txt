@@ -1,0 +1,71 @@
+# Nmap 7.95 scan initiated Tue Dec 16 16:17:42 2025 as: /usr/lib/nmap/nmap --script default -oN ./scan_results/185.131.55.234_20251216_161742.txt -oX ./scan_results/185.131.55.234_20251216_161742.xml 185.131.55.234
+Nmap scan report for eyewebsolution.dnshostserver.in (185.131.55.234)
+Host is up (0.019s latency).
+Not shown: 979 filtered tcp ports (no-response)
+PORT     STATE  SERVICE
+20/tcp   closed ftp-data
+21/tcp   open   ftp
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Not valid before: 2025-11-16T02:35:21
+|_Not valid after:  2026-02-14T02:35:20
+|_ssl-date: TLS randomness does not represent time
+22/tcp   closed ssh
+25/tcp   open   smtp
+|_smtp-commands: Couldn't establish connection on port 25
+53/tcp   open   domain
+| dns-nsid: 
+|_  bind.version: 9.11.4-P2-RedHat-9.11.4-26.P2.el7_9.16
+80/tcp   open   http
+|_http-title: Site doesn't have a title (text/html).
+110/tcp  open   pop3
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Not valid before: 2025-11-16T02:35:21
+|_Not valid after:  2026-02-14T02:35:20
+|_pop3-capabilities: USER TOP SASL(PLAIN LOGIN) AUTH-RESP-CODE RESP-CODES PIPELINING CAPA UIDL STLS
+113/tcp  closed ident
+143/tcp  open   imap
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Not valid before: 2025-11-16T02:35:21
+|_Not valid after:  2026-02-14T02:35:20
+|_imap-capabilities: STARTTLS ID ENABLE OK capabilities SASL-IR have AUTH=PLAIN more NAMESPACE listed post-login LOGIN-REFERRALS Pre-login IDLE IMAP4rev1 LITERAL+ AUTH=LOGINA0001
+443/tcp  open   https
+|_ssl-date: TLS randomness does not represent time
+|_http-title: 421 Misdirected Request
+| ssl-cert: Subject: commonName=aadhunikpacker.in
+| Subject Alternative Name: DNS:*.aadhunikpacker.in, DNS:aadhunikpacker.in
+| Not valid before: 2025-08-10T05:19:16
+|_Not valid after:  2025-11-08T05:19:15
+465/tcp  open   smtps
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Not valid before: 2025-11-16T02:35:21
+|_Not valid after:  2026-02-14T02:35:20
+| smtp-commands: eyewebsolution.dnshostserver.in Hello eyewebsolution.dnshostserver.in [27.123.83.202], SIZE 52428800, 8BITMIME, PIPELINING, PIPECONNECT, AUTH PLAIN LOGIN, HELP
+|_ Commands supported: AUTH HELO EHLO MAIL RCPT DATA BDAT NOOP QUIT RSET HELP
+587/tcp  open   submission
+| smtp-commands: eyewebsolution.dnshostserver.in Hello eyewebsolution.dnshostserver.in [27.123.83.202], SIZE 52428800, 8BITMIME, PIPELINING, PIPECONNECT, STARTTLS, HELP
+|_ Commands supported: AUTH STARTTLS HELO EHLO MAIL RCPT DATA BDAT NOOP QUIT RSET HELP
+993/tcp  open   imaps
+|_imap-capabilities: ID ENABLE OK capabilities SASL-IR have AUTH=PLAIN more NAMESPACE listed post-login LOGIN-REFERRALS Pre-login IDLE IMAP4rev1 LITERAL+ AUTH=LOGINA0001
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Not valid before: 2025-11-16T02:35:21
+|_Not valid after:  2026-02-14T02:35:20
+995/tcp  open   pop3s
+| ssl-cert: Subject: commonName=eyewebsolution.dnshostserver.in
+| Subject Alternative Name: DNS:eyewebsolution.dnshostserver.in
+| Not valid before: 2025-11-16T02:35:21
+|_Not valid after:  2026-02-14T02:35:20
+|_pop3-capabilities: USER SASL(PLAIN LOGIN) TOP CAPA PIPELINING RESP-CODES UIDL AUTH-RESP-CODE
+2000/tcp open   cisco-sccp
+3306/tcp open   mysql
+5060/tcp open   sip
+7777/tcp closed cbt
+7778/tcp closed interwise
+7800/tcp closed asr
+8443/tcp closed https-alt
+
+# Nmap done at Tue Dec 16 16:19:28 2025 -- 1 IP address (1 host up) scanned in 106.64 seconds
