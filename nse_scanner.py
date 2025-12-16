@@ -231,7 +231,7 @@ def run_nse_scan(target, scripts, ports, output_dir, extra_args=None, show_close
     print(f"\n{'═' * 70}")
     print(f"🔍 SCANNING: {target}")
     print(f"{'═' * 70}")
-    print(f" Command: {' '.join(cmd)}")
+    print(f"📋 Command: {' '.join(cmd)}")
     print(f"📁 Output: {output_base}.*")
     print(f"{'─' * 70}")
     
