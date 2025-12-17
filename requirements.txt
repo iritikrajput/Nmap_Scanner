@@ -1,0 +1,27 @@
+# Security Scanner Suite - Requirements
+# Python 3.8+ required
+
+# No external Python dependencies - uses stdlib only
+# The scanner uses only Python standard library modules:
+# - subprocess (process execution)
+# - argparse (CLI parsing)
+# - json (JSON handling)
+# - xml.etree.ElementTree (XML parsing)
+# - urllib.request (HTTP requests for headers & Shodan API)
+# - ssl (TLS/SSL)
+# - dataclasses (data structures)
+# - re (regex)
+# - os, sys, datetime (utilities)
+# - socket (DNS resolution for Shodan)
+
+# External tools required (install separately):
+# - nmap: sudo apt install nmap
+# - nuclei: go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
+
+# Optional API integrations:
+# - Shodan API key: Set via SHODAN_API_KEY environment variable
+#   Get your API key at: https://account.shodan.io/
+
+# Optional Python packages (for extended features):
+# shodan>=1.29.1      # Alternative Shodan library (optional, we use urllib)
+# requests>=2.28.0    # Alternative HTTP library (optional)

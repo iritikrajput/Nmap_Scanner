@@ -105,30 +105,60 @@ HEADER_DESCRIPTIONS = {
 def check_http_security_headers(target: str, ports: list) -> dict:
     """
     Check HTTP security headers by making actual HTTP requests
+    PRIORITIZES HTTPS over HTTP for security header checking
     Returns dict with headers found, missing headers, and analysis
     """
     result = {
         "checked": False,
         "url": "",
+        "protocol": "",
         "headers_found": {},
         "missing_headers": [],
         "security_issues": [],
         "score": 0,
+        "https_available": False,
+        "http_to_https_redirect": False,
     }
     
-    # Determine URLs to check based on open ports
-    urls_to_check = []
+    # Separate HTTPS and HTTP URLs - HTTPS takes priority
+    https_urls = []
+    http_urls = []
+    
     for port in ports:
         if port in [443, 8443, 4443]:
-            urls_to_check.append(f"https://{target}:{port}" if port != 443 else f"https://{target}")
+            https_urls.append(f"https://{target}:{port}" if port != 443 else f"https://{target}")
         elif port in [80, 8080, 8000, 3000, 5000]:
-            urls_to_check.append(f"http://{target}:{port}" if port != 80 else f"http://{target}")
+            http_urls.append(f"http://{target}:{port}" if port != 80 else f"http://{target}")
+    
+    # PRIORITIZE HTTPS - check HTTPS first, then HTTP only if HTTPS fails
+    urls_to_check = https_urls + http_urls
     
     if not urls_to_check:
         return result
     
-    # Try each URL
+    # Check if HTTP redirects to HTTPS
+    if http_urls and https_urls:
+        try:
+            ctx = ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
+            
+            req = urllib.request.Request(
+                http_urls[0],
+                headers={'User-Agent': 'Mozilla/5.0 (Security Scanner)'}
+            )
+            
+            with urllib.request.urlopen(req, timeout=10, context=ctx) as response:
+                final_url = response.geturl()
+                if final_url.startswith('https://'):
+                    result["http_to_https_redirect"] = True
+        except:
+            pass
+    
+    # Try HTTPS URLs first, then HTTP
     for url in urls_to_check:
+        is_https = url.startswith('https://')
+        
         try:
             # Create SSL context that doesn't verify (for self-signed certs)
             ctx = ssl.create_default_context()
@@ -144,6 +174,8 @@ def check_http_security_headers(target: str, ports: list) -> dict:
                 headers = dict(response.headers)
                 result["checked"] = True
                 result["url"] = url
+                result["protocol"] = "HTTPS" if is_https else "HTTP"
+                result["https_available"] = is_https
                 
                 # Check for each security header
                 for sec_header in SECURITY_HEADERS:
@@ -156,21 +188,36 @@ def check_http_security_headers(target: str, ports: list) -> dict:
                             break
                     
                     if not found:
+                        # HSTS only makes sense over HTTPS
+                        if sec_header == "Strict-Transport-Security" and not is_https:
+                            continue  # Don't flag HSTS as missing on HTTP
                         result["missing_headers"].append(sec_header)
                 
-                # Analyze specific headers for security issues
-                # Check HSTS
-                if "Strict-Transport-Security" in result["headers_found"]:
-                    hsts_value = result["headers_found"]["Strict-Transport-Security"]
-                    if "max-age" in hsts_value.lower():
-                        try:
-                            max_age = int(hsts_value.split("max-age=")[1].split(";")[0].strip())
-                            if max_age < 31536000:  # Less than 1 year
-                                result["security_issues"].append(f"HSTS max-age too short ({max_age}s, should be >= 31536000)")
-                        except:
-                            pass
-                    if "includesubdomains" not in hsts_value.lower():
-                        result["security_issues"].append("HSTS missing includeSubDomains")
+                # HTTPS-specific security checks
+                if is_https:
+                    # Check HSTS (only relevant for HTTPS)
+                    if "Strict-Transport-Security" in result["headers_found"]:
+                        hsts_value = result["headers_found"]["Strict-Transport-Security"]
+                        if "max-age" in hsts_value.lower():
+                            try:
+                                max_age = int(hsts_value.split("max-age=")[1].split(";")[0].strip())
+                                if max_age < 31536000:  # Less than 1 year
+                                    result["security_issues"].append(f"HSTS max-age too short ({max_age}s, should be >= 31536000)")
+                            except:
+                                pass
+                        if "includesubdomains" not in hsts_value.lower():
+                            result["security_issues"].append("HSTS missing includeSubDomains")
+                        if "preload" not in hsts_value.lower():
+                            result["security_issues"].append("HSTS missing preload directive")
+                    else:
+                        # HSTS missing on HTTPS is critical
+                        result["security_issues"].append("🚨 CRITICAL: HSTS not configured on HTTPS - Vulnerable to SSL stripping attacks")
+                else:
+                    # HTTP-only site warnings
+                    if not https_urls:
+                        result["security_issues"].append("🚨 CRITICAL: No HTTPS available - All traffic is unencrypted")
+                    elif not result["http_to_https_redirect"]:
+                        result["security_issues"].append("⚠️ HTTP does not redirect to HTTPS")
                 
                 # Check X-Frame-Options
                 if "X-Frame-Options" in result["headers_found"]:
@@ -184,10 +231,22 @@ def check_http_security_headers(target: str, ports: list) -> dict:
                     if xcto != "nosniff":
                         result["security_issues"].append("X-Content-Type-Options should be 'nosniff'")
                 
+                # Check Content-Security-Policy
+                if "Content-Security-Policy" in result["headers_found"]:
+                    csp = result["headers_found"]["Content-Security-Policy"].lower()
+                    if "unsafe-inline" in csp:
+                        result["security_issues"].append("CSP contains 'unsafe-inline' - XSS risk")
+                    if "unsafe-eval" in csp:
+                        result["security_issues"].append("CSP contains 'unsafe-eval' - XSS risk")
+                
                 # Calculate score (out of 100)
                 total_headers = len(SECURITY_HEADERS)
                 found_count = len(result["headers_found"])
                 result["score"] = int((found_count / total_headers) * 100)
+                
+                # Bonus/penalty for HTTPS
+                if is_https and "Strict-Transport-Security" in result["headers_found"]:
+                    result["score"] = min(100, result["score"] + 10)  # Bonus for HSTS on HTTPS
                 
                 # Found a working URL, stop checking
                 break
@@ -198,6 +257,9 @@ def check_http_security_headers(target: str, ports: list) -> dict:
                 headers = dict(e.headers)
                 result["checked"] = True
                 result["url"] = url
+                result["protocol"] = "HTTPS" if is_https else "HTTP"
+                result["https_available"] = is_https
+                
                 for sec_header in SECURITY_HEADERS:
                     found = False
                     for h_name, h_value in headers.items():
@@ -206,13 +268,25 @@ def check_http_security_headers(target: str, ports: list) -> dict:
                             found = True
                             break
                     if not found:
+                        # HSTS only makes sense over HTTPS
+                        if sec_header == "Strict-Transport-Security" and not is_https:
+                            continue
                         result["missing_headers"].append(sec_header)
+                
+                # HTTPS-specific: Flag missing HSTS
+                if is_https and "Strict-Transport-Security" not in result["headers_found"]:
+                    result["security_issues"].append("🚨 CRITICAL: HSTS not configured on HTTPS")
+                
                 total_headers = len(SECURITY_HEADERS)
                 found_count = len(result["headers_found"])
                 result["score"] = int((found_count / total_headers) * 100)
                 break
         except Exception as e:
             continue
+    
+    # Final check: If we only checked HTTP and HTTPS was available, note it
+    if result["checked"] and not result["https_available"] and https_urls:
+        result["security_issues"].append("⚠️ HTTPS available but could not connect - check SSL/TLS configuration")
     
     return result
 
@@ -543,21 +617,10 @@ def analyze_and_decide(host_info: HostInfo) -> HostInfo:
             host_info.nuclei_templates.add("ssl/misconfigurations")
             decisions.append("Weak TLS detected → ssl/misconfigurations")
     
-    # Security header analysis
+    # Security header analysis - only add template decision (flags already added in Phase 1.5)
     if host_info.missing_headers:
-        host_info.flags.append(f"⚠️  Missing headers: {', '.join(host_info.missing_headers[:3])}...")
-        host_info.risk_score += len(host_info.missing_headers) * 5
         host_info.nuclei_templates.add("http/misconfiguration")
         decisions.append(f"Missing {len(host_info.missing_headers)} security headers → http/misconfiguration")
-        
-        # Critical missing headers
-        if "Strict-Transport-Security" in host_info.missing_headers:
-            host_info.flags.append("❌ HSTS Missing - Vulnerable to downgrade attacks")
-            host_info.risk_score += 15
-        
-        if "Content-Security-Policy" in host_info.missing_headers:
-            host_info.flags.append("❌ CSP Missing - XSS risk increased")
-            host_info.risk_score += 10
     
     # Print decisions
     if decisions:
@@ -672,10 +735,220 @@ def run_nuclei(host_info: HostInfo, config: ScanConfig, output_dir: str) -> List
 # PHASE 4: REPORTING
 # ═══════════════════════════════════════════════════════════════════════════════
 
+def save_xml_report(report_data: dict, filepath: str):
+    """Save report in XML format"""
+    
+    def dict_to_xml(data, parent_tag="root"):
+        """Convert dictionary to XML string"""
+        xml_lines = [f'<?xml version="1.0" encoding="UTF-8"?>']
+        xml_lines.append(f'<{parent_tag}>')
+        
+        def add_element(key, value, indent=1):
+            prefix = "  " * indent
+            # Sanitize key for XML tag
+            tag = re.sub(r'[^a-zA-Z0-9_]', '_', str(key))
+            
+            if isinstance(value, dict):
+                xml_lines.append(f'{prefix}<{tag}>')
+                for k, v in value.items():
+                    add_element(k, v, indent + 1)
+                xml_lines.append(f'{prefix}</{tag}>')
+            elif isinstance(value, list):
+                xml_lines.append(f'{prefix}<{tag}>')
+                for i, item in enumerate(value):
+                    if isinstance(item, dict):
+                        xml_lines.append(f'{prefix}  <item index="{i}">')
+                        for k, v in item.items():
+                            add_element(k, v, indent + 2)
+                        xml_lines.append(f'{prefix}  </item>')
+                    else:
+                        # Escape XML special characters
+                        escaped = str(item).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+                        xml_lines.append(f'{prefix}  <item>{escaped}</item>')
+                xml_lines.append(f'{prefix}</{tag}>')
+            else:
+                # Escape XML special characters
+                escaped = str(value).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+                xml_lines.append(f'{prefix}<{tag}>{escaped}</{tag}>')
+        
+        for key, value in data.items():
+            add_element(key, value)
+        
+        xml_lines.append(f'</{parent_tag}>')
+        return '\n'.join(xml_lines)
+    
+    xml_content = dict_to_xml(report_data, "security_scan_report")
+    
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(xml_content)
+
+
+def save_txt_report(report_data: dict, host_info, findings: list, filepath: str):
+    """Save report in human-readable TXT format"""
+    
+    lines = []
+    lines.append("=" * 80)
+    lines.append("                    SECURITY SCAN REPORT")
+    lines.append("=" * 80)
+    lines.append("")
+    lines.append(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    lines.append("")
+    
+    # Target Information
+    lines.append("-" * 80)
+    lines.append("TARGET INFORMATION")
+    lines.append("-" * 80)
+    lines.append(f"  Target:     {report_data['target']}")
+    lines.append(f"  IP:         {report_data['ip']}")
+    lines.append(f"  Hostname:   {report_data['hostname']}")
+    lines.append(f"  Scan Time:  {report_data['scan_time']}")
+    lines.append("")
+    
+    # Risk Assessment
+    lines.append("-" * 80)
+    lines.append("RISK ASSESSMENT")
+    lines.append("-" * 80)
+    lines.append(f"  Risk Score: {report_data['risk_score']}/100")
+    lines.append(f"  Risk Level: {report_data['risk_level']}")
+    lines.append("")
+    
+    # Open Ports
+    lines.append("-" * 80)
+    lines.append("OPEN PORTS")
+    lines.append("-" * 80)
+    if report_data['open_ports']:
+        lines.append(f"  {'PORT':<15} {'SERVICE':<20} {'PRODUCT'}")
+        lines.append(f"  {'-'*15} {'-'*20} {'-'*30}")
+        for port in report_data['open_ports']:
+            lines.append(f"  {port['port']:<15} {port['service']:<20} {port.get('product', '')}")
+    else:
+        lines.append("  No open ports found")
+    lines.append("")
+    
+    # TLS/Certificate Info
+    if report_data['tls_info']['cn']:
+        lines.append("-" * 80)
+        lines.append("TLS/CERTIFICATE INFORMATION")
+        lines.append("-" * 80)
+        lines.append(f"  Common Name (CN): {report_data['tls_info']['cn']}")
+        lines.append(f"  Issuer:           {report_data['tls_info']['issuer']}")
+        lines.append(f"  Expiry:           {report_data['tls_info']['expiry']}")
+        lines.append("")
+    
+    # Security Headers
+    lines.append("-" * 80)
+    lines.append("SECURITY HEADERS")
+    lines.append("-" * 80)
+    headers_data = report_data['security_headers']
+    lines.append(f"  Header Security Score: {headers_data['score']}/100")
+    lines.append("")
+    
+    if headers_data['found']:
+        lines.append("  PRESENT HEADERS:")
+        for header, value in headers_data['found'].items():
+            lines.append(f"    [+] {header}")
+            lines.append(f"        Value: {value[:60]}{'...' if len(str(value)) > 60 else ''}")
+        lines.append("")
+    
+    if headers_data['missing']:
+        lines.append("  MISSING HEADERS:")
+        for header in headers_data['missing']:
+            desc = HEADER_DESCRIPTIONS.get(header, "")
+            lines.append(f"    [-] {header}")
+            if desc:
+                lines.append(f"        Purpose: {desc}")
+        lines.append("")
+    
+    # Security Flags/Issues
+    if report_data['flags']:
+        lines.append("-" * 80)
+        lines.append("SECURITY FLAGS & ISSUES")
+        lines.append("-" * 80)
+        for flag in report_data['flags']:
+            lines.append(f"  [!] {flag}")
+        lines.append("")
+    
+    # Nuclei Findings
+    lines.append("-" * 80)
+    lines.append("VULNERABILITY FINDINGS (Nuclei)")
+    lines.append("-" * 80)
+    if findings:
+        for finding in findings:
+            info = finding.get('info', {}) if isinstance(finding.get('info'), dict) else {}
+            severity = info.get('severity', 'unknown').upper()
+            name = info.get('name', 'Unknown')
+            description = info.get('description', '')
+            matched = finding.get('matched-at', '') or finding.get('matched', '')
+            
+            lines.append(f"  [{severity}] {name}")
+            if matched:
+                lines.append(f"      URL: {matched}")
+            if description:
+                lines.append(f"      Description: {description[:100]}{'...' if len(description) > 100 else ''}")
+            lines.append("")
+    else:
+        lines.append("  No vulnerabilities found")
+        lines.append("")
+    
+    # Summary
+    lines.append("=" * 80)
+    lines.append("SUMMARY")
+    lines.append("=" * 80)
+    lines.append(f"  Total Open Ports:     {len(report_data['open_ports'])}")
+    lines.append(f"  Security Headers:     {len(headers_data['found'])}/{len(headers_data['found']) + len(headers_data['missing'])}")
+    lines.append(f"  Security Issues:      {len(report_data['flags'])}")
+    lines.append(f"  Vulnerabilities:      {len(findings)}")
+    lines.append(f"  Overall Risk Score:   {report_data['risk_score']}/100 ({report_data['risk_level']})")
+    lines.append("")
+    lines.append("=" * 80)
+    lines.append("                    END OF REPORT")
+    lines.append("=" * 80)
+    
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(lines))
+
+
 def generate_report(host_info: HostInfo, nuclei_findings: List[Dict], output_dir: str):
     """Generate comprehensive scan report"""
     
     print_section("SCAN REPORT", "📊")
+    
+    # Cap risk score at 100
+    host_info.risk_score = min(host_info.risk_score, 100)
+    
+    # Deduplicate flags (keep unique entries only)
+    unique_flags = []
+    seen_flags = set()
+    for flag in host_info.flags:
+        # Normalize flag for comparison (lowercase, strip emojis for matching)
+        normalized = flag.lower().strip()
+        # Extract key content for deduplication
+        if "hsts" in normalized or "strict-transport" in normalized:
+            key = "hsts"
+        elif "csp" in normalized or "content-security-policy" in normalized:
+            key = "csp"
+        elif "x-frame" in normalized:
+            key = "xframe"
+        elif "x-content-type" in normalized:
+            key = "xcontent"
+        elif "x-xss" in normalized:
+            key = "xxss"
+        elif "referrer" in normalized:
+            key = "referrer"
+        elif "permissions" in normalized:
+            key = "permissions"
+        elif "cert" in normalized and "mismatch" in normalized:
+            key = "certmismatch"
+        elif "tls" in normalized or "ssl" in normalized:
+            key = "tls"
+        else:
+            key = normalized[:50]  # Use first 50 chars as key for other flags
+        
+        if key not in seen_flags:
+            seen_flags.add(key)
+            unique_flags.append(flag)
+    
+    host_info.flags = unique_flags
     
     # Target info
     print(f"\n  🎯 Target: {host_info.target}")
@@ -754,10 +1027,10 @@ def generate_report(host_info: HostInfo, nuclei_findings: List[Dict], output_dir
     else:
         print(f"\n  ✅ No vulnerabilities found by Nuclei")
     
-    # Save JSON report
+    # Save reports in multiple formats
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     safe_target = re.sub(r'[^\w\-.]', '_', host_info.target)
-    report_path = os.path.join(output_dir, f"report_{safe_target}_{timestamp}.json")
+    report_base = os.path.join(output_dir, f"report_{safe_target}_{timestamp}")
     
     report_data = {
         "target": host_info.target,
@@ -781,10 +1054,23 @@ def generate_report(host_info: HostInfo, nuclei_findings: List[Dict], output_dir
         "nuclei_findings": valid_findings,
     }
     
-    with open(report_path, 'w') as f:
+    # 1. Save JSON report
+    json_path = f"{report_base}.json"
+    with open(json_path, 'w') as f:
         json.dump(report_data, f, indent=2)
     
-    print(f"\n  📁 Report saved: {report_path}")
+    # 2. Save XML report
+    xml_path = f"{report_base}.xml"
+    save_xml_report(report_data, xml_path)
+    
+    # 3. Save TXT report
+    txt_path = f"{report_base}.txt"
+    save_txt_report(report_data, host_info, valid_findings, txt_path)
+    
+    print(f"\n  📁 Reports saved:")
+    print(f"      📄 JSON: {json_path}")
+    print(f"      📄 XML:  {xml_path}")
+    print(f"      📄 TXT:  {txt_path}")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -820,13 +1106,32 @@ def scan_target(target: str, config: ScanConfig) -> Dict:
     if config.check_headers:
         print_subsection("Phase 1.5: HTTP Security Header Analysis")
         http_ports = [p.port for p in host_info.ports if p.port in [80, 443, 8080, 8443, 8000, 3000, 5000, 4443]]
+        https_ports = [p for p in http_ports if p in [443, 8443, 4443]]
         
         if http_ports:
             print(f"  🔍 Checking security headers on ports: {http_ports}")
+            if https_ports:
+                print(f"  🔐 HTTPS ports detected: {https_ports} (prioritized)")
+            
             header_result = check_http_security_headers(target, http_ports)
             
             if header_result["checked"]:
+                protocol = header_result.get("protocol", "HTTP")
+                protocol_icon = "🔐" if protocol == "HTTPS" else "⚠️"
+                print(f"  {protocol_icon} Protocol: {protocol}")
                 print(f"  ✅ Headers checked at: {header_result['url']}")
+                
+                # HTTPS status
+                if header_result.get("https_available"):
+                    print(f"  🔐 HTTPS: Available and checked")
+                else:
+                    print(f"  ⚠️  HTTPS: Not available or not checked")
+                
+                # HTTP to HTTPS redirect
+                if header_result.get("http_to_https_redirect"):
+                    print(f"  ✅ HTTP→HTTPS redirect: Configured")
+                elif http_ports and https_ports:
+                    print(f"  ⚠️  HTTP→HTTPS redirect: Not configured")
                 
                 # Update host_info with header results
                 host_info.http_headers = header_result["headers_found"]
@@ -844,26 +1149,35 @@ def scan_target(target: str, config: ScanConfig) -> Dict:
                     for header in header_result["missing_headers"]:
                         desc = HEADER_DESCRIPTIONS.get(header, "")
                         print(f"      ❌ {header} - {desc}")
-                        host_info.flags.append(f"Missing: {header}")
                     
-                    # Add to risk score based on missing headers
-                    host_info.risk_score += len(header_result["missing_headers"]) * 5
+                    # Add to risk score based on missing headers (3 points each)
+                    host_info.risk_score += len(header_result["missing_headers"]) * 3
                     
-                    # Extra penalty for critical missing headers
-                    if "Strict-Transport-Security" in header_result["missing_headers"]:
-                        host_info.risk_score += 10
-                        host_info.flags.append("❌ CRITICAL: HSTS not configured - Vulnerable to downgrade attacks")
+                    # Extra penalty for critical missing headers on HTTPS
+                    if protocol == "HTTPS":
+                        if "Strict-Transport-Security" in header_result["missing_headers"]:
+                            host_info.risk_score += 10
+                            host_info.flags.append("❌ HSTS not configured - SSL stripping vulnerability")
+                    
                     if "Content-Security-Policy" in header_result["missing_headers"]:
-                        host_info.risk_score += 10
-                        host_info.flags.append("❌ CRITICAL: CSP not configured - XSS risk")
-                
-                # Report security issues
-                if header_result["security_issues"]:
-                    print(f"\n  ⚠️  Security Issues:")
-                    for issue in header_result["security_issues"]:
-                        print(f"      ⚠️  {issue}")
-                        host_info.flags.append(issue)
+                        host_info.risk_score += 8
+                        host_info.flags.append("❌ CSP not configured - XSS risk")
+                    
+                    if "X-Frame-Options" in header_result["missing_headers"]:
                         host_info.risk_score += 5
+                        host_info.flags.append("⚠️ X-Frame-Options missing - Clickjacking risk")
+                
+                # Report additional security issues (from header analysis)
+                if header_result["security_issues"]:
+                    print(f"\n  🚨 Security Issues Found:")
+                    for issue in header_result["security_issues"]:
+                        # Skip the generic HSTS message if we already flagged it
+                        if "HSTS not configured" in issue and any("HSTS" in f for f in host_info.flags):
+                            print(f"      {issue}")
+                            continue
+                        print(f"      {issue}")
+                        host_info.flags.append(issue)
+                        host_info.risk_score += 3
                 
                 print(f"\n  📊 Header Security Score: {header_result['score']}/100")
             else:
@@ -903,13 +1217,13 @@ def scan_target(target: str, config: ScanConfig) -> Dict:
         print("\n  ⚠️  Nuclei not installed, skipping vulnerability scan")
         print("  💡 Install: go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest")
     
-    # Phase 4: Report
+    # Phase 4: Report (this also caps risk_score at 100 and deduplicates flags)
     generate_report(host_info, nuclei_findings, config.output_dir)
     
     return {
         "target": target,
         "status": "completed",
-        "risk_score": host_info.risk_score,
+        "risk_score": min(host_info.risk_score, 100),  # Cap at 100
         "open_ports": len(host_info.ports),
         "findings": len(nuclei_findings),
     }
