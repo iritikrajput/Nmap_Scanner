@@ -1,27 +1,24 @@
-# Security Scanner Suite - Requirements
+# Security Scanner Suite v2.0 - Requirements
 # Python 3.8+ required
 
-# No external Python dependencies - uses stdlib only
-# The scanner uses only Python standard library modules:
-# - subprocess (process execution)
-# - argparse (CLI parsing)
+# API Server
+flask>=2.0.0
+
+# Standard library modules used (no install needed):
+# - subprocess (tool execution)
 # - json (JSON handling)
 # - xml.etree.ElementTree (XML parsing)
-# - urllib.request (HTTP requests for headers & Shodan API)
+# - urllib.request (HTTP requests)
 # - ssl (TLS/SSL)
+# - socket (DNS resolution)
 # - dataclasses (data structures)
-# - re (regex)
-# - os, sys, datetime (utilities)
-# - socket (DNS resolution for Shodan)
+# - threading (background tasks)
+# - re, os, sys, datetime (utilities)
 
-# External tools required (install separately):
-# - nmap: sudo apt install nmap
-# - nuclei: go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
-
-# Optional API integrations:
-# - Shodan API key: Set via SHODAN_API_KEY environment variable
-#   Get your API key at: https://account.shodan.io/
-
-# Optional Python packages (for extended features):
-# shodan>=1.29.1      # Alternative Shodan library (optional, we use urllib)
-# requests>=2.28.0    # Alternative HTTP library (optional)
+# External tools required:
+# ─────────────────────────────────────────────────────────────────────────────
+# Tool      | Purpose              | Install Command
+# ─────────────────────────────────────────────────────────────────────────────
+# nmap      | Port/SSL/Header scan | sudo apt install nmap
+# httpx     | Dead domain check    | go install github.com/projectdiscovery/httpx/cmd/httpx@latest
+# ─────────────────────────────────────────────────────────────────────────────

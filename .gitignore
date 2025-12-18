@@ -60,3 +60,4 @@ temp/
 secrets.json
 
 scan_results/
+nmap_scan.txt

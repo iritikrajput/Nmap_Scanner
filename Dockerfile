@@ -1,41 +1,41 @@
-# Security Scanner Suite - Dockerfile
-# Production-ready container with Nmap and Nuclei
+# Security Scanner Suite v2.0 - Dockerfile
+# Nmap + httpx architecture
 
 FROM python:3.11-slim
 
-# Labels
 LABEL maintainer="Security Scanner Suite"
-LABEL description="Production-ready security scanner with Nmap + Nuclei"
-LABEL version="1.1.0"
+LABEL description="Lightweight security scanner: Nmap + httpx"
+LABEL version="2.0.0"
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nmap \
     wget \
-    unzip \
     curl \
+    unzip \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Nuclei - fetch latest version dynamically
-RUN NUCLEI_VERSION=$(curl -s https://api.github.com/repos/projectdiscovery/nuclei/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/') \
-    && echo "Installing Nuclei version: ${NUCLEI_VERSION}" \
-    && wget -q "https://github.com/projectdiscovery/nuclei/releases/download/v${NUCLEI_VERSION}/nuclei_${NUCLEI_VERSION}_linux_amd64.zip" -O nuclei.zip \
-    && unzip nuclei.zip -d /usr/local/bin/ \
-    && rm nuclei.zip \
-    && chmod +x /usr/local/bin/nuclei
-
-# Update Nuclei templates
-RUN nuclei -update-templates || true
+# Install httpx (ProjectDiscovery)
+RUN HTTPX_VERSION=$(curl -s https://api.github.com/repos/projectdiscovery/httpx/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/') \
+    && echo "Installing httpx version: ${HTTPX_VERSION}" \
+    && wget -q "https://github.com/projectdiscovery/httpx/releases/download/v${HTTPX_VERSION}/httpx_${HTTPX_VERSION}_linux_amd64.zip" -O httpx.zip \
+    && unzip httpx.zip -d /usr/local/bin/ \
+    && rm httpx.zip \
+    && chmod +x /usr/local/bin/httpx
 
 # Create app directory
 WORKDIR /app
 
+# Copy requirements and install
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
 # Copy application files
 COPY config.py .
 COPY scanner_api.py .
-COPY intelligent_scanner.py .
-COPY nse_scanner.py .
+COPY daily_scan.py .
+COPY api_server.py .
 
 # Create output directory
 RUN mkdir -p /app/scan_results
@@ -43,9 +43,10 @@ RUN mkdir -p /app/scan_results
 # Set environment variables
 ENV SCANNER_OUTPUT_DIR=/app/scan_results
 ENV SCANNER_LOG_LEVEL=INFO
-ENV SCANNER_SHODAN_ENABLED=true
-# SHODAN_API_KEY should be passed at runtime: docker run -e SHODAN_API_KEY=xxx ...
 
-# Default command
-ENTRYPOINT ["python3", "scanner_api.py"]
-CMD ["--help"]
+# Expose API port
+EXPOSE 5000
+
+# Default command - start API server
+ENTRYPOINT ["python3", "api_server.py"]
+CMD ["--host", "0.0.0.0", "--port", "5000"]
