@@ -187,9 +187,19 @@ source "$VENV_DIR/bin/activate"
 # Use gunicorn if available, otherwise flask dev server
 if [ -f "$VENV_DIR/bin/gunicorn" ]; then
     echo -e "${GREEN}Running with Gunicorn (production mode)${NC}"
-    # --timeout 300 = 5 minutes (Nmap scans can take time)
+    echo -e "${GREEN}  Workers: 8 | Threads: 4 | Max Parallel Scans: 200${NC}"
+    # -w 8 = 8 worker processes
+    # --threads 4 = 4 threads per worker (8x4 = 32 concurrent requests)
+    # --timeout 600 = 10 minutes (for parallel scans)
     # --graceful-timeout 300 = graceful shutdown timeout
-    sudo "$VENV_DIR/bin/gunicorn" -w 4 -b 0.0.0.0:5000 --timeout 300 --graceful-timeout 300 api_server:app
+    sudo "$VENV_DIR/bin/gunicorn" \
+        -w 8 \
+        --threads 4 \
+        -b 0.0.0.0:5000 \
+        --timeout 600 \
+        --graceful-timeout 300 \
+        --keep-alive 5 \
+        api_server:app
 else
     echo -e "${YELLOW}Running with Flask dev server${NC}"
     sudo "$VENV_DIR/bin/python" api_server.py --host 0.0.0.0 --port 5000

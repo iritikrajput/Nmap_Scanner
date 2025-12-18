@@ -514,8 +514,8 @@ class SecurityScanner:
                 cmd.extend(["-p", tcp_ports])
         # If tcp_ports is empty, don't add any -p flag - nmap defaults to top 1000
         
-        # Timing
-        timing = getattr(self.config, 'nmap_ip_timing', '-T3')
+        # Timing (T4 = aggressive)
+        timing = getattr(self.config, 'nmap_ip_timing', '-T4')
         cmd.append(timing)
         
         # Retries
@@ -523,8 +523,24 @@ class SecurityScanner:
         cmd.extend(["--max-retries", str(max_retries)])
         
         # Host timeout
-        host_timeout = getattr(self.config, 'nmap_ip_host_timeout', '5m')
+        host_timeout = getattr(self.config, 'nmap_ip_host_timeout', '10m')
         cmd.extend(["--host-timeout", host_timeout])
+        
+        # ═══════════════════════════════════════════════════════════════════════
+        # PARALLEL PROCESSING FLAGS
+        # ═══════════════════════════════════════════════════════════════════════
+        
+        # Host group size (parallel hosts)
+        min_hostgroup = getattr(self.config, 'nmap_min_hostgroup', 100)
+        max_hostgroup = getattr(self.config, 'nmap_max_hostgroup', 200)
+        cmd.extend(["--min-hostgroup", str(min_hostgroup)])
+        cmd.extend(["--max-hostgroup", str(max_hostgroup)])
+        
+        # Packet rate (packets per second)
+        min_rate = getattr(self.config, 'nmap_min_rate', 1500)
+        max_rate = getattr(self.config, 'nmap_max_rate', 5000)
+        cmd.extend(["--min-rate", str(min_rate)])
+        cmd.extend(["--max-rate", str(max_rate)])
         
         cmd.append(target)
         

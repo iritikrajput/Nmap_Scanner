@@ -27,6 +27,12 @@ class ScannerConfig:
     nmap_ip_host_timeout: str = "10m"  # 10 minutes per host
     nmap_ip_scan_udp: bool = False  # UDP disabled by default
     
+    # Parallel processing settings
+    nmap_min_hostgroup: int = 100  # Min hosts to scan in parallel
+    nmap_max_hostgroup: int = 200  # Max hosts to scan in parallel
+    nmap_min_rate: int = 1500      # Min packets per second
+    nmap_max_rate: int = 5000      # Max packets per second
+    
     # httpx settings (dead domain detection)
     httpx_path: str = "httpx"
     httpx_timeout: int = 30

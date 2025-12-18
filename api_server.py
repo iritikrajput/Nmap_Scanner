@@ -3,6 +3,11 @@
 Security Scanner API Server
 REST API for triggering scans via HTTP requests
 
+Features:
+  - Parallel scanning up to 200 concurrent scans
+  - Async and sync modes
+  - Bulk scan endpoint
+
 Usage:
   python3 api_server.py                    # Start server on port 5000
   python3 api_server.py --port 8080        # Custom port
@@ -12,6 +17,8 @@ API Endpoints:
   POST /api/scan          - Start a new scan
   GET  /api/scan/<id>     - Get scan result by ID
   GET  /api/scans         - List all scans
+  POST /api/scan/bulk     - Bulk scan (up to 200 parallel)
+  POST /api/scan/parallel - Parallel scan with results
   GET  /api/health        - Health check
 """
 
@@ -22,6 +29,8 @@ import uuid
 import threading
 from datetime import datetime
 from functools import wraps
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import List, Dict, Any
 
 # Add current directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -43,8 +52,17 @@ config = ScannerConfig.from_env()
 scan_results = {}
 scan_queue = {}
 
+# Thread-safe lock for results
+results_lock = threading.Lock()
+
 # API Key for authentication (optional)
 API_KEY = os.environ.get("SCANNER_API_KEY", None)
+
+# Maximum parallel scans
+MAX_PARALLEL_SCANS = int(os.environ.get("MAX_PARALLEL_SCANS", 200))
+
+# Global thread pool for parallel scanning
+executor = ThreadPoolExecutor(max_workers=MAX_PARALLEL_SCANS)
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # AUTHENTICATION (Optional)
@@ -62,36 +80,84 @@ def require_api_key(f):
     return decorated
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# BACKGROUND SCANNER
+# SCANNER FUNCTIONS
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def run_scan_background(scan_id: str, target: str):
-    """Run scan in background thread"""
+def scan_single_target(target: str, scan_id: str) -> Dict[str, Any]:
+    """Scan a single target and return result dict"""
+    started_at = datetime.now().isoformat()
+    
     try:
         scanner = SecurityScanner(config)
         result = scanner.scan(target)
+        result_dict = result.to_dict()
         
-        scan_results[scan_id] = {
+        return {
             "id": scan_id,
             "target": target,
             "status": "completed",
-            "started_at": scan_queue[scan_id]["started_at"],
+            "started_at": started_at,
             "completed_at": datetime.now().isoformat(),
-            "result": result.to_dict()
+            **result_dict
         }
     except Exception as e:
-        scan_results[scan_id] = {
+        return {
             "id": scan_id,
             "target": target,
             "status": "failed",
-            "started_at": scan_queue[scan_id]["started_at"],
+            "started_at": started_at,
             "completed_at": datetime.now().isoformat(),
             "error": str(e)
         }
-    finally:
-        # Remove from queue
+
+
+def run_scan_background(scan_id: str, target: str):
+    """Run scan in background thread and store result"""
+    result = scan_single_target(target, scan_id)
+    
+    with results_lock:
+        scan_results[scan_id] = result
         if scan_id in scan_queue:
             del scan_queue[scan_id]
+
+
+def run_parallel_scans(targets: List[str]) -> List[Dict[str, Any]]:
+    """
+    Run multiple scans in parallel using ThreadPoolExecutor.
+    Returns list of scan results.
+    """
+    results = []
+    futures = {}
+    
+    for target in targets:
+        target = str(target).strip()
+        if not target:
+            continue
+        
+        scan_id = str(uuid.uuid4())[:8]
+        future = executor.submit(scan_single_target, target, scan_id)
+        futures[future] = {"id": scan_id, "target": target}
+    
+    # Collect results as they complete
+    for future in as_completed(futures):
+        try:
+            result = future.result(timeout=600)  # 10 min timeout per scan
+            results.append(result)
+            
+            # Store in global results
+            with results_lock:
+                scan_results[result["id"]] = result
+        except Exception as e:
+            info = futures[future]
+            results.append({
+                "id": info["id"],
+                "target": info["target"],
+                "status": "failed",
+                "error": str(e)
+            })
+    
+    return results
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # API ENDPOINTS
@@ -110,8 +176,10 @@ def health_check():
             "nmap": nmap_ok,
             "httpx": deps.get("httpx", False)
         },
+        "max_parallel_scans": MAX_PARALLEL_SCANS,
         "pending_scans": len(scan_queue),
-        "completed_scans": len(scan_results)
+        "completed_scans": len(scan_results),
+        "executor_threads": executor._max_workers
     })
 
 
@@ -124,118 +192,64 @@ def start_scan():
     Request body:
     {
         "target": "192.168.1.1",      # Required: IP or domain
-        "async": false                 # Optional: Run async (default: false - returns result directly)
-    }
-    
-    Response (sync mode - default):
-    Returns complete scan result directly with id included.
-    
-    Response (async mode):
-    {
-        "id": "uuid",
-        "target": "192.168.1.1",
-        "status": "pending",
-        "message": "Scan started"
+        "async": false                 # Optional: Run async (default: false)
     }
     """
     data = request.get_json() or {}
     
-    # Get target
     target = data.get("target") or request.args.get("target")
     if not target:
         return jsonify({"error": "Missing 'target' parameter"}), 400
     
-    # Clean target
     target = target.strip()
     if not target:
         return jsonify({"error": "Empty target"}), 400
     
-    # Check if async (default: synchronous - returns result directly)
     run_async = data.get("async", False)
-    
-    # Generate scan ID
     scan_id = str(uuid.uuid4())[:8]
     started_at = datetime.now().isoformat()
     
-    # Default: Synchronous mode - return result directly with ID
+    # Synchronous mode (default)
     if not run_async:
-        try:
-            scanner = SecurityScanner(config)
-            result = scanner.scan(target)
-            result_dict = result.to_dict()
-            
-            # Include ID in the response for reference
-            response = {
-                "id": scan_id,
-                "target": target,
-                "status": "completed",
-                "started_at": started_at,
-                "completed_at": datetime.now().isoformat(),
-                **result_dict  # Spread the result directly (open_ports, security_headers, etc.)
-            }
-            
-            # Also store for later retrieval
-            scan_results[scan_id] = response
-            
-            return jsonify(response), 200
-        except Exception as e:
-            return jsonify({
-                "id": scan_id,
-                "target": target,
-                "status": "failed",
-                "error": str(e)
-            }), 500
+        result = scan_single_target(target, scan_id)
+        with results_lock:
+            scan_results[scan_id] = result
+        return jsonify(result), 200 if result["status"] == "completed" else 500
     
-    # Async mode: Return ID and run in background
-    else:
+    # Async mode
+    with results_lock:
         scan_queue[scan_id] = {
             "id": scan_id,
             "target": target,
             "status": "pending",
             "started_at": started_at
         }
-        
-        thread = threading.Thread(
-            target=run_scan_background,
-            args=(scan_id, target),
-            daemon=True
-        )
-        thread.start()
-        
-        return jsonify({
-            "id": scan_id,
-            "target": target,
-            "status": "pending",
-            "message": "Scan started in background. Use /api/scan/{id} to get results.",
-            "check_status": f"/api/scan/{scan_id}"
-        }), 202
+    
+    executor.submit(run_scan_background, scan_id, target)
+    
+    return jsonify({
+        "id": scan_id,
+        "target": target,
+        "status": "pending",
+        "message": "Scan started in background. Use /api/scan/{id} to get results.",
+        "check_status": f"/api/scan/{scan_id}"
+    }), 202
 
 
 @app.route("/api/scan/<scan_id>", methods=["GET"])
 @require_api_key
 def get_scan(scan_id: str):
-    """
-    Get scan result by ID
-    
-    Response:
-    {
-        "id": "uuid",
-        "target": "192.168.1.1",
-        "status": "completed",
-        "result": { ... }
-    }
-    """
-    # Check if in results
-    if scan_id in scan_results:
-        return jsonify(scan_results[scan_id]), 200
-    
-    # Check if still in queue
-    if scan_id in scan_queue:
-        return jsonify({
-            **scan_queue[scan_id],
-            "status": "running",
-            "message": "Scan is still in progress"
-        }), 202
+    """Get scan result by ID"""
+    with results_lock:
+        if scan_id in scan_results:
+            return jsonify(scan_results[scan_id]), 200
+        
+        if scan_id in scan_queue:
+            return jsonify({
+                **scan_queue[scan_id],
+                "status": "running",
+                "message": "Scan is still in progress"
+            }), 202
     
     return jsonify({"error": "Scan not found"}), 404
 
@@ -243,41 +257,23 @@ def get_scan(scan_id: str):
 @app.route("/api/scans", methods=["GET"])
 @require_api_key
 def list_scans():
-    """
-    List all scans
-    
-    Query params:
-    - status: Filter by status (pending, running, completed, failed)
-    - limit: Max results (default: 50)
-    
-    Response:
-    {
-        "total": 10,
-        "pending": 2,
-        "completed": 8,
-        "scans": [ ... ]
-    }
-    """
+    """List all scans"""
     status_filter = request.args.get("status")
-    limit = int(request.args.get("limit", 50))
+    limit = int(request.args.get("limit", 100))
     
-    # Combine queue and results
-    all_scans = []
+    with results_lock:
+        all_scans = []
+        
+        for scan_id, scan in scan_queue.items():
+            all_scans.append({**scan, "status": "running"})
+        
+        for scan_id, scan in scan_results.items():
+            all_scans.append(scan)
     
-    for scan_id, scan in scan_queue.items():
-        all_scans.append({**scan, "status": "running"})
-    
-    for scan_id, scan in scan_results.items():
-        all_scans.append(scan)
-    
-    # Filter by status
     if status_filter:
         all_scans = [s for s in all_scans if s.get("status") == status_filter]
     
-    # Sort by started_at (newest first)
     all_scans.sort(key=lambda x: x.get("started_at", ""), reverse=True)
-    
-    # Limit
     all_scans = all_scans[:limit]
     
     return jsonify({
@@ -293,21 +289,14 @@ def list_scans():
 @require_api_key
 def bulk_scan():
     """
-    Start multiple scans at once
+    Start multiple scans in background (async)
     
     Request body:
     {
-        "targets": ["192.168.1.1", "example.com", "10.0.0.1"]
+        "targets": ["192.168.1.1", "example.com", ...]  # Up to 200 targets
     }
     
-    Response:
-    {
-        "message": "3 scans started",
-        "scans": [
-            {"id": "abc123", "target": "192.168.1.1", "status": "pending"},
-            ...
-        ]
-    }
+    Response: Returns immediately with scan IDs
     """
     data = request.get_json() or {}
     targets = data.get("targets", [])
@@ -315,8 +304,8 @@ def bulk_scan():
     if not targets:
         return jsonify({"error": "Missing 'targets' array"}), 400
     
-    if len(targets) > 100:
-        return jsonify({"error": "Maximum 100 targets per request"}), 400
+    if len(targets) > MAX_PARALLEL_SCANS:
+        return jsonify({"error": f"Maximum {MAX_PARALLEL_SCANS} targets per request"}), 400
     
     started_scans = []
     
@@ -328,19 +317,15 @@ def bulk_scan():
         scan_id = str(uuid.uuid4())[:8]
         started_at = datetime.now().isoformat()
         
-        scan_queue[scan_id] = {
-            "id": scan_id,
-            "target": target,
-            "status": "pending",
-            "started_at": started_at
-        }
+        with results_lock:
+            scan_queue[scan_id] = {
+                "id": scan_id,
+                "target": target,
+                "status": "pending",
+                "started_at": started_at
+            }
         
-        thread = threading.Thread(
-            target=run_scan_background,
-            args=(scan_id, target),
-            daemon=True
-        )
-        thread.start()
+        executor.submit(run_scan_background, scan_id, target)
         
         started_scans.append({
             "id": scan_id,
@@ -349,9 +334,82 @@ def bulk_scan():
         })
     
     return jsonify({
-        "message": f"{len(started_scans)} scans started",
+        "message": f"{len(started_scans)} scans started (parallel processing)",
+        "max_parallel": MAX_PARALLEL_SCANS,
         "scans": started_scans
     }), 202
+
+
+@app.route("/api/scan/parallel", methods=["POST"])
+@require_api_key
+def parallel_scan():
+    """
+    Run parallel scans and WAIT for all results (synchronous bulk)
+    
+    Request body:
+    {
+        "targets": ["192.168.1.1", "example.com", ...]  # Up to 200 targets
+    }
+    
+    Response: Returns when ALL scans complete with full results
+    
+    ⚠️ WARNING: This endpoint blocks until all scans finish.
+    For large batches, use /api/scan/bulk instead.
+    """
+    data = request.get_json() or {}
+    targets = data.get("targets", [])
+    
+    if not targets:
+        return jsonify({"error": "Missing 'targets' array"}), 400
+    
+    if len(targets) > MAX_PARALLEL_SCANS:
+        return jsonify({"error": f"Maximum {MAX_PARALLEL_SCANS} targets per request"}), 400
+    
+    # Run all scans in parallel and wait for results
+    start_time = datetime.now()
+    results = run_parallel_scans(targets)
+    duration = (datetime.now() - start_time).total_seconds()
+    
+    completed = len([r for r in results if r.get("status") == "completed"])
+    failed = len([r for r in results if r.get("status") == "failed"])
+    
+    return jsonify({
+        "message": f"Parallel scan completed: {completed} successful, {failed} failed",
+        "total_targets": len(targets),
+        "completed": completed,
+        "failed": failed,
+        "duration_seconds": round(duration, 2),
+        "results": results
+    }), 200
+
+
+@app.route("/api/scan/status", methods=["GET"])
+@require_api_key
+def scan_status():
+    """Get status of all scans by IDs"""
+    ids = request.args.get("ids", "").split(",")
+    ids = [i.strip() for i in ids if i.strip()]
+    
+    if not ids:
+        return jsonify({"error": "Missing 'ids' parameter"}), 400
+    
+    statuses = []
+    with results_lock:
+        for scan_id in ids:
+            if scan_id in scan_results:
+                statuses.append(scan_results[scan_id])
+            elif scan_id in scan_queue:
+                statuses.append({**scan_queue[scan_id], "status": "running"})
+            else:
+                statuses.append({"id": scan_id, "status": "not_found"})
+    
+    return jsonify({
+        "total": len(ids),
+        "completed": len([s for s in statuses if s.get("status") == "completed"]),
+        "running": len([s for s in statuses if s.get("status") in ["pending", "running"]]),
+        "failed": len([s for s in statuses if s.get("status") == "failed"]),
+        "statuses": statuses
+    })
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -380,27 +438,40 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     
-    print("=" * 60)
-    print("  SECURITY SCANNER API SERVER")
-    print("=" * 60)
-    print(f"  Host:     {args.host}")
-    print(f"  Port:     {args.port}")
-    print(f"  API Key:  {'Enabled' if API_KEY else 'Disabled'}")
-    print("=" * 60)
+    print("=" * 70)
+    print("  SECURITY SCANNER API SERVER - Parallel Processing Edition")
+    print("=" * 70)
+    print(f"  Host:              {args.host}")
+    print(f"  Port:              {args.port}")
+    print(f"  Max Parallel:      {MAX_PARALLEL_SCANS} scans")
+    print(f"  API Key:           {'Enabled' if API_KEY else 'Disabled'}")
+    print("=" * 70)
     print()
     print("Endpoints:")
-    print("  POST /api/scan          - Start a new scan")
+    print("  POST /api/scan          - Single scan (sync/async)")
     print("  GET  /api/scan/<id>     - Get scan result")
     print("  GET  /api/scans         - List all scans")
-    print("  POST /api/scan/bulk     - Bulk scan multiple targets")
+    print("  POST /api/scan/bulk     - Bulk scan (async, up to 200)")
+    print("  POST /api/scan/parallel - Parallel scan (sync, wait for results)")
+    print("  GET  /api/scan/status   - Check multiple scan statuses")
     print("  GET  /api/health        - Health check")
     print()
-    print("Example:")
+    print("Examples:")
+    print()
+    print("  # Single scan")
     print(f'  curl -X POST http://{args.host}:{args.port}/api/scan \\')
     print('       -H "Content-Type: application/json" \\')
     print('       -d \'{"target": "192.168.1.1"}\'')
     print()
+    print("  # Bulk scan (200 IPs async)")
+    print(f'  curl -X POST http://{args.host}:{args.port}/api/scan/bulk \\')
+    print('       -H "Content-Type: application/json" \\')
+    print('       -d \'{"targets": ["1.1.1.1", "8.8.8.8", ...]}\'')
+    print()
+    print("  # Parallel scan (wait for all results)")
+    print(f'  curl -X POST http://{args.host}:{args.port}/api/scan/parallel \\')
+    print('       -H "Content-Type: application/json" \\')
+    print('       -d \'{"targets": ["1.1.1.1", "8.8.8.8", ...]}\'')
+    print()
     
     app.run(host=args.host, port=args.port, debug=args.debug, threaded=True)
-
-
