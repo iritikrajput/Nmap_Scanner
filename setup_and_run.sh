@@ -187,7 +187,9 @@ source "$VENV_DIR/bin/activate"
 # Use gunicorn if available, otherwise flask dev server
 if [ -f "$VENV_DIR/bin/gunicorn" ]; then
     echo -e "${GREEN}Running with Gunicorn (production mode)${NC}"
-    sudo "$VENV_DIR/bin/gunicorn" -w 4 -b 0.0.0.0:5000 api_server:app
+    # --timeout 300 = 5 minutes (Nmap scans can take time)
+    # --graceful-timeout 300 = graceful shutdown timeout
+    sudo "$VENV_DIR/bin/gunicorn" -w 4 -b 0.0.0.0:5000 --timeout 300 --graceful-timeout 300 api_server:app
 else
     echo -e "${YELLOW}Running with Flask dev server${NC}"
     sudo "$VENV_DIR/bin/python" api_server.py --host 0.0.0.0 --port 5000

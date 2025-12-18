@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 import subprocess
 import os
 import sys
@@ -147,6 +146,7 @@ class ScanResult:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization"""
         return {
+            "scan_time": self.scan_time,
             "ip": self.ip,
             "hostname": self.hostname,
             "duration": self.duration,
