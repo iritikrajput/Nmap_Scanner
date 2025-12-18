@@ -55,53 +55,60 @@
 
 ## 🚀 Quick Start
 
-### Installation
+### One-Command Setup & Start
 
 ```bash
-# Install Nmap
+# Install everything and start server (recommended)
+sudo ./setup_and_run.sh
+```
+
+This script automatically:
+- ✅ Installs Python3, pip, Nmap, httpx
+- ✅ Creates virtual environment (`venv/`)
+- ✅ Installs Flask & Gunicorn
+- ✅ Starts API server on `http://0.0.0.0:5000`
+
+### Manual Installation
+
+```bash
+# 1. Install system tools
 sudo apt install nmap
 
-# Install Python dependencies
+# 2. Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# 3. Install Python dependencies
 pip install -r requirements.txt
 
-# Install httpx (optional)
-go install github.com/projectdiscovery/httpx/cmd/httpx@latest
+# 4. Start API server
+sudo venv/bin/python api_server.py --host 0.0.0.0 --port 5000
 ```
 
-### Start API Server
+### Single Target Scan (CLI)
 
 ```bash
-# Start the API server
-sudo python3 api_server.py
+# Activate venv first
+source venv/bin/activate
 
-# Custom port
-sudo python3 api_server.py --port 8080
-
-# Listen on all interfaces
-sudo python3 api_server.py --host 0.0.0.0 --port 5000
-```
-
-### Single Target Scan
-
-```bash
 # Scan IP (Port scan)
-sudo python3 scanner_api.py -t 192.168.1.1
+sudo venv/bin/python scanner_api.py -t 192.168.1.1
 
 # Scan Domain (Dead check + Headers + SSL)
-sudo python3 scanner_api.py -t example.com
+sudo venv/bin/python scanner_api.py -t example.com
 ```
 
 ### Daily Batch Scan
 
 ```bash
 # Scan all targets from file
-sudo python3 daily_scan.py -f targets.txt
+sudo ./venv/bin/python daily_scan.py -f targets.txt
 
 # With custom output directory
-sudo python3 daily_scan.py -f ips.txt -o /var/scans
+sudo ./venv/bin/python daily_scan.py -f ips.txt -o /var/scans
 
 # JSON only output
-sudo python3 daily_scan.py -f targets.txt --json-only
+sudo ./venv/bin/python daily_scan.py -f targets.txt --json-only
 ```
 
 ---
@@ -141,29 +148,37 @@ sudo python3 daily_scan.py -f targets.txt --json-only
 ### Start Server
 
 ```bash
-sudo python3 api_server.py --host 0.0.0.0 --port 5000
+# Option 1: One-command setup & start
+sudo ./setup_and_run.sh
+
+# Option 2: Manual (after setup)
+source venv/bin/activate
+sudo venv/bin/python api_server.py --host 0.0.0.0 --port 5000
 ```
 
 ### API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/api/scan` | Start a new scan |
+| POST | `/api/scan` | Scan target (returns result directly) |
 | GET | `/api/scan/<id>` | Get scan result by ID |
 | GET | `/api/scans` | List all scans |
 | POST | `/api/scan/bulk` | Bulk scan multiple targets |
 | GET | `/api/health` | Health check |
 
-### Examples
+---
 
-**Start a scan (returns result directly):**
+### 📡 How to Call API
+
+#### 1. Scan an IP (Port Scan)
+
 ```bash
-curl -X POST http://localhost:5000/api/scan \
+curl -X POST http://YOUR_SERVER_IP:5000/api/scan \
   -H "Content-Type: application/json" \
   -d '{"target": "192.168.1.1"}'
 ```
 
-Response (complete result with ID):
+**Response:**
 ```json
 {
   "id": "abc12345",
@@ -173,21 +188,51 @@ Response (complete result with ID):
   "completed_at": "2025-12-18T10:01:30",
   "open_ports": [
     {"port": 22, "protocol": "tcp", "state": "open", "service": "ssh"},
-    {"port": 80, "protocol": "tcp", "state": "filtered", "service": "http"}
-  ],
-  "security_headers": {...},
-  "security_flags": [...]
+    {"port": 80, "protocol": "tcp", "state": "open", "service": "http"},
+    {"port": 443, "protocol": "tcp", "state": "filtered", "service": "https"}
+  ]
 }
 ```
 
-**Async scan (get ID, fetch result later):**
+#### 2. Scan a Domain (Headers + SSL + Dead Check)
+
 ```bash
-curl -X POST http://localhost:5000/api/scan \
+curl -X POST http://YOUR_SERVER_IP:5000/api/scan \
+  -H "Content-Type: application/json" \
+  -d '{"target": "example.com"}'
+```
+
+**Response:**
+```json
+{
+  "id": "xyz78901",
+  "target": "example.com",
+  "status": "completed",
+  "domain_status": "alive",
+  "open_ports": [...],
+  "security_headers": {
+    "Strict-Transport-Security": "max-age=31536000",
+    "X-Frame-Options": "DENY"
+  },
+  "ssl_info": {
+    "common_name": "example.com",
+    "issuer": "DigiCert Inc",
+    "valid_from": "2025-01-01",
+    "valid_until": "2026-01-01"
+  },
+  "security_flags": ["Missing CSP header", "Missing X-Content-Type-Options"]
+}
+```
+
+#### 3. Async Mode (Background Scan)
+
+```bash
+curl -X POST http://YOUR_SERVER_IP:5000/api/scan \
   -H "Content-Type: application/json" \
   -d '{"target": "192.168.1.1", "async": true}'
 ```
 
-Response:
+**Response:**
 ```json
 {
   "id": "abc12345",
@@ -197,30 +242,39 @@ Response:
 }
 ```
 
-**Get scan result by ID:**
+Then fetch result:
 ```bash
-curl http://localhost:5000/api/scan/abc12345
+curl http://YOUR_SERVER_IP:5000/api/scan/abc12345
 ```
 
-**Bulk scan (always async):**
+#### 4. Bulk Scan (Multiple Targets)
+
 ```bash
-curl -X POST http://localhost:5000/api/scan/bulk \
+curl -X POST http://YOUR_SERVER_IP:5000/api/scan/bulk \
   -H "Content-Type: application/json" \
   -d '{"targets": ["192.168.1.1", "example.com", "10.0.0.1"]}'
 ```
 
-### API Authentication (Optional)
+#### 5. Health Check
+
+```bash
+curl http://YOUR_SERVER_IP:5000/api/health
+```
+
+---
+
+### 🔐 API Authentication (Optional)
 
 Set `SCANNER_API_KEY` environment variable to enable authentication:
 
 ```bash
 export SCANNER_API_KEY="your-secret-key"
-sudo python3 api_server.py
+sudo ./setup_and_run.sh
 ```
 
 Then include the key in requests:
 ```bash
-curl -X POST http://localhost:5000/api/scan \
+curl -X POST http://YOUR_SERVER_IP:5000/api/scan \
   -H "X-API-Key: your-secret-key" \
   -H "Content-Type: application/json" \
   -d '{"target": "192.168.1.1"}'
@@ -234,8 +288,8 @@ curl -X POST http://localhost:5000/api/scan \
 # Edit crontab
 crontab -e
 
-# Run daily at 2 AM
-0 2 * * * cd /path/to/scanner && sudo python3 daily_scan.py -f targets.txt >> /var/log/scanner.log 2>&1
+# Run daily at 2 AM (using venv)
+0 2 * * * cd /path/to/scanner && sudo ./venv/bin/python daily_scan.py -f targets.txt >> /var/log/scanner.log 2>&1
 ```
 
 ---
@@ -290,13 +344,15 @@ nmap -Pn -sS --open -sV -T4 --max-retries 2 --host-timeout 10m <target>
 
 ```
 security-scanner/
+├── setup_and_run.sh    # One-command setup & start script
 ├── api_server.py       # REST API server (Flask)
 ├── scanner_api.py      # Core scanner module
 ├── daily_scan.py       # Daily batch scan script
 ├── config.py           # Configuration
-├── requirements.txt    # Dependencies
+├── requirements.txt    # Python dependencies
 ├── Dockerfile          # Docker build
 ├── targets.txt         # Sample targets
+├── venv/               # Virtual environment (created by setup script)
 ├── scan_results/       # Output directory
 │   ├── 192.168.1.1.json
 │   ├── 192.168.1.1.txt

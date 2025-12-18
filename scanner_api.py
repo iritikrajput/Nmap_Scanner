@@ -1,21 +1,5 @@
 #!/usr/bin/env python3
-"""
-Security Scanner Suite v2.0
-Lightweight security scanner: Nmap + httpx
 
-Architecture:
-┌─────────────┐
-│    Nmap     │  → Live ports + SSL + Security Headers
-└──────┬──────┘
-       │
-┌──────▼──────┐
-│   httpx     │  → Dead domain / HTTP reachability
-└──────┬──────┘
-       │
-┌──────▼──────┐
-│   Report    │  → JSON, XML, TXT output
-└─────────────┘
-"""
 
 import subprocess
 import os

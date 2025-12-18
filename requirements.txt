@@ -1,24 +1,5 @@
-# Security Scanner Suite v2.0 - Requirements
-# Python 3.8+ required
+# Security Scanner API - Python Dependencies
+# Install: pip install -r requirements.txt
 
-# API Server
 flask>=2.0.0
-
-# Standard library modules used (no install needed):
-# - subprocess (tool execution)
-# - json (JSON handling)
-# - xml.etree.ElementTree (XML parsing)
-# - urllib.request (HTTP requests)
-# - ssl (TLS/SSL)
-# - socket (DNS resolution)
-# - dataclasses (data structures)
-# - threading (background tasks)
-# - re, os, sys, datetime (utilities)
-
-# External tools required:
-# ─────────────────────────────────────────────────────────────────────────────
-# Tool      | Purpose              | Install Command
-# ─────────────────────────────────────────────────────────────────────────────
-# nmap      | Port/SSL/Header scan | sudo apt install nmap
-# httpx     | Dead domain check    | go install github.com/projectdiscovery/httpx/cmd/httpx@latest
-# ─────────────────────────────────────────────────────────────────────────────
+gunicorn>=21.0.0
