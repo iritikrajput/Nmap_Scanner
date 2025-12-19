@@ -130,9 +130,33 @@ else
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────────
-# 5. Create Virtual Environment & Install Python dependencies
+# 5. Install Redis (optional - for production queue)
 # ─────────────────────────────────────────────────────────────────────────────────
-echo -e "${BLUE}[5/5] Setting up Python virtual environment...${NC}"
+echo -e "${BLUE}[5/7] Checking Redis (optional)...${NC}"
+if ! command -v redis-server &> /dev/null; then
+    echo -e "${YELLOW}Redis not installed. Install for production queue? (y/n)${NC}"
+    read -t 10 -n 1 INSTALL_REDIS || INSTALL_REDIS="n"
+    echo
+    if [[ "$INSTALL_REDIS" =~ ^[Yy]$ ]]; then
+        case $PKG_MANAGER in
+            apt) sudo apt-get install -y redis-server ;;
+            yum) sudo yum install -y redis ;;
+            dnf) sudo dnf install -y redis ;;
+        esac
+        sudo systemctl enable redis-server 2>/dev/null || true
+        sudo systemctl start redis-server 2>/dev/null || true
+        echo -e "${GREEN}✓ Redis installed and started${NC}"
+    else
+        echo -e "${YELLOW}⚠ Redis skipped (in-memory mode will be used)${NC}"
+    fi
+else
+    echo -e "${GREEN}✓ Redis: $(redis-server --version | head -1)${NC}"
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────────
+# 6. Create Virtual Environment & Install Python dependencies
+# ─────────────────────────────────────────────────────────────────────────────────
+echo -e "${BLUE}[6/7] Setting up Python virtual environment...${NC}"
 
 VENV_DIR="$SCRIPT_DIR/venv"
 
@@ -150,9 +174,11 @@ echo -e "${GREEN}✓ Virtual environment created: $VENV_DIR${NC}"
 echo -e "${GREEN}✓ Python dependencies installed${NC}"
 
 # ─────────────────────────────────────────────────────────────────────────────────
-# Create scan_results directory
+# 7. Create directories
 # ─────────────────────────────────────────────────────────────────────────────────
+echo -e "${BLUE}[7/7] Creating directories...${NC}"
 mkdir -p scan_results
+echo -e "${GREEN}✓ scan_results directory created${NC}"
 
 # ─────────────────────────────────────────────────────────────────────────────────
 # Summary
@@ -170,7 +196,18 @@ if command -v httpx &> /dev/null; then
 else
     echo -e "  • httpx:   ${YELLOW}Not installed (optional)${NC}"
 fi
+if command -v redis-server &> /dev/null; then
+    echo -e "  • Redis:   $(redis-server --version 2>&1 | head -1)"
+else
+    echo -e "  • Redis:   ${YELLOW}Not installed (in-memory mode)${NC}"
+fi
 echo -e "  • Venv:    $VENV_DIR"
+echo ""
+echo -e "Production Features:"
+echo -e "  • ProcessPoolExecutor for CPU-efficient parallel scans"
+echo -e "  • Rate limiting per client (IP/API key)"
+echo -e "  • Scan profiles: default, tcp_full, udp_common, quick, stealth"
+echo -e "  • Client access policies"
 echo ""
 
 # ─────────────────────────────────────────────────────────────────────────────────
@@ -184,15 +221,24 @@ echo ""
 # Ensure venv is activated
 source "$VENV_DIR/bin/activate"
 
+# Check if Redis should be enabled
+if command -v redis-cli &> /dev/null && redis-cli ping 2>/dev/null | grep -q PONG; then
+    export USE_REDIS=true
+    echo -e "${GREEN}✓ Redis detected and running - queue mode enabled${NC}"
+else
+    export USE_REDIS=false
+    echo -e "${YELLOW}⚠ Redis not running - using in-memory mode${NC}"
+fi
+
 # Use gunicorn if available, otherwise flask dev server
 if [ -f "$VENV_DIR/bin/gunicorn" ]; then
     echo -e "${GREEN}Running with Gunicorn (production mode)${NC}"
-    echo -e "${GREEN}  Workers: 8 | Threads: 4 | Max Parallel Scans: 200${NC}"
+    echo -e "${GREEN}  Workers: 8 | Threads: 4 | Max Parallel Scans: 50${NC}"
     # -w 8 = 8 worker processes
     # --threads 4 = 4 threads per worker (8x4 = 32 concurrent requests)
     # --timeout 600 = 10 minutes (for parallel scans)
     # --graceful-timeout 300 = graceful shutdown timeout
-    sudo "$VENV_DIR/bin/gunicorn" \
+    sudo -E "$VENV_DIR/bin/gunicorn" \
         -w 8 \
         --threads 4 \
         -b 0.0.0.0:5000 \
@@ -202,6 +248,6 @@ if [ -f "$VENV_DIR/bin/gunicorn" ]; then
         api_server:app
 else
     echo -e "${YELLOW}Running with Flask dev server${NC}"
-    sudo "$VENV_DIR/bin/python" api_server.py --host 0.0.0.0 --port 5000
+    sudo -E "$VENV_DIR/bin/python" api_server.py --host 0.0.0.0 --port 5000
 fi
 

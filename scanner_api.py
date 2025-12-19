@@ -29,6 +29,51 @@ from config import (
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# SCAN PROFILES - Production-ready scan type configurations
+# ═══════════════════════════════════════════════════════════════════════════════
+
+SCAN_PROFILES = {
+    "default": {
+        "name": "Default (Top 1000 TCP)",
+        "tcp": "--top-ports 1000",
+        "udp": None,
+        "description": "Quick scan of most common ports"
+    },
+    "tcp_full": {
+        "name": "Full TCP Scan",
+        "tcp": "1-65535",
+        "udp": None,
+        "description": "Complete TCP port scan (all 65535 ports)"
+    },
+    "udp_common": {
+        "name": "UDP Common Ports",
+        "tcp": "--top-ports 1000",
+        "udp": "53,67,68,69,123,135,137,138,139,161,162,389,445,500,514,520,1434,1900,4500,5353",
+        "description": "TCP top 1000 + common UDP services"
+    },
+    "udp_full": {
+        "name": "Full UDP Scan",
+        "tcp": None,
+        "udp": "1-65535",
+        "description": "Complete UDP port scan (policy protected)"
+    },
+    "quick": {
+        "name": "Quick Scan",
+        "tcp": "--top-ports 100",
+        "udp": None,
+        "description": "Fast scan of top 100 ports"
+    },
+    "stealth": {
+        "name": "Stealth Scan",
+        "tcp": "--top-ports 1000",
+        "udp": None,
+        "timing": "-T2",
+        "description": "Slower, less detectable scan"
+    }
+}
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # LOGGING SETUP
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -208,23 +253,27 @@ class SecurityScanner:
         """Check if target is an IP address"""
         return bool(re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', target))
     
-    def scan(self, target: str) -> ScanResult:
+    def scan(self, target: str, scan_type: str = "default") -> ScanResult:
         """
         Perform security scan with different flows for IP vs Domain.
         
         IP Flow:
-        1. Nmap → Port scanning
+        1. Nmap → Port scanning (configurable scan type)
         
         Domain Flow:
         1. Check if alive/dead
         2. Check security headers (missing)
         3. Check SSL certificate
+        
+        Args:
+            target: IP address or domain name
+            scan_type: Scan profile name (default, tcp_full, udp_common, etc.)
         """
         start_time = datetime.now()
         is_ip = self._is_ip_address(target)
         target_type = "IP" if is_ip else "Domain"
         
-        self.logger.info(f"Starting scan for: {target} ({target_type})")
+        self.logger.info(f"Starting scan for: {target} ({target_type}) [profile: {scan_type}]")
         
         result = ScanResult(
             target=target,
@@ -239,9 +288,9 @@ class SecurityScanner:
                 # ═══════════════════════════════════════════════════════════════
                 result.ip = target
                 
-                # Nmap - Port Scanning
-                self.logger.info(f"[{target}] Running Nmap port scan")
-                nmap_data = self._run_nmap_ports_only(target)
+                # Nmap - Port Scanning (with configurable scan type)
+                self.logger.info(f"[{target}] Running Nmap port scan ({scan_type})")
+                nmap_data = self._run_nmap_ports_only(target, scan_type=scan_type)
                 
                 if nmap_data:
                     result.open_ports = nmap_data.get("ports", [])
@@ -465,57 +514,89 @@ class SecurityScanner:
         
         return self._parse_nmap_xml(xml_file, txt_file)
     
-    def _run_nmap_ports_only(self, target: str) -> Optional[Dict]:
+    def _run_nmap_ports_only(self, target: str, scan_type: str = "default") -> Optional[Dict]:
         """
-        Run comprehensive Nmap port scan for IP targets.
+        Run Nmap port scan with configurable scan profiles.
         
-        Scans:
-        - TCP: All 65535 ports (-p-)
-        - UDP: Top 100 ports (optional)
+        Scan Types:
+          default     -> TCP top 1000 ports (fast, comprehensive)
+          tcp_full    -> TCP all 65535 ports (thorough, slow)
+          udp_common  -> TCP top 1000 + common UDP services
+          udp_full    -> UDP all ports (policy protected, very slow)
+          quick       -> TCP top 100 ports (fastest)
+          stealth     -> TCP top 1000 with slower timing (less detectable)
         
-        Command equivalent:
-        nmap -Pn -sS -sU -p- --top-ports 100 -T3 --max-retries 2 --host-timeout 5m
+        Args:
+            target: IP address or hostname to scan
+            scan_type: Profile name from SCAN_PROFILES
+            
+        Returns:
+            Dict with scan results or None on failure
         """
+        # Validate scan type
+        if scan_type not in SCAN_PROFILES:
+            self.logger.error(f"[{target}] Invalid scan_type: {scan_type}")
+            raise ValueError(f"Invalid scan_type: {scan_type}. Valid: {list(SCAN_PROFILES.keys())}")
+        
+        # Policy enforcement for full UDP scans
+        if scan_type == "udp_full":
+            allow_full_udp = getattr(self.config, 'allow_full_udp', False)
+            if not allow_full_udp:
+                self.logger.warning(f"[{target}] Full UDP scan blocked by policy")
+                raise PermissionError("Full UDP scan disabled by policy. Set allow_full_udp=True in config.")
+        
+        profile = SCAN_PROFILES[scan_type]
+        
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         safe_target = re.sub(r'[^\w\-.]', '_', target)
         
         xml_file = os.path.join(self.config.output_dir, f"nmap_{safe_target}_{timestamp}.xml")
         txt_file = os.path.join(self.config.output_dir, f"nmap_{safe_target}_{timestamp}.txt")
         
-        # Build comprehensive port scan command
+        # ═══════════════════════════════════════════════════════════════════════
+        # BUILD NMAP COMMAND
+        # ═══════════════════════════════════════════════════════════════════════
+        
         cmd = [
             "nmap",
-            "-Pn",           # Skip host discovery
+            "-Pn",           # Skip host discovery (treat all as online)
+            "-sV",           # Service version detection
             "-oX", xml_file,
             "-oN", txt_file,
-            "-sV",           # Version detection
         ]
         
-        # TCP SYN scan
-        cmd.append("-sS")
-        
-        # Common UDP ports (top 20 most important)
-        COMMON_UDP_PORTS = "53,67,68,69,123,135,137,138,139,161,162,389,445,500,514,520,1434,1900,4500,5353"
-        
-        # UDP scan (optional)
-        scan_udp = getattr(self.config, 'nmap_ip_scan_udp', False)
-        if scan_udp:
-            cmd.append("-sU")
-        
-        # Port specification (optional - if empty, nmap uses default top 1000)
-        tcp_ports = getattr(self.config, 'nmap_ip_tcp_ports', '')
-        
-        if tcp_ports and tcp_ports.strip():
-            tcp_ports = tcp_ports.replace('-p', '').strip()
-            if scan_udp:
-                udp_ports = getattr(self.config, 'nmap_ip_udp_ports', COMMON_UDP_PORTS)
-                cmd.extend(["-p", f"T:{tcp_ports},U:{udp_ports}"])
+        # TCP scan
+        if profile.get("tcp"):
+            cmd.append("-sS")  # TCP SYN scan
+            tcp_spec = profile["tcp"]
+            if tcp_spec.startswith("--"):
+                # e.g., "--top-ports 1000"
+                cmd.extend(tcp_spec.split())
             else:
-                cmd.extend(["-p", tcp_ports])
-        # If tcp_ports is empty, don't add any -p flag - nmap defaults to top 1000
+                # e.g., "1-65535"
+                cmd.extend(["-p", tcp_spec])
         
-        # Timing (T4 = aggressive)
-        timing = getattr(self.config, 'nmap_ip_timing', '-T4')
+        # UDP scan
+        if profile.get("udp"):
+            cmd.append("-sU")  # UDP scan
+            udp_spec = profile["udp"]
+            if udp_spec == "1-65535":
+                cmd.append("-p-")  # All UDP ports
+            else:
+                # Specific UDP ports
+                if profile.get("tcp"):
+                    # Combined TCP+UDP port specification
+                    tcp_spec = profile["tcp"]
+                    if tcp_spec.startswith("--"):
+                        # Can't combine --top-ports with explicit UDP, use default
+                        cmd.extend(["-pU:" + udp_spec])
+                    else:
+                        cmd.extend(["-p", f"T:{tcp_spec},U:{udp_spec}"])
+                else:
+                    cmd.extend(["-pU:" + udp_spec])
+        
+        # Timing template (use profile-specific or default to T4)
+        timing = profile.get("timing", getattr(self.config, 'nmap_ip_timing', '-T4'))
         cmd.append(timing)
         
         # Retries
@@ -530,28 +611,27 @@ class SecurityScanner:
         # PARALLEL PROCESSING FLAGS
         # ═══════════════════════════════════════════════════════════════════════
         
-        # Host group size (parallel hosts)
         min_hostgroup = getattr(self.config, 'nmap_min_hostgroup', 100)
         max_hostgroup = getattr(self.config, 'nmap_max_hostgroup', 200)
         cmd.extend(["--min-hostgroup", str(min_hostgroup)])
         cmd.extend(["--max-hostgroup", str(max_hostgroup)])
         
-        # Packet rate (packets per second)
         min_rate = getattr(self.config, 'nmap_min_rate', 1500)
         max_rate = getattr(self.config, 'nmap_max_rate', 5000)
         cmd.extend(["--min-rate", str(min_rate)])
         cmd.extend(["--max-rate", str(max_rate)])
         
+        # Target
         cmd.append(target)
         
-        self.logger.info(f"[{target}] Running: {' '.join(cmd)}")
+        self.logger.info(f"[{target}] Nmap ({scan_type}): {' '.join(cmd)}")
         
         try:
-            # Use longer timeout for comprehensive scans
-            scan_timeout = 600  # 10 minutes
+            # Timeout: 10 min default, 30 min for full scans
+            scan_timeout = 1800 if scan_type in ["tcp_full", "udp_full"] else 600
             subprocess.run(cmd, capture_output=True, timeout=scan_timeout)
         except subprocess.TimeoutExpired:
-            self.logger.error(f"[{target}] Nmap timeout (10m)")
+            self.logger.error(f"[{target}] Nmap timeout ({scan_timeout//60}m)")
             return None
         except Exception as e:
             self.logger.error(f"[{target}] Nmap error: {e}")

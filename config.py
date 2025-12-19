@@ -33,10 +33,25 @@ class ScannerConfig:
     nmap_min_rate: int = 1500      # Min packets per second
     nmap_max_rate: int = 5000      # Max packets per second
     
+    # Policy settings
+    allow_full_udp: bool = False   # Full UDP scan policy protection
+    default_scan_type: str = "default"  # Default scan profile
+    
     # httpx settings (dead domain detection)
     httpx_path: str = "httpx"
     httpx_timeout: int = 30
     skip_dead_domains: bool = False  # If True, skip Nmap on dead domains
+    
+    # Redis settings (for production queue)
+    redis_host: str = "localhost"
+    redis_port: int = 6379
+    redis_db: int = 0
+    redis_password: Optional[str] = None
+    use_redis: bool = False  # Enable Redis queue mode
+    
+    # Rate limiting
+    rate_limit_scans: int = 20     # Max scans per window
+    rate_limit_window: int = 60    # Window in seconds
     
     # Output settings
     output_dir: str = "./scan_results"
@@ -106,6 +121,42 @@ class ScannerConfig:
 
 # Default configuration instance
 DEFAULT_CONFIG = ScannerConfig()
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# CLIENT POLICIES - Enterprise-Grade Access Control
+# ═══════════════════════════════════════════════════════════════════════════════
+
+CLIENT_POLICIES = {
+    "default": {
+        "name": "Default Client",
+        "allowed_scans": ["default", "quick", "stealth"],
+        "rate_limit": 10,  # scans per minute
+        "max_targets": 50,  # max targets per bulk request
+        "priority": 1,
+    },
+    "standard": {
+        "name": "Standard Client",
+        "allowed_scans": ["default", "tcp_full", "udp_common", "quick", "stealth"],
+        "rate_limit": 20,
+        "max_targets": 100,
+        "priority": 2,
+    },
+    "premium": {
+        "name": "Premium Client",
+        "allowed_scans": ["default", "tcp_full", "udp_common", "udp_full", "quick", "stealth"],
+        "rate_limit": 50,
+        "max_targets": 200,
+        "priority": 3,
+    },
+    "admin": {
+        "name": "Administrator",
+        "allowed_scans": ["default", "tcp_full", "udp_common", "udp_full", "quick", "stealth"],
+        "rate_limit": 1000,  # effectively unlimited
+        "max_targets": 500,
+        "priority": 10,
+    }
+}
 
 
 # Security headers to check (comprehensive list)

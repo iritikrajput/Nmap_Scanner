@@ -1,5 +1,15 @@
 # Security Scanner API - Python Dependencies
 # Install: pip install -r requirements.txt
 
+# Web Framework
 flask>=2.0.0
 gunicorn>=21.0.0
+
+# Redis Queue (Production)
+redis>=4.0.0
+
+# Rate Limiting (Optional - for advanced rate limiting)
+# flask-limiter>=3.0.0
+
+# Utilities
+python-dotenv>=1.0.0
