@@ -1,52 +1,72 @@
-# Security Scanner Suite v2.0 - Dockerfile
-# Nmap + httpx architecture
+# Security Scanner Suite v2.1 - Dockerfile (Gunicorn Optimized)
+# Nmap + httpx + Gunicorn
 
 FROM python:3.11-slim
 
 LABEL maintainer="Security Scanner Suite"
-LABEL description="Lightweight security scanner: Nmap + httpx"
-LABEL version="2.0.0"
+LABEL description="Parallel Security Scanner: Nmap + httpx + Gunicorn"
+LABEL version="2.1.1"
 
-# Install system dependencies
+# ─────────────────────────────────────────────
+# System dependencies
+# ─────────────────────────────────────────────
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nmap \
-    wget \
     curl \
+    wget \
     unzip \
     ca-certificates \
+    tini \
     && rm -rf /var/lib/apt/lists/*
 
-# Install httpx (ProjectDiscovery)
-RUN HTTPX_VERSION=$(curl -s https://api.github.com/repos/projectdiscovery/httpx/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/') \
-    && echo "Installing httpx version: ${HTTPX_VERSION}" \
-    && wget -q "https://github.com/projectdiscovery/httpx/releases/download/v${HTTPX_VERSION}/httpx_${HTTPX_VERSION}_linux_amd64.zip" -O httpx.zip \
-    && unzip httpx.zip -d /usr/local/bin/ \
-    && rm httpx.zip \
-    && chmod +x /usr/local/bin/httpx
+# ─────────────────────────────────────────────
+# Install httpx ONLY if not already present
+# ─────────────────────────────────────────────
+ENV HTTPX_VERSION=1.6.6
 
-# Create app directory
+RUN if ! command -v httpx >/dev/null 2>&1; then \
+        echo "httpx not found, installing version ${HTTPX_VERSION}"; \
+        wget -q https://github.com/projectdiscovery/httpx/releases/download/v${HTTPX_VERSION}/httpx_${HTTPX_VERSION}_linux_amd64.zip && \
+        unzip httpx_${HTTPX_VERSION}_linux_amd64.zip && \
+        mv httpx /usr/local/bin/httpx && \
+        chmod +x /usr/local/bin/httpx && \
+        rm httpx_${HTTPX_VERSION}_linux_amd64.zip; \
+    else \
+        echo "httpx already installed, skipping download"; \
+    fi
+
+# ─────────────────────────────────────────────
+# App setup
+# ─────────────────────────────────────────────
 WORKDIR /app
 
-# Copy requirements and install
+# Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application files
+# Application code
 COPY config.py .
 COPY scanner_api.py .
-COPY daily_scan.py .
 COPY api_server.py .
+COPY daily_scan.py .
+COPY gunicorn.conf.py .
 
-# Create output directory
+# Output directory
 RUN mkdir -p /app/scan_results
 
-# Set environment variables
+# ─────────────────────────────────────────────
+# Environment
+# ─────────────────────────────────────────────
 ENV SCANNER_OUTPUT_DIR=/app/scan_results
 ENV SCANNER_LOG_LEVEL=INFO
+ENV PYTHONUNBUFFERED=1
 
-# Expose API port
+# API port
 EXPOSE 5000
 
-# Default command - start API server
-ENTRYPOINT ["python3", "api_server.py"]
-CMD ["--host", "0.0.0.0", "--port", "5000"]
+# ─────────────────────────────────────────────
+# Init + Gunicorn (PID 1)
+# ─────────────────────────────────────────────
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+CMD ["gunicorn", "-c", "gunicorn.conf.py", "api_server:app"]

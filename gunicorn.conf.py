@@ -1,18 +1,33 @@
-# Security Scanner API - Python Dependencies
-# Install: pip install -r requirements.txt
+# gunicorn.conf.py
+# Security Scanner Suite – Gunicorn Configuration
+# Optimized for Nmap + ThreadPoolExecutor
+
+bind = "0.0.0.0:5000"
 
 # ─────────────────────────────────────────────
-# Web framework & WSGI server
+# Workers & Threads
 # ─────────────────────────────────────────────
-flask>=2.2,<4.0
-gunicorn>=21.2,<22.0
+# API is I/O bound, scanning happens in threads
+workers = 4
+threads = 2
+worker_class = "gthread"
 
 # ─────────────────────────────────────────────
-# Redis (queue / caching)
+# Timeouts
 # ─────────────────────────────────────────────
-redis>=4.5,<6.0
+# Nmap scans can take time
+timeout = 600
+keepalive = 5
 
 # ─────────────────────────────────────────────
-# Environment variable support
+# Logging
 # ─────────────────────────────────────────────
-python-dotenv>=1.0,<2.0
+loglevel = "info"
+accesslog = "-"
+errorlog = "-"
+
+# ─────────────────────────────────────────────
+# Stability (prevents memory leaks)
+# ─────────────────────────────────────────────
+max_requests = 1000
+max_requests_jitter = 50

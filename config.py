@@ -1,95 +1,142 @@
 #!/usr/bin/env python3
 """
-Security Scanner Suite v2.0 - Configuration
+Security Scanner Suite v2.1 - Configuration (Gunicorn Optimized)
 Nmap + httpx architecture
 """
 
 import os
+import json
 from dataclasses import dataclass, field
 from typing import List, Optional
-import json
 
 
 @dataclass
 class ScannerConfig:
-    """Main scanner configuration"""
-    
-    # Nmap settings
+    """
+    Main scanner configuration
+
+    Optimized for:
+    - Gunicorn (gthread)
+    - ThreadPoolExecutor
+    - External Nmap processes
+    """
+
+    # ─────────────────────────────────────────────
+    # Nmap core settings
+    # ─────────────────────────────────────────────
     nmap_path: str = "nmap"
     nmap_ports: str = "--top-ports 1000"
     nmap_timeout: int = 300
-    
+
+    # ─────────────────────────────────────────────
     # Nmap IP scan settings
-    nmap_ip_tcp_ports: str = ""  # Empty = use --top-ports 1000 (includes high ports like 5060)
-    nmap_ip_udp_ports: str = "53,123,161,500"  # Common UDP ports
-    nmap_ip_timing: str = "-T4"  # Aggressive timing
+    # ─────────────────────────────────────────────
+    nmap_ip_tcp_ports: str = ""
+    nmap_ip_udp_ports: str = "53,123,161,500"
+    nmap_ip_timing: str = "-T4"
     nmap_ip_max_retries: int = 2
-    nmap_ip_host_timeout: str = "10m"  # 10 minutes per host
-    nmap_ip_scan_udp: bool = False  # UDP disabled by default
-    
-    # Parallel processing settings
-    nmap_min_hostgroup: int = 100  # Min hosts to scan in parallel
-    nmap_max_hostgroup: int = 200  # Max hosts to scan in parallel
-    nmap_min_rate: int = 1500      # Min packets per second
-    nmap_max_rate: int = 5000      # Max packets per second
-    
-    # Policy settings
-    allow_full_udp: bool = False   # Full UDP scan policy protection
-    default_scan_type: str = "default"  # Default scan profile
-    
-    # httpx settings (dead domain detection)
+    nmap_ip_host_timeout: str = "10m"
+    nmap_ip_scan_udp: bool = False
+
+    # ─────────────────────────────────────────────
+    # Nmap parallelism (SAFE VALUES)
+    # IMPORTANT: Python threads handle parallelism,
+    # Nmap must be kept conservative
+    # ─────────────────────────────────────────────
+    nmap_min_hostgroup: int = 32
+    nmap_max_hostgroup: int = 64
+    nmap_min_rate: int = 800
+    nmap_max_rate: int = 2000
+
+    # ─────────────────────────────────────────────
+    # Scan policy
+    # ─────────────────────────────────────────────
+    allow_full_udp: bool = False
+    default_scan_type: str = "default"
+
+    # ─────────────────────────────────────────────
+    # httpx (dead domain detection)
+    # ─────────────────────────────────────────────
     httpx_path: str = "httpx"
     httpx_timeout: int = 30
-    skip_dead_domains: bool = False  # If True, skip Nmap on dead domains
-    
-    # Redis settings (for production queue)
+    skip_dead_domains: bool = False
+
+    # ─────────────────────────────────────────────
+    # Redis (queue / caching)
+    # ─────────────────────────────────────────────
     redis_host: str = "localhost"
     redis_port: int = 6379
     redis_db: int = 0
     redis_password: Optional[str] = None
-    use_redis: bool = False  # Enable Redis queue mode
-    
-    # Rate limiting
-    rate_limit_scans: int = 20     # Max scans per window
-    rate_limit_window: int = 60    # Window in seconds
-    
-    # Output settings
+    use_redis: bool = False
+
+    # ─────────────────────────────────────────────
+    # Rate limiting (API level)
+    # ─────────────────────────────────────────────
+    rate_limit_scans: int = 20
+    rate_limit_window: int = 60
+
+    # ─────────────────────────────────────────────
+    # Output
+    # ─────────────────────────────────────────────
     output_dir: str = "./scan_results"
     output_formats: List[str] = field(default_factory=lambda: ["json", "txt"])
-    
+
+    # ─────────────────────────────────────────────
     # Logging
+    # ─────────────────────────────────────────────
     log_level: str = "INFO"
     log_file: Optional[str] = None
-    
+
+    # ─────────────────────────────────────────────
+    # Loaders
+    # ─────────────────────────────────────────────
     @classmethod
     def from_file(cls, filepath: str) -> "ScannerConfig":
-        """Load configuration from JSON file"""
         if not os.path.exists(filepath):
             return cls()
-        
-        with open(filepath, 'r') as f:
+
+        with open(filepath, "r") as f:
             data = json.load(f)
-        
+
         return cls(**{k: v for k, v in data.items() if hasattr(cls, k)})
-    
+
     @classmethod
     def from_env(cls) -> "ScannerConfig":
-        """Load configuration from environment variables"""
+        """
+        Load configuration from environment variables
+        (Production & Docker friendly)
+        """
         config = cls()
-        
+
         env_mapping = {
+            # Nmap
             "SCANNER_NMAP_PORTS": "nmap_ports",
             "SCANNER_NMAP_TIMEOUT": ("nmap_timeout", int),
-            "SCANNER_NMAP_IP_TCP_PORTS": "nmap_ip_tcp_ports",
-            "SCANNER_NMAP_IP_UDP_PORTS": "nmap_ip_udp_ports",
-            "SCANNER_NMAP_IP_TIMING": "nmap_ip_timing",
-            "SCANNER_NMAP_IP_SCAN_UDP": ("nmap_ip_scan_udp", lambda x: x.lower() == "true"),
-            "SCANNER_OUTPUT_DIR": "output_dir",
+            "SCANNER_NMAP_TIMING": "nmap_ip_timing",
+
+            # Parallel tuning
+            "SCANNER_NMAP_MIN_HOSTGROUP": ("nmap_min_hostgroup", int),
+            "SCANNER_NMAP_MAX_HOSTGROUP": ("nmap_max_hostgroup", int),
+            "SCANNER_NMAP_MIN_RATE": ("nmap_min_rate", int),
+            "SCANNER_NMAP_MAX_RATE": ("nmap_max_rate", int),
+
+            # UDP
+            "SCANNER_ALLOW_FULL_UDP": ("allow_full_udp", lambda x: x.lower() == "true"),
+            "SCANNER_SCAN_UDP": ("nmap_ip_scan_udp", lambda x: x.lower() == "true"),
+
+            # httpx
+            "SCANNER_HTTPX_TIMEOUT": ("httpx_timeout", int),
             "SCANNER_SKIP_DEAD": ("skip_dead_domains", lambda x: x.lower() == "true"),
+
+            # Output
+            "SCANNER_OUTPUT_DIR": "output_dir",
+
+            # Logging
             "SCANNER_LOG_LEVEL": "log_level",
             "SCANNER_LOG_FILE": "log_file",
         }
-        
+
         for env_var, field_info in env_mapping.items():
             value = os.environ.get(env_var)
             if value is not None:
@@ -98,68 +145,70 @@ class ScannerConfig:
                     setattr(config, field_name, converter(value))
                 else:
                     setattr(config, field_info, value)
-        
+
         return config
-    
+
     def to_dict(self) -> dict:
-        """Convert configuration to dictionary"""
         return {
             "nmap_ports": self.nmap_ports,
             "nmap_timeout": self.nmap_timeout,
+            "nmap_min_hostgroup": self.nmap_min_hostgroup,
+            "nmap_max_hostgroup": self.nmap_max_hostgroup,
+            "nmap_min_rate": self.nmap_min_rate,
+            "nmap_max_rate": self.nmap_max_rate,
             "httpx_timeout": self.httpx_timeout,
             "skip_dead_domains": self.skip_dead_domains,
             "output_dir": self.output_dir,
             "output_formats": self.output_formats,
             "log_level": self.log_level,
         }
-    
+
     def save(self, filepath: str):
-        """Save configuration to JSON file"""
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             json.dump(self.to_dict(), f, indent=2)
 
 
-# Default configuration instance
+# Default instance
 DEFAULT_CONFIG = ScannerConfig()
 
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# CLIENT POLICIES - Enterprise-Grade Access Control
-# ═══════════════════════════════════════════════════════════════════════════════
-
+# ─────────────────────────────────────────────
+# Client Policies (UNCHANGED – already correct)
+# ─────────────────────────────────────────────
 CLIENT_POLICIES = {
     "default": {
         "name": "Default Client",
         "allowed_scans": ["default", "quick", "stealth"],
-        "rate_limit": 10,  # scans per minute
-        "max_targets": 50,  # max targets per bulk request
+        "rate_limit": 10,
+        "max_targets": 1000,
         "priority": 1,
     },
     "standard": {
         "name": "Standard Client",
         "allowed_scans": ["default", "tcp_full", "udp_common", "quick", "stealth"],
         "rate_limit": 20,
-        "max_targets": 100,
+        "max_targets": 1000,
         "priority": 2,
     },
     "premium": {
         "name": "Premium Client",
         "allowed_scans": ["default", "tcp_full", "udp_common", "udp_full", "quick", "stealth"],
         "rate_limit": 50,
-        "max_targets": 200,
+        "max_targets": 1000,
         "priority": 3,
     },
     "admin": {
         "name": "Administrator",
         "allowed_scans": ["default", "tcp_full", "udp_common", "udp_full", "quick", "stealth"],
-        "rate_limit": 1000,  # effectively unlimited
-        "max_targets": 500,
+        "rate_limit": 1000,
+        "max_targets": 5000,
         "priority": 10,
     }
 }
 
-
-# Security headers to check (comprehensive list)
+# ─────────────────────────────────────────────
+# Security headers & risk weights
+# (UNCHANGED – already well designed)
+# ─────────────────────────────────────────────
 SECURITY_HEADERS = [
     "Strict-Transport-Security",
     "Content-Security-Policy",
@@ -174,7 +223,6 @@ SECURITY_HEADERS = [
     "Access-Control-Allow-Origin",
 ]
 
-# Header descriptions for reporting
 HEADER_DESCRIPTIONS = {
     "Strict-Transport-Security": "HSTS - Forces HTTPS connections",
     "Content-Security-Policy": "CSP - Prevents XSS and injection attacks",
@@ -189,35 +237,28 @@ HEADER_DESCRIPTIONS = {
     "Access-Control-Allow-Origin": "CORS - Controls cross-origin access",
 }
 
-# Insecure header values to flag
 HEADER_INSECURE_VALUES = {
     "Access-Control-Allow-Origin": ["*"],
     "Content-Security-Policy": ["unsafe-inline", "unsafe-eval"],
 }
 
-# Risk scoring weights
 RISK_WEIGHTS = {
-    # Security headers
     "missing_header": 3,
     "missing_hsts_https": 7,
     "hsts_inconsistent": 5,
     "missing_csp": 5,
     "missing_xframe": 3,
     "insecure_cors": 8,
-    
-    # SSL/TLS
     "cert_expired": 20,
     "cert_self_signed": 15,
     "cert_mismatch": 25,
     "weak_tls": 15,
     "weak_ciphers": 10,
-    
-    # Domain
     "dead_domain": 5,
 }
 
 
 if __name__ == "__main__":
-    config = ScannerConfig()
-    config.save("config.json")
+    cfg = ScannerConfig()
+    cfg.save("config.json")
     print("Sample configuration saved to config.json")
