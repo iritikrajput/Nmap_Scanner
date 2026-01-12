@@ -262,10 +262,11 @@ class SecurityScanner:
         safe = re.sub(r"[^\w\-\.]", "_", target)
         xml = f"{self.config.output_dir}/nmap_{safe}_{ts}.xml"
 
+        # Core Nmap command: -Pn (no ping), -sV (service version detection)
         cmd = ["nmap", "-Pn", "-sV", "-oX", xml]
 
+        # Add port specification
         if profile.get("tcp"):
-            cmd.append("-sS")
             if profile["tcp"].startswith("--"):
                 cmd.extend(profile["tcp"].split())
             else:
@@ -277,10 +278,11 @@ class SecurityScanner:
             cmd.append("-sU")
             cmd.extend(["-pU:" + profile["udp"]])
 
+        # Add timing (default -T4)
         cmd.append(profile.get("timing", "-T4"))
-        cmd.extend(["--min-rate", "800", "--max-rate", "2000"])
         cmd.append(target)
 
+        self.logger.info(f"Running Nmap: {' '.join(cmd)}")
         subprocess.run(cmd, timeout=900, capture_output=True)
         return self._parse_nmap_xml(xml)
 
@@ -289,12 +291,14 @@ class SecurityScanner:
         safe = re.sub(r"[^\w\-\.]", "_", target)
         xml = f"{self.config.output_dir}/nmap_{safe}_{ts}.xml"
 
+        # Core Nmap command: -Pn (no ping), -sV (service version detection)
         cmd = [
             "nmap", "-Pn", "-sV", "-T4",
             "--script", "ssl-cert,ssl-enum-ciphers,http-security-headers",
             "-oX", xml,
             target
         ]
+        self.logger.info(f"Running Nmap: {' '.join(cmd)}")
         subprocess.run(cmd, timeout=900, capture_output=True)
         return self._parse_nmap_xml(xml)
 
@@ -315,13 +319,16 @@ class SecurityScanner:
                     ip = addr.get("addr")
 
             for port in host.findall(".//port"):
-                if port.find("state").get("state") == "open":
+                state_elem = port.find("state")
+                if state_elem is not None and state_elem.get("state") == "open":
                     svc = port.find("service")
                     ports.append(PortInfo(
                         port=int(port.get("portid")),
                         protocol=port.get("protocol"),
                         state="open",
-                        service=svc.get("name", "") if svc is not None else ""
+                        service=svc.get("name", "") if svc is not None else "",
+                        product=svc.get("product", "") if svc is not None else "",
+                        version=svc.get("version", "") if svc is not None else ""
                     ))
 
                 for script in port.findall("script"):
