@@ -1,11 +1,12 @@
-# Security Scanner Suite v2.1 - Dockerfile (Gunicorn Optimized)
+# Security Scanner Suite - Dockerfile (Synchronous Edition)
 # Nmap + httpx + Gunicorn
+# No Redis, no background workers - simple request/response model
 
 FROM python:3.11-slim
 
 LABEL maintainer="Security Scanner Suite"
-LABEL description="Parallel Security Scanner: Nmap + httpx + Gunicorn"
-LABEL version="2.1.1"
+LABEL description="Synchronous Security Scanner: Nmap + httpx + Gunicorn"
+LABEL version="3.0.0"
 
 # ─────────────────────────────────────────────
 # System dependencies

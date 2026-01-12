@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """
-Security Scanner API - Production Edition
+Security Scanner API - Synchronous Edition
 Nmap + httpx (safe, thread-aware, Gunicorn compatible)
+
+Design: One request -> one scan -> one response
+No Redis, no job queue, no background workers.
 """
 
 import subprocess
@@ -40,6 +43,13 @@ SCAN_PROFILES = {
     "udp_full": {"tcp": None, "udp": "1-65535"},
     "stealth": {"tcp": "--top-ports 1000", "udp": None, "timing": "-T2"},
 }
+
+# ─────────────────────────────────────────────
+# Allowed Profiles for Synchronous API
+# Long-running scans (tcp_full, udp_common, udp_full)
+# are blocked because they exceed HTTP timeout limits.
+# ─────────────────────────────────────────────
+ALLOWED_SYNC_PROFILES = ["quick", "default", "stealth"]
 
 # ─────────────────────────────────────────────
 # Logging

@@ -1,6 +1,7 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════════════════════
-# Security Scanner API - Setup & Run Script (Production Fixed)
+# Security Scanner API - Setup & Run Script (Synchronous Edition)
+# No Redis, no background workers - simple request/response model
 # ═══════════════════════════════════════════════════════════════════════════════
 
 set -e
@@ -14,7 +15,7 @@ NC='\033[0m'
 
 echo -e "${BLUE}"
 echo "═══════════════════════════════════════════════════════════════════════════════"
-echo "                Security Scanner API - Setup & Run                             "
+echo "           Security Scanner API - Setup & Run (Synchronous Edition)            "
 echo "═══════════════════════════════════════════════════════════════════════════════"
 echo -e "${NC}"
 
@@ -31,7 +32,7 @@ fi
 # ─────────────────────────────────────────────
 # 1. Package manager
 # ─────────────────────────────────────────────
-echo -e "${BLUE}[1/7] Detecting package manager...${NC}"
+echo -e "${BLUE}[1/6] Detecting package manager...${NC}"
 if command -v apt-get &>/dev/null; then
     PKG_MANAGER="apt"
 elif command -v dnf &>/dev/null; then
@@ -46,7 +47,7 @@ echo -e "${GREEN}✓ Package manager: ${PKG_MANAGER}${NC}"
 # ─────────────────────────────────────────────
 # 2. Python
 # ─────────────────────────────────────────────
-echo -e "${BLUE}[2/7] Checking Python...${NC}"
+echo -e "${BLUE}[2/6] Checking Python...${NC}"
 command -v python3 >/dev/null || {
     echo -e "${RED}Python3 not found. Install it manually.${NC}"
     exit 1
@@ -56,7 +57,7 @@ echo -e "${GREEN}✓ Python: $(python3 --version)${NC}"
 # ─────────────────────────────────────────────
 # 3. Nmap
 # ─────────────────────────────────────────────
-echo -e "${BLUE}[3/7] Checking Nmap...${NC}"
+echo -e "${BLUE}[3/6] Checking Nmap...${NC}"
 if ! command -v nmap &>/dev/null; then
     echo "Installing Nmap..."
     case $PKG_MANAGER in
@@ -68,9 +69,9 @@ fi
 echo -e "${GREEN}✓ Nmap installed${NC}"
 
 # ─────────────────────────────────────────────
-# 4. httpx (DO NOT REDOWNLOAD)
+# 4. httpx (optional)
 # ─────────────────────────────────────────────
-echo -e "${BLUE}[4/7] Checking httpx...${NC}"
+echo -e "${BLUE}[4/6] Checking httpx...${NC}"
 if command -v httpx &>/dev/null; then
     echo -e "${GREEN}✓ httpx already installed: $(httpx -version 2>&1 | head -1)${NC}"
 else
@@ -80,19 +81,9 @@ else
 fi
 
 # ─────────────────────────────────────────────
-# 5. Redis (optional)
+# 5. Virtual environment
 # ─────────────────────────────────────────────
-echo -e "${BLUE}[5/7] Checking Redis...${NC}"
-if command -v redis-server &>/dev/null; then
-    echo -e "${GREEN}✓ Redis detected${NC}"
-else
-    echo -e "${YELLOW}⚠ Redis not installed (in-memory mode will be used)${NC}"
-fi
-
-# ─────────────────────────────────────────────
-# 6. Virtual environment
-# ─────────────────────────────────────────────
-echo -e "${BLUE}[6/7] Setting up Python virtual environment...${NC}"
+echo -e "${BLUE}[5/6] Setting up Python virtual environment...${NC}"
 VENV_DIR="$SCRIPT_DIR/venv"
 
 if [ ! -d "$VENV_DIR" ]; then
@@ -105,9 +96,9 @@ pip install -r requirements.txt >/dev/null
 echo -e "${GREEN}✓ Virtualenv ready${NC}"
 
 # ─────────────────────────────────────────────
-# 7. Directories
+# 6. Directories
 # ─────────────────────────────────────────────
-echo -e "${BLUE}[7/7] Preparing directories...${NC}"
+echo -e "${BLUE}[6/6] Preparing directories...${NC}"
 mkdir -p scan_results
 echo -e "${GREEN}✓ scan_results ready${NC}"
 
@@ -123,8 +114,9 @@ echo "Components:"
 echo " • Python: $(python3 --version)"
 echo " • Nmap:   $(nmap --version | head -1)"
 command -v httpx &>/dev/null && echo " • httpx:  $(httpx -version 2>&1 | head -1)"
-command -v redis-server &>/dev/null && echo " • Redis:  available"
 echo " • Venv:   $VENV_DIR"
+echo ""
+echo "Architecture: Synchronous (no Redis, no background workers)"
 echo ""
 
 # ─────────────────────────────────────────────
@@ -132,16 +124,8 @@ echo ""
 # ─────────────────────────────────────────────
 echo -e "${BLUE}Starting Security Scanner API...${NC}"
 echo -e "${YELLOW}URL: http://0.0.0.0:5000${NC}"
+echo -e "${YELLOW}Endpoint: POST /api/scan${NC}"
 echo ""
-
-# Redis detection
-if command -v redis-cli &>/dev/null && redis-cli ping &>/dev/null; then
-    export USE_REDIS=true
-    echo -e "${GREEN}✓ Redis running – enabled${NC}"
-else
-    export USE_REDIS=false
-    echo -e "${YELLOW}⚠ Redis disabled – memory mode${NC}"
-fi
 
 # Run Gunicorn (NO sudo, uses config file)
 if [ -f "$VENV_DIR/bin/gunicorn" ]; then

@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """
-Security Scanner API Server - Synchronous Edition (Gunicorn Optimized)
-All scan results are returned in the same request
+Security Scanner API Server - Synchronous Edition
+One request -> one scan (or small batch) -> one response
+No Redis, no job queue, no background workers.
 """
 
 import os
 import sys
-import json
-import uuid
 import threading
 from time import time
 from datetime import datetime
@@ -18,7 +17,7 @@ from typing import List, Dict, Any, Optional
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from flask import Flask, request, jsonify
-from scanner_api import SecurityScanner, ScanResult, SCAN_PROFILES
+from scanner_api import SecurityScanner, ScanResult, SCAN_PROFILES, ALLOWED_SYNC_PROFILES
 from config import ScannerConfig
 
 # ─────────────────────────────────────────────────────────────
@@ -28,49 +27,22 @@ app = Flask(__name__)
 config = ScannerConfig.from_env()
 
 # ─────────────────────────────────────────────────────────────
-# REDIS (OPTIONAL)
+# THREAD-LOCAL SCANNER (reused per thread)
 # ─────────────────────────────────────────────────────────────
-try:
-    import redis
-    REDIS_AVAILABLE = True
-except ImportError:
-    REDIS_AVAILABLE = False
-    redis = None
+thread_local = threading.local()
 
-USE_REDIS = os.environ.get("USE_REDIS", "false").lower() == "true"
-redis_client = None
 
-if USE_REDIS and REDIS_AVAILABLE:
-    try:
-        redis_client = redis.Redis(
-            host=os.environ.get("REDIS_HOST", "localhost"),
-            port=int(os.environ.get("REDIS_PORT", 6379)),
-            decode_responses=True
-        )
-        redis_client.ping()
-    except Exception:
-        redis_client = None
+def get_scanner() -> SecurityScanner:
+    if not hasattr(thread_local, "scanner"):
+        thread_local.scanner = SecurityScanner(config)
+    return thread_local.scanner
 
-# ─────────────────────────────────────────────────────────────
-# EXECUTOR (THREAD ONLY – SAFE FOR NMAP)
-# ─────────────────────────────────────────────────────────────
-MAX_PARALLEL_SCANS = int(os.environ.get("MAX_PARALLEL_SCANS", 8))
-executor = ThreadPoolExecutor(max_workers=MAX_PARALLEL_SCANS)
-EXECUTOR_TYPE = "ThreadPool"
-
-# ─────────────────────────────────────────────────────────────
-# GLOBAL STATE
-# ─────────────────────────────────────────────────────────────
-scan_results: Dict[str, Dict[str, Any]] = {}
-results_lock = threading.Lock()
-rate_limit_lock = threading.Lock()
 
 # ─────────────────────────────────────────────────────────────
 # RATE LIMITING
 # ─────────────────────────────────────────────────────────────
 client_requests: Dict[str, List[float]] = defaultdict(list)
-RATE_LIMIT_DEFAULT = config.rate_limit_scans
-RATE_WINDOW = config.rate_limit_window
+rate_limit_lock = threading.Lock()
 
 
 def get_client_id() -> str:
@@ -84,14 +56,14 @@ def check_rate_limit() -> Optional[tuple]:
     with rate_limit_lock:
         client_requests[client_id] = [
             t for t in client_requests[client_id]
-            if now - t < RATE_WINDOW
+            if now - t < config.rate_limit_window
         ]
 
-        if len(client_requests[client_id]) >= RATE_LIMIT_DEFAULT:
+        if len(client_requests[client_id]) >= config.rate_limit_scans:
             return jsonify({
                 "error": "Rate limit exceeded",
-                "limit": RATE_LIMIT_DEFAULT,
-                "window_seconds": RATE_WINDOW
+                "limit": config.rate_limit_scans,
+                "window_seconds": config.rate_limit_window
             }), 429
 
         client_requests[client_id].append(now)
@@ -99,159 +71,160 @@ def check_rate_limit() -> Optional[tuple]:
     return None
 
 
-def check_targets_limit(targets: List[str]) -> Optional[tuple]:
-    if len(targets) > 200:
-        return jsonify({
-            "error": "Too many targets",
-            "max_allowed": 200
-        }), 400
-    return None
-
 # ─────────────────────────────────────────────────────────────
-# REDIS HELPERS
+# SCAN EXECUTION
 # ─────────────────────────────────────────────────────────────
-def redis_store_result(scan_id: str, result: Dict[str, Any]):
-    if redis_client:
-        redis_client.setex(
-            f"scan:result:{scan_id}",
-            86400,
-            json.dumps(result)
-        )
+MAX_TARGETS = 10
+MAX_THREADS = 5
 
 
-# ─────────────────────────────────────────────────────────────
-# SCANNER (REUSED PER THREAD)
-# ─────────────────────────────────────────────────────────────
-thread_local = threading.local()
-
-
-def get_scanner() -> SecurityScanner:
-    if not hasattr(thread_local, "scanner"):
-        thread_local.scanner = SecurityScanner(config)
-    return thread_local.scanner
-
-
-def scan_single_target(target: str, scan_id: str, scan_type: str) -> Dict[str, Any]:
-    started_at = datetime.now().isoformat()
+def scan_single_target(target: str, scan_type: str) -> Dict[str, Any]:
+    """Execute a single scan and return result dict."""
     scanner = get_scanner()
 
     try:
         result: ScanResult = scanner.scan(target, scan_type)
-        data = {
-            "id": scan_id,
+        return {
             "target": target,
-            "scan_type": scan_type,
-            "status": "completed",
-            "started_at": started_at,
-            "completed_at": datetime.now().isoformat(),
+            "status": result.status,
             **result.to_dict()
         }
     except PermissionError as e:
-        data = {
-            "id": scan_id,
+        return {
             "target": target,
-            "scan_type": scan_type,
             "status": "blocked",
             "error": str(e)
         }
     except Exception as e:
-        data = {
-            "id": scan_id,
+        return {
             "target": target,
-            "scan_type": scan_type,
             "status": "failed",
             "error": str(e)
         }
 
-    redis_store_result(scan_id, data)
-    with results_lock:
-        scan_results[scan_id] = data
-
-    return data
-
 
 def run_parallel_scans(targets: List[str], scan_type: str) -> List[Dict[str, Any]]:
-    futures = []
+    """Run scans in parallel using ThreadPoolExecutor."""
     results = []
+    num_threads = min(MAX_THREADS, len(targets))
 
-    for t in targets:
-        scan_id = str(uuid.uuid4())[:8]
-        futures.append(
-            executor.submit(scan_single_target, t.strip(), scan_id, scan_type)
-        )
+    with ThreadPoolExecutor(max_workers=num_threads) as executor:
+        futures = {
+            executor.submit(scan_single_target, t.strip(), scan_type): t
+            for t in targets
+        }
 
-    for f in as_completed(futures):
-        results.append(f.result())
+        for future in as_completed(futures):
+            results.append(future.result())
 
     return results
+
 
 # ─────────────────────────────────────────────────────────────
 # FLASK HOOKS
 # ─────────────────────────────────────────────────────────────
 @app.before_request
 def before_request():
-    if request.method == "POST" and request.path.startswith("/api/scan"):
+    if request.method == "POST" and request.path == "/api/scan":
         return check_rate_limit()
+
 
 # ─────────────────────────────────────────────────────────────
 # API ENDPOINTS
 # ─────────────────────────────────────────────────────────────
 @app.route("/api/health", methods=["GET"])
 def health():
+    """Health check endpoint."""
     return jsonify({
         "status": "ok",
-        "executor": EXECUTOR_TYPE,
-        "workers": MAX_PARALLEL_SCANS,
-        "redis": bool(redis_client)
+        "mode": "synchronous"
     })
 
 
 @app.route("/api/scan", methods=["POST"])
-def scan_single():
+def scan():
+    """
+    Main scan endpoint.
+
+    Accepts:
+        {"target": "1.1.1.1"}
+    or:
+        {"targets": ["1.1.1.1", "8.8.8.8"], "scan_type": "default"}
+
+    Returns scan results directly in response.
+    """
     data = request.get_json() or {}
-    target = data.get("target")
-    scan_type = data.get("scan_type", "default")
 
-    if not target:
-        return jsonify({"error": "Missing target"}), 400
+    # Parse targets
+    if "target" in data:
+        targets = [data["target"]]
+    elif "targets" in data:
+        targets = data["targets"]
+    else:
+        return jsonify({"error": "Missing 'target' or 'targets'"}), 400
 
-    if scan_type not in SCAN_PROFILES:
-        return jsonify({"error": "Invalid scan_type"}), 400
-
-    scan_id = str(uuid.uuid4())[:8]
-    result = scan_single_target(target.strip(), scan_id, scan_type)
-    return jsonify(result), 200
-
-
-@app.route("/api/scan/bulk", methods=["POST"])
-def bulk_scan():
-    data = request.get_json() or {}
-    targets = data.get("targets", [])
-    scan_type = data.get("scan_type", "default")
-
+    # Validate targets
     if not targets:
-        return jsonify({"error": "Missing targets"}), 400
+        return jsonify({"error": "No targets provided"}), 400
 
-    limit_error = check_targets_limit(targets)
-    if limit_error:
-        return limit_error
+    if len(targets) > MAX_TARGETS:
+        return jsonify({
+            "error": f"Too many targets (max {MAX_TARGETS})",
+            "provided": len(targets),
+            "max_allowed": MAX_TARGETS
+        }), 400
+
+    # Validate scan type
+    scan_type = data.get("scan_type", "default")
 
     if scan_type not in SCAN_PROFILES:
-        return jsonify({"error": "Invalid scan_type"}), 400
+        return jsonify({
+            "error": "Invalid scan_type",
+            "allowed": list(SCAN_PROFILES.keys())
+        }), 400
 
+    if scan_type not in ALLOWED_SYNC_PROFILES:
+        return jsonify({
+            "error": f"Scan type '{scan_type}' not allowed in sync mode",
+            "reason": "Long-running scans exceed HTTP timeout limits",
+            "allowed": ALLOWED_SYNC_PROFILES
+        }), 400
+
+    # Execute scan(s)
     start = datetime.now()
-    results = run_parallel_scans(targets, scan_type)
+
+    if len(targets) == 1:
+        results = [scan_single_target(targets[0].strip(), scan_type)]
+    else:
+        results = run_parallel_scans(targets, scan_type)
+
+    duration = (datetime.now() - start).total_seconds()
 
     return jsonify({
-        "total": len(targets),
-        "completed": len(results),
-        "duration_seconds": round((datetime.now() - start).total_seconds(), 2),
+        "total_targets": len(targets),
+        "scan_type": scan_type,
+        "duration_seconds": round(duration, 2),
         "results": results
     })
 
 
 # ─────────────────────────────────────────────────────────────
-# GUNICORN ENTRY
+# MAIN (Development only)
 # ─────────────────────────────────────────────────────────────
-# Run with:
-# gunicorn -k gthread -w 4 --threads 2 api_server:app
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Security Scanner API")
+    parser.add_argument("--host", default="0.0.0.0", help="Host to bind")
+    parser.add_argument("--port", type=int, default=5000, help="Port to bind")
+    parser.add_argument("--debug", action="store_true", help="Debug mode")
+
+    args = parser.parse_args()
+
+    print(f"\nSecurity Scanner API (Synchronous)")
+    print(f"=" * 50)
+    print(f"Endpoint: http://{args.host}:{args.port}/api/scan")
+    print(f"Health:   http://{args.host}:{args.port}/api/health")
+    print(f"=" * 50)
+
+    app.run(host=args.host, port=args.port, debug=args.debug)

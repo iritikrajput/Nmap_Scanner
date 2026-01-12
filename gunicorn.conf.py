@@ -1,6 +1,7 @@
 # gunicorn.conf.py
 # Security Scanner Suite – Gunicorn Configuration
-# Optimized for Nmap + ThreadPoolExecutor
+# Synchronous Edition: Optimized for Nmap + ThreadPoolExecutor
+# No Redis, no background workers - requests wait for scan completion
 
 bind = "0.0.0.0:5000"
 

@@ -1,110 +1,40 @@
-Great work — this README is **very polished**, but it no longer fully matches the **final, fixed architecture** we implemented together.
+# Security Scanner – Synchronous Edition
 
-Below is a **COMPLETE, CORRECTED README (v3.1 – FINAL)** that:
+**A synchronous security scanning API built on Nmap + Python**
 
-✅ Matches **Gunicorn + gthread**
-✅ Removes **ProcessPoolExecutor references**
-✅ Uses **safe Nmap rates**
-✅ Aligns with **Redis worker design**
-✅ Matches **actual code behavior**
-✅ Is **academically + industry defensible**
+Design principle: **One request → one scan (or small batch) → one response**
 
-You can **replace your `README.md` entirely** with this.
+No Redis, no job queue, no background workers. Simple, predictable, debuggable.
 
 ---
 
-# 🛡️ Security Scanner v3.1 – Production Edition
-
-**Enterprise-grade security scanner with REST API, parallel execution, rate limiting, and Redis-backed job queue**
-
----
-
-## 📊 Architecture (FINAL)
+## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              CLIENT REQUEST                                 │
-└────────────────────────────────────┬────────────────────────────────────────┘
-                                     │
-                    ┌────────────────▼────────────────┐
-                    │        API GATEWAY (Flask)       │
-                    │  ┌─────────────────────────────┐ │
-                    │  │ • API Key Authentication    │ │
-                    │  │ • Rate Limiting (per IP)    │ │
-                    │  │ • Policy Enforcement        │ │
-                    │  └─────────────────────────────┘ │
-                    └────────────────┬────────────────┘
-                                     │
-              ┌──────────────────────┴──────────────────────┐
-              │                                             │
-     ┌────────▼────────┐                         ┌─────────▼─────────┐
-     │ In-Memory Mode  │                         │   Redis Queue     │
-     │ (Default)       │                         │ (Production)      │
-     └────────┬────────┘                         └─────────┬─────────┘
-              │                                            │
-              └────────────────────┬───────────────────────┘
-                                   │
-                    ┌──────────────▼──────────────┐
-                    │ Gunicorn (gthread workers)  │
-                    │  • Multiple workers         │
-                    │  • Thread-based concurrency │
-                    └──────────────┬──────────────┘
-                                   │
-              ┌────────────────────┴────────────────────┐
-              │         Is target an IP address?        │
-              └────────────────────┬────────────────────┘
-                                   │
-         ┌─────────────────────────┴─────────────────────────┐
-         │                                                   │
-    ┌────▼────┐                                        ┌─────▼─────┐
-    │   IP    │                                        │  DOMAIN   │
-    └────┬────┘                                        └─────┬─────┘
-         │                                                   │
-┌────────▼────────────────┐                    ┌─────────────▼─────────────┐
-│ Nmap Port Scan          │                    │ 1. Alive / Dead Check     │
-│ (Profile-based)         │                    │ 2. Security Headers       │
-│ • default / quick       │                    │ 3. SSL/TLS Certificate    │
-│ • tcp_full              │                    └─────────────┬─────────────┘
-│ • udp_common             │                                  │
-└────────┬────────────────┘                                  │
-         │                                                   │
-         └─────────────────────┬─────────────────────────────┘
-                               │
-                    ┌──────────▼──────────┐
-                    │   JSON / TXT Report │
-                    │   (Historical)      │
-                    └─────────────────────┘
+Client
+  │
+  │ POST /api/scan
+  │
+Flask API Server (Gunicorn)
+  │
+  │ (parallel threads inside request)
+  │
+SecurityScanner (scanner_api.py)
+  │
+  │ subprocess.run()
+  │
+Nmap
+  │
+XML output
+  │
+Parsed JSON result
+  │
+Returned in HTTP response
 ```
 
 ---
 
-## ✨ Features
-
-### Core Scanning
-
-| Feature             | Tool           | Target |
-| ------------------- | -------------- | ------ |
-| Port Scanning       | Nmap           | IP     |
-| Alive / Dead Check  | httpx / urllib | Domain |
-| Security Headers    | Nmap NSE       | Domain |
-| SSL/TLS Certificate | Nmap NSE       | Domain |
-
----
-
-### Production Features
-
-| Feature                      | Description                   |
-| ---------------------------- | ----------------------------- |
-| ⚡ **Threaded API Execution** | Gunicorn `gthread` workers    |
-| 🚦 **Rate Limiting**         | Per-IP / per-client           |
-| 📋 **Scan Profiles**         | 6 predefined profiles         |
-| 🔐 **Client Policies**       | Tiered access control         |
-| 📦 **Redis Queue**           | Optional persistent job queue |
-| 👷 **Worker Processes**      | Horizontal scaling via Redis  |
-
----
-
-## 🚀 Quick Start
+## Quick Start
 
 ### One-Line Setup
 
@@ -112,10 +42,6 @@ You can **replace your `README.md` entirely** with this.
 chmod +x setup_and_run.sh
 ./setup_and_run.sh
 ```
-
-(No forced reinstallation of httpx)
-
----
 
 ### Manual Setup
 
@@ -127,13 +53,9 @@ source venv/bin/activate
 
 pip install -r requirements.txt
 
-# Optional (recommended)
+# Optional (recommended for domain checks)
 go install github.com/projectdiscovery/httpx/cmd/httpx@latest
 ```
-
----
-
-## 🔌 REST API
 
 ### Start Server
 
@@ -147,37 +69,16 @@ gunicorn -c gunicorn.conf.py api_server:app
 
 ---
 
-### API Endpoints
+## API Usage
 
-| Method | Endpoint             | Description       |
-| ------ | -------------------- | ----------------- |
-| POST   | `/api/scan`          | Single scan       |
-| POST   | `/api/scan/bulk`     | Bulk scan (sync)  |
-| POST   | `/api/scan/parallel` | Parallel scan     |
-| GET    | `/api/scan/<id>`     | Fetch scan result |
-| GET    | `/api/scans`         | List scans        |
-| GET    | `/api/scan/profiles` | Scan profiles     |
-| GET    | `/api/client/info`   | Rate limit info   |
-| GET    | `/api/health`        | Health check      |
+### Endpoint
 
----
+```
+POST /api/scan
+GET  /api/health
+```
 
-## 📋 Scan Profiles (FINAL)
-
-| Profile      | TCP      | UDP     | Speed | Use              |
-| ------------ | -------- | ------- | ----- | ---------------- |
-| `default`    | Top 1000 | ❌       | ⚡     | General          |
-| `quick`      | Top 100  | ❌       | ⚡⚡    | Fast             |
-| `tcp_full`   | 1–65535  | ❌       | 🐢    | Full TCP         |
-| `udp_common` | Top 1000 | Common  | 🔄    | UDP services     |
-| `udp_full`   | ❌        | 1–65535 | 🐌    | Policy protected |
-| `stealth`    | Top 1000 | ❌       | 🐢    | Low-noise        |
-
----
-
-## 📡 API Examples
-
-### Single Scan
+### Single Target
 
 ```bash
 curl -X POST http://localhost:5000/api/scan \
@@ -185,93 +86,120 @@ curl -X POST http://localhost:5000/api/scan \
   -d '{"target":"192.168.1.1"}'
 ```
 
----
-
-### Bulk Scan
+### Multiple Targets (max 10)
 
 ```bash
-curl -X POST http://localhost:5000/api/scan/bulk \
+curl -X POST http://localhost:5000/api/scan \
   -H "Content-Type: application/json" \
-  -d '{"targets":["1.1.1.1","8.8.8.8"],"scan_type":"quick"}'
+  -d '{"targets":["1.1.1.1","8.8.8.8"], "scan_type":"quick"}'
+```
+
+### Response Format
+
+```json
+{
+  "total_targets": 2,
+  "scan_type": "default",
+  "duration_seconds": 6.8,
+  "results": [
+    {
+      "target": "1.1.1.1",
+      "status": "completed",
+      "ip": "1.1.1.1",
+      "open_ports": [...]
+    }
+  ]
+}
 ```
 
 ---
 
-## 📦 Redis Queue (Production Mode)
+## Scan Profiles
 
-### Enable Redis
+| Profile   | TCP Ports  | Allowed in API | Notes        |
+|-----------|------------|----------------|--------------|
+| `quick`   | Top 100    | Yes            | Fast scans   |
+| `default` | Top 1000   | Yes            | General use  |
+| `stealth` | Top 1000   | Yes            | Low-noise    |
+| `tcp_full`| 1-65535    | No             | Too slow     |
+| `udp_common`| + UDP    | No             | Too slow     |
+| `udp_full`| All UDP    | No             | Too slow     |
 
-```bash
-sudo systemctl start redis-server
-USE_REDIS=true gunicorn -c gunicorn.conf.py api_server:app
-```
-
-### Start Workers
-
-```bash
-python3 worker.py --workers 4
-```
-
-### Worker Utilities
-
-```bash
-python3 worker.py --stats
-python3 worker.py --clear
-```
+Long-running profiles (`tcp_full`, `udp_common`, `udp_full`) are blocked because they exceed HTTP timeout limits.
 
 ---
 
-## ⚙️ Configuration (FINAL)
+## Bulk Scanning Limits
+
+| Feature              | Status |
+|----------------------|--------|
+| Single IP            | Yes    |
+| Small bulk (≤10 IPs) | Yes    |
+| Parallel scanning    | Yes (threads) |
+| CIDR ranges          | No     |
+| 100+ IPs             | No     |
+
+These limits exist because:
+- Nmap is CPU + network heavy
+- HTTP requests must not block forever
+- OS file descriptors & sockets are finite
+
+---
+
+## Components
+
+| File | Purpose |
+|------|---------|
+| `api_server.py` | Flask API - accepts requests, validates, returns results |
+| `scanner_api.py` | Core engine - builds Nmap commands, parses XML, produces JSON |
+| `config.py` | All configuration - Nmap timing, rate limits, output settings |
+| `daily_scan.py` | Cron script for batch scanning from targets.txt |
+| `gunicorn.conf.py` | Production server config |
+
+---
+
+## Configuration
 
 ### Environment Variables
 
-| Variable             | Description        |
-| -------------------- | ------------------ |
-| `SCANNER_API_KEY`    | API authentication |
-| `SCANNER_OUTPUT_DIR` | Output directory   |
-| `SCANNER_LOG_LEVEL`  | Logging            |
-| `USE_REDIS`          | Enable Redis       |
-| `REDIS_HOST`         | Redis host         |
-| `MAX_PARALLEL_SCANS` | API concurrency    |
+| Variable             | Description           |
+|----------------------|-----------------------|
+| `SCANNER_OUTPUT_DIR` | Output directory      |
+| `SCANNER_LOG_LEVEL`  | Logging level (INFO)  |
+| `SCANNER_NMAP_TIMEOUT` | Nmap timeout (300s) |
 
----
-
-### Safe Nmap Defaults
+### Nmap Defaults (config.py)
 
 ```python
 nmap_ip_timing = "-T4"
 nmap_ip_max_retries = 2
 nmap_ip_host_timeout = "10m"
-
-# SAFE for threaded execution
-nmap_min_hostgroup = 32
-nmap_max_hostgroup = 64
 nmap_min_rate = 800
 nmap_max_rate = 2000
 ```
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 security-scanner/
-├── api_server.py
-├── scanner_api.py
-├── worker.py
-├── daily_scan.py
-├── config.py
-├── requirements.txt
-├── gunicorn.conf.py
-├── setup_and_run.sh
-├── Dockerfile
-├── scan_results/
+├── api_server.py       # API layer
+├── scanner_api.py      # Nmap engine
+├── config.py           # Configuration
+├── daily_scan.py       # Cron scanner
+├── requirements.txt    # Python deps
+├── gunicorn.conf.py    # Server config
+├── setup_and_run.sh    # Setup script
+├── Dockerfile          # Container
+├── targets.txt         # Target list
+├── scan_results/       # Output
 └── README.md
 ```
 
 ---
 
-## ⏰ Cron (Daily Scan)
+## Cron (Daily Scan)
 
 ```bash
 0 2 * * * cd /path/to/scanner && ./venv/bin/python daily_scan.py -f targets.txt
@@ -279,19 +207,44 @@ security-scanner/
 
 ---
 
-## ⚠️ Legal Notice
+## Docker
+
+```bash
+docker build -t security-scanner .
+docker run -p 5000:5000 security-scanner
+```
+
+---
+
+## When to Use This Architecture
+
+**Good for:**
+- Internal SOC tools
+- University / research projects
+- Red-team assessments
+- Controlled client networks
+- CLI-driven automation
+
+**Not suitable for:**
+- Public SaaS
+- Large customer base
+- Internet-wide scanning
+- Long-running UDP scans
+
+For those use cases, async + queue + workers is required.
+
+---
+
+## Legal Notice
 
 **Only scan systems you own or have explicit permission to test.**
 
 ---
 
-## 🏁 Production Checklist
+## Production Checklist
 
-* [ ] API key configured
-* [ ] Redis enabled (optional)
-* [ ] Workers running
-* [ ] Gunicorn deployed
-* [ ] Logs rotated
-* [ ] Reverse proxy (HTTPS)
-
----
+- [ ] Gunicorn deployed
+- [ ] Logs rotated
+- [ ] Reverse proxy (HTTPS)
+- [ ] Rate limits configured
+- [ ] Output directory writable

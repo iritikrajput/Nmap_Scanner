@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
-Security Scanner Suite v2.1 - Configuration (Gunicorn Optimized)
+Security Scanner Suite - Configuration (Synchronous Edition)
 Nmap + httpx architecture
+
+Design: Simple, predictable, no external dependencies (no Redis).
 """
 
 import os
@@ -19,6 +21,7 @@ class ScannerConfig:
     - Gunicorn (gthread)
     - ThreadPoolExecutor
     - External Nmap processes
+    - Synchronous request/response model
     """
 
     # ─────────────────────────────────────────────
@@ -60,15 +63,6 @@ class ScannerConfig:
     httpx_path: str = "httpx"
     httpx_timeout: int = 30
     skip_dead_domains: bool = False
-
-    # ─────────────────────────────────────────────
-    # Redis (queue / caching)
-    # ─────────────────────────────────────────────
-    redis_host: str = "localhost"
-    redis_port: int = 6379
-    redis_db: int = 0
-    redis_password: Optional[str] = None
-    use_redis: bool = False
 
     # ─────────────────────────────────────────────
     # Rate limiting (API level)
@@ -172,42 +166,7 @@ class ScannerConfig:
 DEFAULT_CONFIG = ScannerConfig()
 
 # ─────────────────────────────────────────────
-# Client Policies (UNCHANGED – already correct)
-# ─────────────────────────────────────────────
-CLIENT_POLICIES = {
-    "default": {
-        "name": "Default Client",
-        "allowed_scans": ["default", "quick", "stealth"],
-        "rate_limit": 10,
-        "max_targets": 1000,
-        "priority": 1,
-    },
-    "standard": {
-        "name": "Standard Client",
-        "allowed_scans": ["default", "tcp_full", "udp_common", "quick", "stealth"],
-        "rate_limit": 20,
-        "max_targets": 1000,
-        "priority": 2,
-    },
-    "premium": {
-        "name": "Premium Client",
-        "allowed_scans": ["default", "tcp_full", "udp_common", "udp_full", "quick", "stealth"],
-        "rate_limit": 50,
-        "max_targets": 1000,
-        "priority": 3,
-    },
-    "admin": {
-        "name": "Administrator",
-        "allowed_scans": ["default", "tcp_full", "udp_common", "udp_full", "quick", "stealth"],
-        "rate_limit": 1000,
-        "max_targets": 5000,
-        "priority": 10,
-    }
-}
-
-# ─────────────────────────────────────────────
 # Security headers & risk weights
-# (UNCHANGED – already well designed)
 # ─────────────────────────────────────────────
 SECURITY_HEADERS = [
     "Strict-Transport-Security",
