@@ -1,12 +1,12 @@
-# Security Scanner Suite - Dockerfile (Synchronous Edition)
-# Nmap + httpx + Gunicorn
-# No Redis, no background workers - simple request/response model
+# Security Scanner Suite - Dockerfile (Database-First Edition)
+# Nmap + httpx + SQLite + Gunicorn
+# Background scanner writes to DB, API reads from DB
 
 FROM python:3.11-slim
 
 LABEL maintainer="Security Scanner Suite"
-LABEL description="Synchronous Security Scanner: Nmap + httpx + Gunicorn"
-LABEL version="3.0.0"
+LABEL description="Database-First Security Scanner: Nmap + SQLite + Gunicorn"
+LABEL version="4.0.0"
 
 # ─────────────────────────────────────────────
 # System dependencies
@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # ─────────────────────────────────────────────
-# Install httpx ONLY if not already present
+# Install httpx (optional, for domain checks)
 # ─────────────────────────────────────────────
 ENV HTTPX_VERSION=1.6.6
 
@@ -47,27 +47,40 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Application code
 COPY config.py .
+COPY database.py .
 COPY scanner_api.py .
 COPY api_server.py .
+COPY background_scanner.py .
 COPY daily_scan.py .
 COPY gunicorn.conf.py .
+COPY targets.txt .
 
-# Output directory
+# Output directory (contains SQLite DB)
 RUN mkdir -p /app/scan_results
 
 # ─────────────────────────────────────────────
 # Environment
 # ─────────────────────────────────────────────
 ENV SCANNER_OUTPUT_DIR=/app/scan_results
+ENV DB_PATH=/app/scan_results/scanner.db
 ENV SCANNER_LOG_LEVEL=INFO
 ENV PYTHONUNBUFFERED=1
+ENV BATCH_SIZE=25
+ENV MAX_PARALLEL_BATCHES=4
 
 # API port
 EXPOSE 5000
 
 # ─────────────────────────────────────────────
-# Init + Gunicorn (PID 1)
+# Volume for persistent data
+# ─────────────────────────────────────────────
+VOLUME ["/app/scan_results"]
+
+# ─────────────────────────────────────────────
+# Init (PID 1)
 # ─────────────────────────────────────────────
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
+# Default: run API server
+# Override with: docker run ... python background_scanner.py --continuous
 CMD ["gunicorn", "-c", "gunicorn.conf.py", "api_server:app"]

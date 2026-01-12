@@ -1,7 +1,7 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════════════════════
-# Security Scanner API - Setup & Run Script (Synchronous Edition)
-# No Redis, no background workers - simple request/response model
+# Security Scanner - Setup & Run Script (Database-First Edition)
+# Background scanner writes to SQLite, API reads from SQLite
 # ═══════════════════════════════════════════════════════════════════════════════
 
 set -e
@@ -15,7 +15,7 @@ NC='\033[0m'
 
 echo -e "${BLUE}"
 echo "═══════════════════════════════════════════════════════════════════════════════"
-echo "           Security Scanner API - Setup & Run (Synchronous Edition)            "
+echo "           Security Scanner - Setup & Run (Database-First Edition)             "
 echo "═══════════════════════════════════════════════════════════════════════════════"
 echo -e "${NC}"
 
@@ -96,11 +96,14 @@ pip install -r requirements.txt >/dev/null
 echo -e "${GREEN}✓ Virtualenv ready${NC}"
 
 # ─────────────────────────────────────────────
-# 6. Directories
+# 6. Directories & Database
 # ─────────────────────────────────────────────
-echo -e "${BLUE}[6/6] Preparing directories...${NC}"
+echo -e "${BLUE}[6/6] Preparing directories and database...${NC}"
 mkdir -p scan_results
-echo -e "${GREEN}✓ scan_results ready${NC}"
+
+# Initialize database
+"$VENV_DIR/bin/python" -c "from database import get_database; get_database()" 2>/dev/null || true
+echo -e "${GREEN}✓ scan_results and database ready${NC}"
 
 # ─────────────────────────────────────────────
 # Summary
@@ -115,23 +118,26 @@ echo " • Python: $(python3 --version)"
 echo " • Nmap:   $(nmap --version | head -1)"
 command -v httpx &>/dev/null && echo " • httpx:  $(httpx -version 2>&1 | head -1)"
 echo " • Venv:   $VENV_DIR"
+echo " • DB:     $SCRIPT_DIR/scan_results/scanner.db"
 echo ""
-echo "Architecture: Synchronous (no Redis, no background workers)"
+echo "Architecture: Database-First (background scanner + read-only API)"
 echo ""
 
 # ─────────────────────────────────────────────
-# Start API server
+# Usage
 # ─────────────────────────────────────────────
-echo -e "${BLUE}Starting Security Scanner API...${NC}"
-echo -e "${YELLOW}URL: http://0.0.0.0:5000${NC}"
-echo -e "${YELLOW}Endpoint: POST /api/scan${NC}"
+echo -e "${BLUE}Usage:${NC}"
 echo ""
-
-# Run Gunicorn (NO sudo, uses config file)
-if [ -f "$VENV_DIR/bin/gunicorn" ]; then
-    echo -e "${GREEN}Running with Gunicorn (production)${NC}"
-    exec "$VENV_DIR/bin/gunicorn" -c gunicorn.conf.py api_server:app
-else
-    echo -e "${YELLOW}Running Flask dev server${NC}"
-    exec "$VENV_DIR/bin/python" api_server.py --host 0.0.0.0 --port 5000
-fi
+echo "  1. Start background scanner (run in separate terminal or as service):"
+echo "     $VENV_DIR/bin/python background_scanner.py --once -f targets.txt"
+echo "     $VENV_DIR/bin/python background_scanner.py --continuous"
+echo ""
+echo "  2. Start API server:"
+echo "     $VENV_DIR/bin/python api_server.py"
+echo "     OR: $VENV_DIR/bin/gunicorn -c gunicorn.conf.py api_server:app"
+echo ""
+echo "  3. Query results:"
+echo "     curl http://localhost:5000/api/result/<ip>"
+echo "     curl http://localhost:5000/api/stats"
+echo ""
+echo -e "${GREEN}═══════════════════════════════════════════════════════════════════════════════${NC}"

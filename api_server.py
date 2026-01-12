@@ -1,132 +1,54 @@
 #!/usr/bin/env python3
 """
-Security Scanner API Server - Synchronous Edition
-One request -> one scan (or small batch) -> one response
-No Redis, no job queue, no background workers.
+Security Scanner API Server - Database-First Edition
+
+Architecture:
+- Background scanner writes results to database
+- API reads from database AND accepts IPs to queue
+- Background scanner picks up queued IPs automatically
+
+Endpoints:
+- POST /api/scan          - Queue IP(s) for scanning
+- GET  /api/result/<ip>   - Get scan results for an IP
+- GET  /api/queue         - Get queue status
+- GET  /api/stats         - Get database statistics
+- GET  /api/health        - Health check
 """
 
 import os
 import sys
-import threading
-from time import time
+import re
+import uuid
 from datetime import datetime
-from collections import defaultdict
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import List, Dict, Any, Optional
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from flask import Flask, request, jsonify
-from scanner_api import SecurityScanner, ScanResult, SCAN_PROFILES, ALLOWED_SYNC_PROFILES
-from config import ScannerConfig
+from flask import Flask, jsonify, request
+from database import get_database
 
 # ─────────────────────────────────────────────────────────────
 # APP
 # ─────────────────────────────────────────────────────────────
 app = Flask(__name__)
-config = ScannerConfig.from_env()
-
-# ─────────────────────────────────────────────────────────────
-# THREAD-LOCAL SCANNER (reused per thread)
-# ─────────────────────────────────────────────────────────────
-thread_local = threading.local()
-
-
-def get_scanner() -> SecurityScanner:
-    if not hasattr(thread_local, "scanner"):
-        thread_local.scanner = SecurityScanner(config)
-    return thread_local.scanner
 
 
 # ─────────────────────────────────────────────────────────────
-# RATE LIMITING
+# DATABASE
 # ─────────────────────────────────────────────────────────────
-client_requests: Dict[str, List[float]] = defaultdict(list)
-rate_limit_lock = threading.Lock()
-
-
-def get_client_id() -> str:
-    return request.remote_addr or "unknown"
-
-
-def check_rate_limit() -> Optional[tuple]:
-    client_id = get_client_id()
-    now = time()
-
-    with rate_limit_lock:
-        client_requests[client_id] = [
-            t for t in client_requests[client_id]
-            if now - t < config.rate_limit_window
-        ]
-
-        if len(client_requests[client_id]) >= config.rate_limit_scans:
-            return jsonify({
-                "error": "Rate limit exceeded",
-                "limit": config.rate_limit_scans,
-                "window_seconds": config.rate_limit_window
-            }), 429
-
-        client_requests[client_id].append(now)
-
-    return None
+def get_db():
+    return get_database()
 
 
 # ─────────────────────────────────────────────────────────────
-# SCAN EXECUTION
+# VALIDATION
 # ─────────────────────────────────────────────────────────────
-MAX_TARGETS = 10
-MAX_THREADS = 5
-
-
-def scan_single_target(target: str, scan_type: str) -> Dict[str, Any]:
-    """Execute a single scan and return result dict."""
-    scanner = get_scanner()
-
-    try:
-        result: ScanResult = scanner.scan(target, scan_type)
-        return {
-            "target": target,
-            "status": result.status,
-            **result.to_dict()
-        }
-    except PermissionError as e:
-        return {
-            "target": target,
-            "status": "blocked",
-            "error": str(e)
-        }
-    except Exception as e:
-        return {
-            "target": target,
-            "status": "failed",
-            "error": str(e)
-        }
-
-
-def run_parallel_scans(targets: List[str], scan_type: str) -> List[Dict[str, Any]]:
-    """Run scans in parallel using ThreadPoolExecutor."""
-    results = []
-    num_threads = min(MAX_THREADS, len(targets))
-
-    with ThreadPoolExecutor(max_workers=num_threads) as executor:
-        futures = {
-            executor.submit(scan_single_target, t.strip(), scan_type): t
-            for t in targets
-        }
-
-        for future in as_completed(futures):
-            results.append(future.result())
-
-    return results
-
-
-# ─────────────────────────────────────────────────────────────
-# FLASK HOOKS
-# ─────────────────────────────────────────────────────────────
-@app.before_request
-def before_request():
-    if request.method == "POST" and request.path == "/api/scan":
-        return check_rate_limit()
+def is_valid_ip(ip: str) -> bool:
+    """Validate IPv4 address format."""
+    pattern = r"^(\d{1,3}\.){3}\d{1,3}$"
+    if not re.match(pattern, ip):
+        return False
+    parts = ip.split(".")
+    return all(0 <= int(p) <= 255 for p in parts)
 
 
 # ─────────────────────────────────────────────────────────────
@@ -135,81 +57,245 @@ def before_request():
 @app.route("/api/health", methods=["GET"])
 def health():
     """Health check endpoint."""
+    db = get_db()
+    stats = db.get_scan_stats()
+    queue = db.get_queue_stats()
+
     return jsonify({
         "status": "ok",
-        "mode": "synchronous"
+        "mode": "database-first",
+        "total_ips_scanned": stats["total_ips"],
+        "queue_pending": queue["pending"],
+        "last_scan": stats["last_scan"]
     })
 
 
 @app.route("/api/scan", methods=["POST"])
-def scan():
+def queue_scan():
     """
-    Main scan endpoint.
+    Queue IP(s) for background scanning.
 
-    Accepts:
-        {"target": "1.1.1.1"}
+    The background scanner will pick up these IPs automatically.
+    This endpoint returns immediately - it does NOT wait for scan completion.
+
+    Request body:
+        {"ip": "192.168.1.1"}
     or:
-        {"targets": ["1.1.1.1", "8.8.8.8"], "scan_type": "default"}
+        {"ips": ["192.168.1.1", "192.168.1.2", ...]}
 
-    Returns scan results directly in response.
+    Response:
+        {
+            "status": "queued",
+            "job_id": "api_20260112_123456_abc123",
+            "queued_ips": 5,
+            "message": "IPs added to scan queue"
+        }
     """
     data = request.get_json() or {}
 
-    # Parse targets
-    if "target" in data:
-        targets = [data["target"]]
-    elif "targets" in data:
-        targets = data["targets"]
+    # Parse IPs
+    if "ip" in data:
+        ips = [data["ip"]]
+    elif "ips" in data:
+        ips = data["ips"]
     else:
-        return jsonify({"error": "Missing 'target' or 'targets'"}), 400
-
-    # Validate targets
-    if not targets:
-        return jsonify({"error": "No targets provided"}), 400
-
-    if len(targets) > MAX_TARGETS:
         return jsonify({
-            "error": f"Too many targets (max {MAX_TARGETS})",
-            "provided": len(targets),
-            "max_allowed": MAX_TARGETS
+            "error": "Missing 'ip' or 'ips' in request body",
+            "example": {"ip": "192.168.1.1"}
         }), 400
 
-    # Validate scan type
-    scan_type = data.get("scan_type", "default")
+    # Validate
+    if not ips:
+        return jsonify({"error": "No IPs provided"}), 400
 
-    if scan_type not in SCAN_PROFILES:
+    if not isinstance(ips, list):
+        ips = [ips]
+
+    # Limit to prevent abuse
+    MAX_IPS_PER_REQUEST = 1000
+    if len(ips) > MAX_IPS_PER_REQUEST:
         return jsonify({
-            "error": "Invalid scan_type",
-            "allowed": list(SCAN_PROFILES.keys())
+            "error": f"Too many IPs (max {MAX_IPS_PER_REQUEST} per request)",
+            "provided": len(ips)
         }), 400
 
-    if scan_type not in ALLOWED_SYNC_PROFILES:
+    # Validate each IP
+    valid_ips = []
+    invalid_ips = []
+    for ip in ips:
+        ip = str(ip).strip()
+        if is_valid_ip(ip):
+            valid_ips.append(ip)
+        else:
+            invalid_ips.append(ip)
+
+    if not valid_ips:
         return jsonify({
-            "error": f"Scan type '{scan_type}' not allowed in sync mode",
-            "reason": "Long-running scans exceed HTTP timeout limits",
-            "allowed": ALLOWED_SYNC_PROFILES
+            "error": "No valid IPs provided",
+            "invalid_ips": invalid_ips[:10]  # Show first 10
         }), 400
 
-    # Execute scan(s)
-    start = datetime.now()
+    # Create job and queue IPs
+    db = get_db()
+    job_id = f"api_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
 
-    if len(targets) == 1:
-        results = [scan_single_target(targets[0].strip(), scan_type)]
-    else:
-        results = run_parallel_scans(targets, scan_type)
+    db.create_job(job_id, len(valid_ips))
+    db.queue_ips(valid_ips, job_id)
 
-    duration = (datetime.now() - start).total_seconds()
+    response = {
+        "status": "queued",
+        "job_id": job_id,
+        "queued_ips": len(valid_ips),
+        "message": "IPs added to scan queue. Background scanner will process them."
+    }
+
+    if invalid_ips:
+        response["skipped_invalid"] = len(invalid_ips)
+        response["invalid_examples"] = invalid_ips[:5]
+
+    return jsonify(response), 202  # 202 Accepted
+
+
+@app.route("/api/result/<ip>", methods=["GET"])
+def get_result(ip: str):
+    """
+    Get scan results for an IP address.
+
+    Returns all port scan data from the database.
+    This endpoint is READ-ONLY and extremely fast.
+
+    Response:
+    {
+        "ip": "8.8.8.8",
+        "last_scanned": "2026-01-12T00:15:00",
+        "ports": [
+            {
+                "port": 53,
+                "protocol": "udp",
+                "state": "open",
+                "service": "dns",
+                "product": "bind",
+                "version": "9.16"
+            }
+        ]
+    }
+    """
+    db = get_db()
+    result = db.get_result_by_ip(ip)
+
+    if not result:
+        # Check if it's in queue
+        queue = db.get_queue_stats()
+        return jsonify({
+            "error": "No results found",
+            "ip": ip,
+            "message": "This IP has not been scanned yet. Use POST /api/scan to queue it.",
+            "queue_pending": queue["pending"]
+        }), 404
+
+    return jsonify(result)
+
+
+@app.route("/api/queue", methods=["GET"])
+def get_queue():
+    """
+    Get current queue status.
+
+    Returns:
+    - pending: IPs waiting to be scanned
+    - running: IPs currently being scanned
+    - completed: IPs finished scanning
+    - failed: IPs that failed to scan
+    """
+    db = get_db()
+    queue = db.get_queue_stats()
+    job = db.get_latest_job()
+
+    response = {
+        "queue": queue,
+        "total_in_queue": queue["pending"] + queue["running"]
+    }
+
+    if job:
+        response["latest_job"] = {
+            "job_id": job["job_id"],
+            "status": job["status"],
+            "progress": f"{job['completed_ips']}/{job['total_ips']}",
+            "started_at": job["started_at"],
+            "completed_at": job["completed_at"]
+        }
+
+    return jsonify(response)
+
+
+@app.route("/api/stats", methods=["GET"])
+def get_stats():
+    """
+    Get database statistics.
+
+    Returns:
+    - total_ips: Number of unique IPs scanned
+    - total_ports: Total port records in database
+    - last_scan: Timestamp of most recent scan
+    - queue: Current queue status
+    """
+    db = get_db()
+    stats = db.get_scan_stats()
+    queue = db.get_queue_stats()
+    job = db.get_latest_job()
+
+    response = {
+        "database": {
+            "total_ips": stats["total_ips"],
+            "total_ports": stats["total_ports"],
+            "last_scan": stats["last_scan"]
+        },
+        "queue": queue
+    }
+
+    if job:
+        response["latest_job"] = {
+            "job_id": job["job_id"],
+            "status": job["status"],
+            "progress": f"{job['completed_ips']}/{job['total_ips']}",
+            "started_at": job["started_at"],
+            "completed_at": job["completed_at"]
+        }
+
+    return jsonify(response)
+
+
+@app.route("/api/ips", methods=["GET"])
+def list_ips():
+    """
+    List all scanned IPs.
+
+    Returns list of unique IP addresses in the database.
+    """
+    db = get_db()
+    ips = db.get_all_ips()
 
     return jsonify({
-        "total_targets": len(targets),
-        "scan_type": scan_type,
-        "duration_seconds": round(duration, 2),
-        "results": results
+        "total": len(ips),
+        "ips": ips
     })
 
 
 # ─────────────────────────────────────────────────────────────
-# MAIN (Development only)
+# ERROR HANDLERS
+# ─────────────────────────────────────────────────────────────
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({"error": "Endpoint not found"}), 404
+
+
+@app.errorhandler(500)
+def server_error(e):
+    return jsonify({"error": "Internal server error"}), 500
+
+
+# ─────────────────────────────────────────────────────────────
+# MAIN
 # ─────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     import argparse
@@ -221,10 +307,17 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    print(f"\nSecurity Scanner API (Synchronous)")
-    print(f"=" * 50)
-    print(f"Endpoint: http://{args.host}:{args.port}/api/scan")
-    print(f"Health:   http://{args.host}:{args.port}/api/health")
-    print(f"=" * 50)
+    print("\n" + "=" * 60)
+    print("Security Scanner API (Database-First)")
+    print("=" * 60)
+    print("POST /api/scan         - Queue IP(s) for scanning")
+    print("GET  /api/result/<ip>  - Get scan results for IP")
+    print("GET  /api/queue        - Queue status")
+    print("GET  /api/stats        - Database statistics")
+    print("GET  /api/ips          - List all scanned IPs")
+    print("GET  /api/health       - Health check")
+    print("=" * 60)
+    print(f"Server: http://{args.host}:{args.port}")
+    print("=" * 60 + "\n")
 
     app.run(host=args.host, port=args.port, debug=args.debug)

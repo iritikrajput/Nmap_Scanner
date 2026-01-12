@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """
-Security Scanner Suite - Configuration (Synchronous Edition)
-Nmap + httpx architecture
+Security Scanner Suite - Configuration (Database-First Edition)
+Nmap + httpx + SQLite architecture
 
-Design: Simple, predictable, no external dependencies (no Redis).
+Design:
+- Background scanner writes to database
+- API reads from database
+- Batch processing with controlled parallelism
 """
 
 import os
@@ -18,11 +21,22 @@ class ScannerConfig:
     Main scanner configuration
 
     Optimized for:
-    - Gunicorn (gthread)
-    - ThreadPoolExecutor
-    - External Nmap processes
-    - Synchronous request/response model
+    - Background batch processing
+    - Database-first architecture
+    - Controlled parallelism (4 batches x 25 IPs)
     """
+
+    # ─────────────────────────────────────────────
+    # Database settings
+    # ─────────────────────────────────────────────
+    db_path: str = "./scan_results/scanner.db"
+
+    # ─────────────────────────────────────────────
+    # Batch processing settings
+    # ─────────────────────────────────────────────
+    batch_size: int = 25           # IPs per batch
+    max_parallel_batches: int = 4  # Concurrent batches
+    scan_interval_hours: int = 24  # Daily scanning
 
     # ─────────────────────────────────────────────
     # Nmap core settings
@@ -43,8 +57,6 @@ class ScannerConfig:
 
     # ─────────────────────────────────────────────
     # Nmap parallelism (SAFE VALUES)
-    # IMPORTANT: Python threads handle parallelism,
-    # Nmap must be kept conservative
     # ─────────────────────────────────────────────
     nmap_min_hostgroup: int = 32
     nmap_max_hostgroup: int = 64
@@ -63,12 +75,6 @@ class ScannerConfig:
     httpx_path: str = "httpx"
     httpx_timeout: int = 30
     skip_dead_domains: bool = False
-
-    # ─────────────────────────────────────────────
-    # Rate limiting (API level)
-    # ─────────────────────────────────────────────
-    rate_limit_scans: int = 20
-    rate_limit_window: int = 60
 
     # ─────────────────────────────────────────────
     # Output
@@ -104,6 +110,14 @@ class ScannerConfig:
         config = cls()
 
         env_mapping = {
+            # Database
+            "DB_PATH": "db_path",
+
+            # Batch processing
+            "BATCH_SIZE": ("batch_size", int),
+            "MAX_PARALLEL_BATCHES": ("max_parallel_batches", int),
+            "SCAN_INTERVAL_HOURS": ("scan_interval_hours", int),
+
             # Nmap
             "SCANNER_NMAP_PORTS": "nmap_ports",
             "SCANNER_NMAP_TIMEOUT": ("nmap_timeout", int),
@@ -144,16 +158,16 @@ class ScannerConfig:
 
     def to_dict(self) -> dict:
         return {
+            "db_path": self.db_path,
+            "batch_size": self.batch_size,
+            "max_parallel_batches": self.max_parallel_batches,
+            "scan_interval_hours": self.scan_interval_hours,
             "nmap_ports": self.nmap_ports,
             "nmap_timeout": self.nmap_timeout,
-            "nmap_min_hostgroup": self.nmap_min_hostgroup,
-            "nmap_max_hostgroup": self.nmap_max_hostgroup,
             "nmap_min_rate": self.nmap_min_rate,
             "nmap_max_rate": self.nmap_max_rate,
             "httpx_timeout": self.httpx_timeout,
-            "skip_dead_domains": self.skip_dead_domains,
             "output_dir": self.output_dir,
-            "output_formats": self.output_formats,
             "log_level": self.log_level,
         }
 
