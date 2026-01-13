@@ -263,7 +263,8 @@ class SecurityScanner:
         xml = f"{self.config.output_dir}/nmap_{safe}_{ts}.xml"
 
         # Core Nmap command: -Pn (no ping), -sV (service version detection)
-        cmd = ["nmap", "-Pn", "-sV", "-oX", xml]
+        # --version-intensity 9 for maximum service/version detection (slower but more thorough)
+        cmd = ["nmap", "-Pn", "-sV", "--version-intensity", "9", "-oX", xml]
 
         # Add port specification
         if profile.get("tcp"):
@@ -292,8 +293,9 @@ class SecurityScanner:
         xml = f"{self.config.output_dir}/nmap_{safe}_{ts}.xml"
 
         # Core Nmap command: -Pn (no ping), -sV (service version detection)
+        # --version-intensity 9 for maximum service/version detection
         cmd = [
-            "nmap", "-Pn", "-sV", "-T4",
+            "nmap", "-Pn", "-sV", "--version-intensity", "9", "-T4",
             "--script", "ssl-cert,ssl-enum-ciphers,http-security-headers",
             "-oX", xml,
             target

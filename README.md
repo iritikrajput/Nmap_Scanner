@@ -53,7 +53,7 @@ Design principle: **Background scanner writes to database → API reads from dat
 
 ```bash
 chmod +x setup_and_run.sh
-./setup_and_run.sh
+./setup_and_run.shs
 ```
 
 ### 2. Start Background Scanner
